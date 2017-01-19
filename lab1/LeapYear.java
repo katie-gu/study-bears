@@ -5,10 +5,10 @@ public class LeapYear {
 
     public static boolean isLeapYear(int year){
         if (year % 4 != 0) {
-            return true;
+            return false;
         }
         else {
-            return false;
+            return true;
         }
     }
     /** Calls isLeapYear to print correct statement.
