@@ -5,10 +5,10 @@ public class LeapYear {
 
     public static boolean isLeapYear(int year){
         if (year % 4 != 0) {
-            System.out.println(year + " is not a leap year.");
+            return True;
         }
         else {
-            System.out.println(year + " is a leap year.");
+            return False;
         }
     }
     /** Calls isLeapYear to print correct statement.
