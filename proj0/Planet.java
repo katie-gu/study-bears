@@ -40,43 +40,57 @@ public class Planet {
 	}
 
 	public double calcForceExertedByX(Planet p){
-		
+		double changeX = p.xxPos - this.xxPos;
+		double force = calcForceExertedBy(p);
+		double distance = calcDistance(p);
+		double xForce = (changeX * force) / distance;
+		return xForce;
 	}
 
-	public double calcNetForceExertedByX(Planet p[]){
+	public double calcForceExertedByY(Planet p){
+		double changeY = p.yyPos - this.yyPos;
+		double force = calcForceExertedBy(p);
+		double distance = calcDistance(p);
+		double yForce = (changeY * force) / distance;
+		return yForce;
+	}
+
+	public double calcNetForceExertedByX(Planet[] p){
 		double netForce = 0;
 		double xForce;
 		for(int i = 0; i < p.length; i++){
 			if (!this.equals(p[i])){
-				double changeX = this.xxPos - p[i].xxPos;
-				xForce = (calcForceExertedBy(p[i]) * changeX) / calcDistance(p[i]);
+				xForce = calcForceExertedByX(p[i]);
 				netForce += xForce;
 			}
 		}
 
-		if (netForce < 0){
-			return -netForce;
-		}
-
 		return netForce;
 	}
 
-	public double calcNetForceExertedByY(Planet p[]){
+	public double calcNetForceExertedByY(Planet[] p){
 		double netForce = 0;
 		double yForce;
 		for(int i = 0; i < p.length; i++){
 			if (!this.equals(p[i])){
-				double changeY = this.yyPos - p[i].yyPos;
-				yForce = (this.calcForceExertedBy(p[i]) * changeY) / calcDistance(p[i]);
+				yForce = calcForceExertedByY(p[i]);
 				netForce += yForce;
 			}
-		}
-
-		if (netForce < 0){
-			return -netForce;
 		}
 
 		return netForce;
 	}
 
+	public void update(double dt, double fX, double fY){
+		double xAcc = fX/this.mass;
+		double yAcc = fY/this.mass;
+		xxVel = this.xxVel + (dt * xAcc);
+		yyVel = this.yyVel + (dt * yAcc);
+		xxPos = this.xxPos + (dt * xxVel);
+		yyPos = this.yyPos + (dt * yyVel);
+	}
+
+	public void draw(){
+		StdDraw.picture(xxPos, yyPos, "images/" + imgFileName);
+	}
 }
