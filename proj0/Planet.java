@@ -1,4 +1,5 @@
 public class Planet {
+<<<<<<< HEAD
 	public double xxPos;
 	public double yyPos;
 	public double xxVel;
@@ -93,4 +94,6 @@ public class Planet {
 	public void draw(){
 		StdDraw.picture(xxPos, yyPos, "images/" + imgFileName);
 	}
+=======
+>>>>>>> ef31bf2cd75281bb57de6a23dfecb585639bc61d
 }
