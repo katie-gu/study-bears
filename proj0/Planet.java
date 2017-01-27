@@ -2,13 +2,7 @@
 *Each instance of this Planet class is a Planet with a given x position,
 *y position, x velocity, y velocity, mass and the image.
 */
-
-
-
 public class Planet {
-
-
-
 	public double xxPos;
 	public double yyPos;
 	public double xxVel;
@@ -26,7 +20,6 @@ public class Planet {
 	*@param m inputted mass of the Planet
 	*@param img inputted file name of the image of the Planet
 	*/
-
 	public Planet(double xP, double yP, double xV, double yV, double m, String img){
 		xxPos = xP;
 		yyPos = yP;
@@ -37,7 +30,6 @@ public class Planet {
 	}
 
 	/**This constructor creates an instance of a Planet.*/
-
 	public Planet(Planet p){
 		xxPos = p.xxPos;
 		yyPos = p.yyPos;
@@ -45,35 +37,34 @@ public class Planet {
 		yyVel = p.yyVel;
 		mass = p.mass;
 		imgFileName = p.imgFileName;
-
 	}
+
 	/**
 	*This method calculates the distance between this Planet and an inputted Planet.
 	*@param pl inputted Planet
 	*/
-
 	public double calcDistance(Planet pl){
 		double changeX = this.xxPos - pl.xxPos;
 		double changeY = this.yyPos - pl.yyPos;
 		double distance = Math.sqrt((changeX * changeX) + (changeY * changeY));
 		return distance;
 	}
+
 	/**
 	*This method calculates the force exerted on this Planet by the inputted Planet.
 	*@param pl inputted Planet
 	*/
-
 	public double calcForceExertedBy(Planet pl){
 		double G = 6.67 * Math.pow(10, -11);
 		double distance = calcDistance(pl);
 		double force = ((G * this.mass * pl.mass)/(distance * distance));
 		return force;
 	}
+
 	/**
 	*This method calculates the force in the x direction exerted on this Planet by the inputted Planet.
 	*@param pl inputted Planet
 	*/
-
 	public double calcForceExertedByX(Planet pl){
 		double changeX = pl.xxPos - this.xxPos;
 		double force = calcForceExertedBy(pl);
@@ -86,7 +77,6 @@ public class Planet {
 	*This method calculates the force in the y direction exerted on this Planet by the inputted Planet.
 	*@param pl inputted Planet
 	*/
-
 	public double calcForceExertedByY(Planet pl){
 		double changeY = pl.yyPos - this.yyPos;
 		double force = calcForceExertedBy(pl);
@@ -96,10 +86,10 @@ public class Planet {
 	}
 
 	/**
-	*This method calculates the net force in the x direction exerted on this Planet by the inputted Planet.
-	*@param pl inputted Planet
+	*This method calculates the net force in the x direction exerted on this Planet by the 
+	*by other planets in the inputted array.
+	*@param p inputted Planet array
 	*/
-
 	public double calcNetForceExertedByX(Planet[] p){
 		double netForce = 0;
 		double xForce;
@@ -113,6 +103,11 @@ public class Planet {
 		return netForce;
 	}
 
+	/**
+	*This method calculates the net force in the y direction exerted on this Planet by the 
+	*by other planets in the inputted array.
+	*@param p inputted Planet array
+	*/
 	public double calcNetForceExertedByY(Planet[] p){
 		double netForce = 0;
 		double yForce;
@@ -126,6 +121,13 @@ public class Planet {
 		return netForce;
 	}
 
+	/**
+	*This method finds this planet's cceleration in the x and y direction
+	* to update the velocity and position in the x and y direction.
+	*@param dt inputted change in time 
+	*@param fX inputted x force
+	*@param fY inputted y force 
+	*/
 	public void update(double dt, double fX, double fY){
 		double xAcc = fX/this.mass;
 		double yAcc = fY/this.mass;
@@ -135,6 +137,9 @@ public class Planet {
 		yyPos = this.yyPos + (dt * yyVel);
 	}
 
+	/**
+	*This method draws this planet at its x position and y position  .
+	*/
 	public void draw(){
 		StdDraw.picture(xxPos, yyPos, "images/" + imgFileName);
 	}
