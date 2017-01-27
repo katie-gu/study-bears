@@ -1,4 +1,17 @@
+/**
+*This class creates a simulation of the planets in this universe
+*/
+
 public class NBody {
+
+	/**
+	*This method takes in an array of String arguments and assigns them in order
+	*to Time and change in time variables. Then it reads the planets, sets the scale
+	*of the window, and draws the background image. Then the program runs until
+	*time T, updating the planets locations and drawing them. At the end,
+	*the planets' information is printed out.
+	*/
+
 	public static void main(String[] args){
 		StdAudio.play("audio/2001.mid");
 		double T = Double.parseDouble(args[0]);
@@ -41,13 +54,23 @@ public class NBody {
 
 	}
 
+	/**
+	*This method reads the radius of a planet with the given file name
+	*and returns it. 
+	*@param fileName inputted file name of the planet's image
+	*/
+
 	public static double readRadius(String fileName){
 		In in = new In(fileName);
 		int numPlanets = in.readInt();
 		double radius = in.readDouble();
 		return radius;
 	}
-
+	/**
+	*This method reads the radius of a planet with the given file name
+	*and ß. 
+	*@param fileName inputted file name of the planet's image
+	*/
 	public static Planet[] readPlanets(String fileName){
 		In in = new In(fileName);
 		int numPlanets = in.readInt();
