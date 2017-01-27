@@ -1,7 +1,6 @@
 /**
-*This class creates a simulation of the planets in this universe
+*This class creates a simulation of the planets in this universe.
 */
-
 public class NBody {
 
 	/**
@@ -11,7 +10,6 @@ public class NBody {
 	*time T, updating the planets locations and drawing them. At the end,
 	*the planets' information is printed out.
 	*/
-
 	public static void main(String[] args){
 		StdAudio.play("audio/2001.mid");
 		double T = Double.parseDouble(args[0]);
@@ -55,21 +53,22 @@ public class NBody {
 	}
 
 	/**
-	*This method reads the radius of a planet with the given file name
-	*and returns it. 
-	*@param fileName inputted file name of the planet's image
+	*This method reads the radius of a planet in the given file
+	*and returns the radius. 
+	*@param fileName inputted file name 
 	*/
-
 	public static double readRadius(String fileName){
 		In in = new In(fileName);
 		int numPlanets = in.readInt();
 		double radius = in.readDouble();
 		return radius;
 	}
+
 	/**
-	*This method reads the radius of a planet with the given file name
-	*and ß. 
-	*@param fileName inputted file name of the planet's image
+	*This method reads the radius of a planet in given file 
+	*and creates an array of planets with their attributes from the file.
+	*Then it returns the array of planets.
+	*@param fileName inputted file name 
 	*/
 	public static Planet[] readPlanets(String fileName){
 		In in = new In(fileName);
