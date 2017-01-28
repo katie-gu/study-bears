@@ -34,11 +34,13 @@ public class LinkedListDeque<Item> {
 
     public void addLast(Item i){
         size += 1;
-        
+        IntNode p = sentinel;
+        IntNode last = p.prev;
+        last.next = new IntNode(last, i, p);
     }
 
     public boolean isEmpty(){
-
+        
     }
 
     public int size(){
