@@ -40,17 +40,25 @@ public class LinkedListDeque<Item> {
     }
 
     public boolean isEmpty(){
-        
+        if (sentinel.next == null){
+            return true;
+        }
+
+        return false;
     }
 
     public int size(){
-
+        return size;
     }
 
     public void printDeque(){
-
+        IntNode p  = sentinel;
+        while(p.next != sentinel){
+            System.out.print(p.next.item + " ");
+            p = p.next;
+        }
     }
-
+/*
     public Item removeFirst(){
 
     }
@@ -66,6 +74,7 @@ public class LinkedListDeque<Item> {
     public Item getRecursive(int index){
 
     }
+    */
 
 
 
