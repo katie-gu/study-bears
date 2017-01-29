@@ -3,31 +3,31 @@
  */
 public class LinkedListDeque<Item> {
 
-    private class IntNode {
-        public IntNode next;
+    private class Node {
+        public Node next;
         public Item item;
-        public IntNode prev;
+        public Node prev;
 
-        public IntNode(IntNode p, Item i, IntNode n){
+        public Node(Node p, Item i, Node n){
             prev = p;
             item = i;
             next = n;
         }
     }
 
-    private IntNode sentinel;
+    private Node sentinel;
     private int size;
     private Item temp; //does this work? OH
 
     public LinkedListDeque(){
-        sentinel = new IntNode(null, temp, null);
+        sentinel = new Node(null, temp, null);
         size = 0;
     }
 
     public void addFirst(Item i){
         //sentinel.prev = sentinel;
         //IntNode p = sentinel;
-        sentinel.next = new IntNode(sentinel, i, sentinel.next);
+        sentinel.next = new Node(sentinel, i, sentinel.next);
         //sentinel.prev = sentinel.next;
         if(sentinel.next.next != null) {
             sentinel.next.next.prev = sentinel.next;
@@ -44,9 +44,9 @@ public class LinkedListDeque<Item> {
 
     public void addLast(Item i){
         size += 1;
-        IntNode p = sentinel;
-        IntNode last = p.prev;
-        last.next = new IntNode(last, i, p);
+        Node p = sentinel;
+        Node last = p.prev;
+        last.next = new Node(last, i, p);
         p.prev = last.next;
     }
 
@@ -64,7 +64,7 @@ public class LinkedListDeque<Item> {
     }
 
     public void printDeque(){
-        IntNode p  = sentinel;
+        Node p  = sentinel;
         while(p.next != sentinel){
             System.out.print(p.next.item + " ");
             p = p.next;
@@ -89,11 +89,24 @@ public class LinkedListDeque<Item> {
     }
 
     public Item get(int index){
+        Node p = sentinel;
+        while (index>=0){
+            p = p.next;
+            if (p.next == sentinel){
+                return null;
+            }
+            index = index - 1;
+        }
 
+        return p.item;
     }
 
     public Item getRecursive(int index){
-
+        Node p = sentinel;
+        if (index == 0){
+            return p.item;
+        }
+        return getRecursive(index-1);
     }
 
 
