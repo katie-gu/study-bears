@@ -13,7 +13,6 @@ public class LinkedListDeque<Item> {
             item = i;
             next = n;
         }
-
     }
 
     private IntNode sentinel;
@@ -27,7 +26,18 @@ public class LinkedListDeque<Item> {
 
     public void addFirst(Item i){
         //sentinel.prev = sentinel;
+        //IntNode p = sentinel;
         sentinel.next = new IntNode(sentinel, i, sentinel.next);
+        //sentinel.prev = sentinel.next;
+        if(sentinel.next.next != null) {
+            sentinel.next.next.prev = sentinel.next;
+        }
+        else{
+            sentinel.prev = sentinel.next;
+            sentinel.next.next = sentinel;
+        }
+       // sentinel.prev = sentinel.next.next;
+        //nullpointer exception
         size += 1;
     }
 
@@ -37,6 +47,7 @@ public class LinkedListDeque<Item> {
         IntNode p = sentinel;
         IntNode last = p.prev;
         last.next = new IntNode(last, i, p);
+        p.prev = last.next;
     }
 
     public boolean isEmpty(){
@@ -48,6 +59,7 @@ public class LinkedListDeque<Item> {
     }
 
     public int size(){
+
         return size;
     }
 
@@ -58,13 +70,22 @@ public class LinkedListDeque<Item> {
             p = p.next;
         }
     }
-/*
-    public Item removeFirst(){
 
+    public Item removeFirst(){
+        if (!this.isEmpty()) {
+            Item removed = sentinel.next.item;
+            sentinel.next = sentinel.next.next;
+            sentinel.next.prev = sentinel;
+            return removed;
+        }
+            return null;
     }
 
     public Item removeLast(){
-
+        Item removed = sentinel.prev.item;
+        sentinel.prev = sentinel.prev.prev;
+        sentinel.prev.next = sentinel;
+        return removed;
     }
 
     public Item get(int index){
@@ -74,7 +95,7 @@ public class LinkedListDeque<Item> {
     public Item getRecursive(int index){
 
     }
-    */
+
 
 
 
