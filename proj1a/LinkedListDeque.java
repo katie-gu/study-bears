@@ -18,6 +18,7 @@ public class LinkedListDeque<Item> {
     private Node sentinel;
     private int size;
     private Item temp; //does this work? OH
+    //private Node lastNode; //does this work? for last method
 
     public LinkedListDeque(){
         sentinel = new Node(null, temp, null);
@@ -102,14 +103,19 @@ public class LinkedListDeque<Item> {
     }
 
     public Item getRecursive(int index){
-        Node p = sentinel;
-        if (index == 0){
-            return p.item;
+        //Node p = getNode(sentinel);
+        if (index>=size){
+            return null;
         }
-        return getRecursive(index-1);
+        return getNode(sentinel, index).item;
     }
 
-
-
+    //ask in OH
+    private Node getNode(Node p, int index){
+        if (index == 0){
+            return p.next;
+        }
+        return getNode(p.next, index-1);
+    }
 
 }
