@@ -70,15 +70,56 @@ public class LinkedListDequeTest {
 
 		System.out.println("Make sure to uncomment the lines below (and delete this print statement).");
 		//try with String as Generic type!!
-		LinkedListDeque<Integer> lld1 = new LinkedListDeque<Integer>();
-		//ArrayDeque<Integer> lld2 = new ArrayDeque<Integer>();
+		//LinkedListDeque<Integer> lld1 = new LinkedListDeque<Integer>();
+		ArrayDeque<Integer> lld2 = new ArrayDeque<Integer>();
 		//should be empty
 		//boolean passed = checkEmpty(true, lld1.isEmpty());
 
 
+        //Checks if the nextFirst and nextLast are same
+        lld2.addFirst(8);
+        lld2.addLast(9);
+        lld2.addLast(10);
+        lld2.addLast(11);
+        lld2.addLast(12);
+        lld2.addLast(13);
+        lld2.addLast(14);
+        lld2.addLast(15);
+        lld2.addLast(16);
+        lld2.addFirst(7);
 
 
-		//lld1.addFirst(8);
+
+        //Also checks if the nextFirst and nextLast are same
+        //with nextFirst = 2 and nextLast = 3;
+        /*
+        lld2.addLast(4);
+        lld2.addLast(5);
+        lld2.addLast(6);
+        lld2.addLast(7);
+        lld2.addLast(8);
+        lld2.addLast(9);
+        lld2.addLast(10);
+        lld2.addLast(11);
+        lld2.addLast(12);
+        lld2.addFirst(35);
+        */
+    /*
+        lld2.addFirst(35);
+        lld2.addFirst(36);
+        lld2.addFirst(37);
+        lld2.addFirst(38);
+        lld2.addFirst(39);
+        lld2.addFirst(40);
+        lld2.addFirst(41);
+        lld2.addFirst(42);
+        lld2.addFirst(43);
+        lld2.addFirst(44);
+
+*/
+
+
+        //lld1.addFirst(8);
 		//lld1.addLast(11);
 		//lld1.getRecursive(1);
 		//lld1.printDeque();
