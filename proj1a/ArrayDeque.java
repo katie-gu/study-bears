@@ -81,13 +81,29 @@ public class ArrayDeque<Item> {
     }
 
     public void printDeque(){
-        //int i = nextFirst + 1;
+        /*
         for(int i = nextFirst + 1; i<size; i++) {
             if (items[i] != null) {
+                if (i == items.length){
+                    switch (i = 0) {
+                    }
+                }
                 System.out.print(items[i] + " ");
             }
         }
+        */
+        int i = nextFirst + 1;
+        int sizeValue = size; //do i need this??
+        while(i < sizeValue){
+            if (items[i] != null) {
+                if (i == items.length){
+                    i = 0;
+                }
+                System.out.print(items[i] + " ");
+            }
 
+            i = i + 1;
+        }
 
     }
 
@@ -96,19 +112,26 @@ public class ArrayDeque<Item> {
             return null;
         }
         Item first = items[nextFirst+1];
-        items[nextFirst] = null;
+        items[nextFirst+1] = null;
+        nextFirst = nextFirst + 1; //maybe not necessary
+        size = size - 1;
         return first;
 
     }
-/*
+
     public Item removeLast(){
-        Item last = items[size-1];
-        items[size - 1] = null;
+        if (items[nextLast - 1] == null){
+            return null;
+        }
+        Item last = items[nextLast -1];
+        items[nextLast - 1] = null; //maybe not necessary
+        nextLast = nextLast - 1;
         size = size - 1;
         return last;
     }
 
     public Item get(int index){
+        //check piazza post!
         if (index < size) {
             return items[index];
         }
@@ -116,7 +139,7 @@ public class ArrayDeque<Item> {
             return null;
         }
     }
-    */
+
 
 
 
