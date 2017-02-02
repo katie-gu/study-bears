@@ -34,12 +34,14 @@ public class ArrayDeque<Item> {
         items = a;
     }
 
-    private boolean ifHalved(){
+    private boolean ifHalved(){ //of half it in here
         usageRatio = size/items.length;
         //size of ARRAY, not list is halved
         if (usageRatio < 0.25){
+            return true;
             //call resize method
         }
+        return false;
     }
 
 
@@ -108,24 +110,32 @@ public class ArrayDeque<Item> {
     }
 
     public Item removeFirst(){
-        if (items[nextFirst+1] == null){
+       int nextElement = nextFirst + 1;
+       if (nextElement>=items.length){
+           nextElement = 0;
+       }
+       if (items[nextElement] == null){
             return null;
-        }
-        Item first = items[nextFirst+1];
-        items[nextFirst+1] = null;
-        nextFirst = nextFirst + 1; //maybe not necessary
+       }
+        Item first = items[nextElement];
+        items[nextElement] = null; //maybe not necessary
+        nextFirst = nextElement;
         size = size - 1;
         return first;
 
     }
 
     public Item removeLast(){
-        if (items[nextLast - 1] == null){
+        int lastElement = nextLast - 1;
+        if (lastElement < 0){
+            lastElement = items.length-1;
+        }
+        if (items[lastElement] == null){
             return null;
         }
-        Item last = items[nextLast -1];
-        items[nextLast - 1] = null; //maybe not necessary
-        nextLast = nextLast - 1;
+        Item last = items[lastElement];
+        items[lastElement] = null; //maybe not necessary
+        nextLast = lastElement;
         size = size - 1;
         return last;
     }
