@@ -94,6 +94,11 @@ public class LinkedListDequeTest {
         lld2.removeLast();
         lld2.removeLast();
         lld2.removeLast();
+        lld2.removeLast();
+        lld2.removeLast();
+        lld2.removeLast();
+        lld2.removeLast();
+        lld2.removeLast();
 
 
 
