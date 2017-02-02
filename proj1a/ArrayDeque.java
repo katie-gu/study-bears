@@ -7,18 +7,19 @@ public class ArrayDeque<Item> {
     private int size;
     private int nextFirst;
     private int nextLast;
-    private int usageRatio; //when to check this?
-    private int RFACTOR = 2; //what number to use?
+    private int usageRatio;
+    private int RFACTOR = 2;
 
     public ArrayDeque(){
         items = (Item[]) new Object[8];
         size = 0;
         nextFirst = 0;
-        nextLast = 1; //does last start at index 1?
+        nextLast = 1;
         usageRatio = 0;
     }
 
     public void addFirst(Item i){
+        ifFullList();
         items[nextFirst] = i;
         if (nextFirst == 0){
             nextFirst = items.length;
@@ -33,19 +34,29 @@ public class ArrayDeque<Item> {
         items = a;
     }
 
-    public void addLast(Item i){
+    private boolean ifHalved(){
+        usageRatio = size/items.length;
+        //size of ARRAY, not list is halved
+        if (usageRatio < 0.25){
+            //call resize method
+        }
+    }
+
+
+    private void ifFullList(){
         if (nextLast == nextFirst){
-           // resize(0, size * RFACTOR, 0);
             Item[] a = (Item[]) new Object[size*RFACTOR];
             System.arraycopy(items, nextFirst+1, a, 0, items.length-(nextFirst+1));
-            System.arraycopy(items, 0, a, items.length-nextFirst, nextFirst);
+            System.arraycopy(items, 0, a, items.length-(nextFirst+1), nextFirst);
             items = a;
+            nextFirst = items.length-1;
+            nextLast = size;  //because nextLast gets incremented later in the method
         }
-       // if (size == items.length){
-           // resize(0, (size * RFACTOR), 0);
-        //}
-        items[nextLast] = i;
+    }
 
+    public void addLast(Item i){
+        ifFullList();
+        items[nextLast] = i;
 
         if (nextLast < items.length - 1) {
             nextLast++;
@@ -53,18 +64,16 @@ public class ArrayDeque<Item> {
         else {
             nextLast = 0;
         }
-
         size++;
     }
 
 
     public boolean isEmpty(){
-        for(int i = 0; i < items.length; i++){
-            if (items[i] != null){
-                return false;
-            }
+        if (size == 0){
+            return true;
         }
-        return true;
+
+        return false;
     }
 
     public int size(){
@@ -72,9 +81,14 @@ public class ArrayDeque<Item> {
     }
 
     public void printDeque(){
-        for(int i = 0; i<size; i++) {
-            System.out.print(items[0] + " ");
+        //int i = nextFirst + 1;
+        for(int i = nextFirst + 1; i<size; i++) {
+            if (items[i] != null) {
+                System.out.print(items[i] + " ");
+            }
         }
+
+
     }
 
     public Item removeFirst(){
@@ -86,7 +100,7 @@ public class ArrayDeque<Item> {
         return first;
 
     }
-
+/*
     public Item removeLast(){
         Item last = items[size-1];
         items[size - 1] = null;
@@ -102,6 +116,7 @@ public class ArrayDeque<Item> {
             return null;
         }
     }
+    */
 
 
 
