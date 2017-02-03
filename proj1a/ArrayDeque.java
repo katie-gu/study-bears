@@ -17,7 +17,7 @@ public class ArrayDeque<Item> {
      * of length 8, size, nextFirst, nextLast and usageRatio.
      */
     public ArrayDeque(){
-        items = (Item[]) new Object[8];
+        items = (Item[]) new Object[16]; //change length to 8
         size = 0;
         nextFirst = 2;
         nextLast = 3;
@@ -30,34 +30,34 @@ public class ArrayDeque<Item> {
      */
     public void addFirst(Item i){
         if (nextLast == nextFirst){
-            rearrangeList();
+            resize();
         }
         items[nextFirst] = i;
         if (nextFirst == 0){
-            nextFirst = items.length;
+            nextFirst = items.length-1;
+        } else {
+            nextFirst--;
         }
-        nextFirst--;
         size++;
+        checkUsageRatio();
+
     }
 
-    private void resize(int srcPos, int capacity, int destPos){
-        Item[] a = (Item[]) new Object[capacity];
-        System.arraycopy(items, 0, a, destPos, size);
-        items = a;
-    }
-
-    private boolean ifHalved(){ //of half it in here
+    private void checkUsageRatio(){ //of half it in here. calls resize method
         usageRatio = size/items.length;
-        //size of ARRAY, not list is halved
-        if (usageRatio < 0.25){
-            return true;
-            //call resize method
+        if (items.length>= 16 && usageRatio < 0.25){
+            resize();
+           // size++;
+
+            Item[] a = (Item[]) new Object[items.length/2];
+            System.arraycopy(items, 0, a, 0, items.length);
+            items = a;
+            nextFirst = items.length-1;
+            nextLast = size + 1;
         }
-        return false;
     }
 
-
-    private void rearrangeList(){
+    private void resize(){
             Item[] a = (Item[]) new Object[size*RFACTOR];
             System.arraycopy(items, nextFirst+1, a, 0, items.length-(nextFirst+1));
             System.arraycopy(items, 0, a, items.length-(nextFirst+1), nextFirst);
@@ -72,18 +72,17 @@ public class ArrayDeque<Item> {
      */
     public void addLast(Item i){
         if (nextLast == nextFirst){
-            rearrangeList();
+            resize();
         }
         items[nextLast] = i;
         if (nextLast < items.length - 1) {
             nextLast++;
-        }
-        else {
+        } else {
             nextLast = 0;
         }
         size++;
+        checkUsageRatio();
     }
-
 
     /**
      * This method checks if the array is empty by checking if size is 0.
@@ -128,10 +127,10 @@ public class ArrayDeque<Item> {
         nextFirst = nextElement;
         size = size - 1;
         if (nextLast == nextFirst){
-            rearrangeList();
+            resize();
         }
+        checkUsageRatio();
         return first;
-
     }
 
     /**
@@ -151,8 +150,9 @@ public class ArrayDeque<Item> {
         nextLast = lastElement;
         size = size - 1;
         if (nextLast == nextFirst){
-            rearrangeList();
+            resize();
         }
+        checkUsageRatio();
         return last;
     }
 
