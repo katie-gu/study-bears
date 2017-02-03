@@ -148,10 +148,10 @@ public class LinkedListDeque<Item> {
     public Item get(int index) {
         Node p = sentinel;
         while (index >= 0){
-            p = p.next;
             if (p.next == sentinel) {
                 return null;
             }
+            p = p.next;
             index = index - 1;
         }
 
