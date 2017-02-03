@@ -16,7 +16,7 @@ public class ArrayDeque<Item> {
      * The constructor creates an instance of the ArrayDeque class with the empty
      * of length 8, size, nextFirst, nextLast and usageRatio.
      */
-    public ArrayDeque(){
+    public ArrayDeque() {
         items = (Item[]) new Object[8];
         size = 0;
         nextFirst = 2;
@@ -28,8 +28,8 @@ public class ArrayDeque<Item> {
      * This method adds an item to the beginning of the array, and decrements nextFirst.
      * @param i item added to the array
      */
-    public void addFirst(Item i){
-        if (nextLast == nextFirst){
+    public void addFirst(Item i) {
+        if (nextLast == nextFirst) {
             resize();
         }
         items[nextFirst] = i;
@@ -47,13 +47,13 @@ public class ArrayDeque<Item> {
      * usageRatio is less than .25. If this is true, it decreases the size of the stored array
      * as 3 times the size of the array.
      */
-    private void checkUsageRatio(){ //of half it in here. calls resize method
-        usageRatio = size/items.length;
-        if (items.length>= 16 && usageRatio < 0.25){
+    private void checkUsageRatio() { //of half it in here. calls resize method
+        usageRatio = size / items.length;
+        if (items.length >= 16 && usageRatio < 0.25){
             Item[] a = (Item[]) new Object[size*3];
-            System.arraycopy(items, nextFirst+1, a, 0, size);
+            System.arraycopy(items, nextFirst + 1, a, 0, size);
             items = a;
-            nextFirst = items.length-1;
+            nextFirst = items.length - 1;
             nextLast = size;
         }
     }
@@ -62,12 +62,12 @@ public class ArrayDeque<Item> {
      * Resize changes the size of the array as size times RFACTOR and rearranges
      * the list if nextFirst and nextLast point in the same position.
      */
-    private void resize(){
-            Item[] a = (Item[]) new Object[size*2];
+    private void resize() {
+            Item[] a = (Item[]) new Object[size * 2];
             System.arraycopy(items, nextFirst+1, a, 0, items.length-(nextFirst+1));
             System.arraycopy(items, 0, a, items.length-(nextFirst+1), nextFirst);
             items = a;
-            nextFirst = items.length-1;
+            nextFirst = items.length - 1;
             nextLast = size;  //nextLast gets incremented later in the method
     }
 
@@ -75,8 +75,8 @@ public class ArrayDeque<Item> {
      * This method removes an item from the end of the array, and increments nextLast.
      * @param i item to be removed from array
      */
-    public void addLast(Item i){
-        if (nextLast == nextFirst){
+    public void addLast(Item i) {
+        if (nextLast == nextFirst) {
             resize();
         }
         items[nextLast] = i;
@@ -119,19 +119,19 @@ public class ArrayDeque<Item> {
      * This method removes the first item of the array and changes the nextFirst position.
      * @return first item
      */
-    public Item removeFirst(){
+    public Item removeFirst() {
        int nextElement = nextFirst + 1;
-       if (nextElement>=items.length){
+       if (nextElement>=items.length) {
            nextElement = 0;
        }
-       if (items[nextElement] == null){
+       if (items[nextElement] == null) {
             return null;
        }
         Item first = items[nextElement];
         items[nextElement] = null; //maybe not necessary
         nextFirst = nextElement;
         size = size - 1;
-        if (nextLast == nextFirst){
+        if (nextLast == nextFirst) {
             resize();
         }
         checkUsageRatio();
@@ -142,10 +142,10 @@ public class ArrayDeque<Item> {
      * This method removes the last item of the array and changes the nextLast position.
      * @return last item
      */
-    public Item removeLast(){
+    public Item removeLast() {
         int lastElement = nextLast - 1;
         if (lastElement < 0){
-            lastElement = items.length-1;
+            lastElement = items.length - 1;
         }
         if (items[lastElement] == null){
             return null;
@@ -167,12 +167,12 @@ public class ArrayDeque<Item> {
      * @param index position of the circular array
      * @return item at the index
      */
-    public Item get(int index){
-        if (index >= size){
+    public Item get(int index) {
+        if (index >= size) {
             return null;
         }
         int newIndex = nextFirst + 1 + index;
-        if (newIndex > items.length-1){
+        if (newIndex > items.length-1) {
             newIndex = newIndex - items.length;
         }
         return items[newIndex];
