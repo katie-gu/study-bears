@@ -77,6 +77,7 @@ public class LinkedListDequeTest {
 
 
         //Checks if the nextFirst and nextLast are same
+/*
         lld2.addFirst(8);
         lld2.addLast(9);
         lld2.addLast(10);
@@ -94,7 +95,20 @@ public class LinkedListDequeTest {
         lld2.removeLast();
         lld2.removeLast();
         lld2.removeLast();
-        System.out.println(lld2.get(2));
+*/
+
+        lld2.addFirst(8);
+        lld2.addLast(9);
+        lld2.addLast(10);
+        lld2.addLast(11);
+        lld2.addLast(12);
+        lld2.addLast(13);
+       // lld2.addLast(14);
+
+
+
+        System.out.println(lld2.get(1));
+        lld2.printDeque();
        // lld2.removeLast();
        // lld2.removeLast();
       //  lld2.removeLast();
