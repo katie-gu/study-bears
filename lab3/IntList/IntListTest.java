@@ -2,6 +2,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+
 public class IntListTest {
 
     /**
@@ -9,6 +10,7 @@ public class IntListTest {
      * method. The main point of this is to convince you that
      * assertEquals knows how to handle IntLists just fine.
      */
+
 
     @Test
     public void testList() {
@@ -27,6 +29,16 @@ public class IntListTest {
         assertEquals(IntList.list(1, 4, 9), L);
     }
 
+    @Test(timeout = 1000)
+    public void testReverse(){
+        IntList A = IntList.list(1, 2, 3);
+        IntList reversed = IntList.list(3, 2, 1);
+        assertEquals(reversed, IntList.reverse(A));
+        assertNotEquals(A, IntList.reverse(A));
+        assertEquals(null, IntList.reverse(null)); //is this right?
+
+    }
+
     /**
      * Do not use the new keyword in your tests. You can create
      * lists using the handy IntList.list method.
@@ -39,6 +51,7 @@ public class IntListTest {
      * Keep in mind that dcatenate(A, B) is NOT required to leave A untouched.
      * Anything can happen to A.
      */
+
 
     @Test
     public void testSquareListRecursive() {
@@ -71,3 +84,4 @@ public class IntListTest {
       * example. */
 
 }
+
