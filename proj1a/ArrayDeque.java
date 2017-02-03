@@ -9,7 +9,7 @@ public class ArrayDeque<Item> {
     private int size;
     private int nextFirst;
     private int nextLast;
-    private int usageRatio;
+    private double usageRatio;
     private int RFACTOR = 2;
 
     /**
@@ -17,7 +17,7 @@ public class ArrayDeque<Item> {
      * of length 8, size, nextFirst, nextLast and usageRatio.
      */
     public ArrayDeque(){
-        items = (Item[]) new Object[16]; //change length to 8
+        items = (Item[]) new Object[8];
         size = 0;
         nextFirst = 2;
         nextLast = 3;
@@ -40,30 +40,35 @@ public class ArrayDeque<Item> {
         }
         size++;
         checkUsageRatio();
-
     }
 
+    /**
+     * This method checks if the length of the stored array is is greater and 16 and the
+     * usageRatio is less than .25. If this is true, it decreases the size of the stored array
+     * as 3 times the size of the array.
+     */
     private void checkUsageRatio(){ //of half it in here. calls resize method
         usageRatio = size/items.length;
         if (items.length>= 16 && usageRatio < 0.25){
-            resize();
-           // size++;
-
-            Item[] a = (Item[]) new Object[items.length/2];
-            System.arraycopy(items, 0, a, 0, items.length);
+            Item[] a = (Item[]) new Object[size*3];
+            System.arraycopy(items, nextFirst+1, a, 0, size);
             items = a;
             nextFirst = items.length-1;
-            nextLast = size + 1;
+            nextLast = size;
         }
     }
 
+    /**
+     * Resize changes the size of the array as size times RFACTOR and rearranges
+     * the list if nextFirst and nextLast point in the same position.
+     */
     private void resize(){
-            Item[] a = (Item[]) new Object[size*RFACTOR];
+            Item[] a = (Item[]) new Object[size*2];
             System.arraycopy(items, nextFirst+1, a, 0, items.length-(nextFirst+1));
             System.arraycopy(items, 0, a, items.length-(nextFirst+1), nextFirst);
             items = a;
             nextFirst = items.length-1;
-            nextLast = size;  //because nextLast gets incremented later in the method
+            nextLast = size;  //nextLast gets incremented later in the method
     }
 
     /**
@@ -172,8 +177,5 @@ public class ArrayDeque<Item> {
         }
         return items[newIndex];
     }
-
-
-
 
 }
