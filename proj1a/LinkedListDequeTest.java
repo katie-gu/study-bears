@@ -94,11 +94,13 @@ public class LinkedListDequeTest {
         lld2.removeLast();
         lld2.removeLast();
         lld2.removeLast();
-        lld2.removeLast();
-        lld2.removeLast();
-        lld2.removeLast();
-        lld2.removeLast();
-        lld2.removeLast();
+        System.out.println(lld2.get(2));
+       // lld2.removeLast();
+       // lld2.removeLast();
+      //  lld2.removeLast();
+      //  lld2.removeLast();
+      //  lld2.removeLast();
+
 
 
 
