@@ -109,6 +109,7 @@ public class LinkedListDequeTest {
 
         System.out.println(lld2.get(1));
         lld2.printDeque();
+
        // lld2.removeLast();
        // lld2.removeLast();
       //  lld2.removeLast();
