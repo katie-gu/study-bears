@@ -103,7 +103,16 @@ public class LinkedListDequeTest {
         lld2.addLast(11);
         lld2.addLast(12);
         lld2.addLast(13);
-       // lld2.addLast(14);
+        lld2.removeFirst();
+        lld2.removeFirst();
+        lld2.removeFirst();
+        lld2.removeFirst();
+        lld2.removeFirst();
+        lld2.removeFirst();
+        lld2.addFirst(6);
+        lld2.addLast(7);
+
+        // lld2.addLast(14);
 
 
 
