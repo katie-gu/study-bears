@@ -229,7 +229,8 @@ public class IntList {
         for (Reverse = null; A != null; A = A.rest) {
             Reverse = new IntList(A.first, Reverse);
         }
-        return Reverse;
+        A = Reverse;
+        return A;
         /*
         if (A == null || A.rest == null){
             return A;
