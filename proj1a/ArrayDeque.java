@@ -1,5 +1,6 @@
 /**
  * Created by jhinukbarman on 1/29/17.
+ * This class creates a circular ArrayList with
  */
 public class ArrayDeque<Item> {
 
@@ -19,8 +20,9 @@ public class ArrayDeque<Item> {
     }
 
     public void addFirst(Item i){
-        ifFullList();
-        items[nextFirst] = i;
+        if (nextLast == nextFirst){
+            rearrangeList();
+        }        items[nextFirst] = i;
         if (nextFirst == 0){
             nextFirst = items.length;
         }
@@ -45,19 +47,21 @@ public class ArrayDeque<Item> {
     }
 
 
-    private void ifFullList(){
-        if (nextLast == nextFirst){
+    private void rearrangeList(int srcPos, int destPos, int length){
             Item[] a = (Item[]) new Object[size*RFACTOR];
+            //System.arraycopy(items, nextFirst+1, a, 0, items.length-(nextFirst+1));
+            //System.arraycopy(items, 0, a, items.length-(nextFirst+1), nextFirst);
             System.arraycopy(items, nextFirst+1, a, 0, items.length-(nextFirst+1));
             System.arraycopy(items, 0, a, items.length-(nextFirst+1), nextFirst);
             items = a;
             nextFirst = items.length-1;
             nextLast = size;  //because nextLast gets incremented later in the method
-        }
     }
 
     public void addLast(Item i){
-        ifFullList();
+        if (nextLast == nextFirst){
+            rearrangeList();
+        }
         items[nextLast] = i;
 
         if (nextLast < items.length - 1) {
@@ -83,17 +87,6 @@ public class ArrayDeque<Item> {
     }
 
     public void printDeque(){
-        /*
-        for(int i = nextFirst + 1; i<size; i++) {
-            if (items[i] != null) {
-                if (i == items.length){
-                    switch (i = 0) {
-                    }
-                }
-                System.out.print(items[i] + " ");
-            }
-        }
-        */
         int i = nextFirst + 1;
         int sizeValue = size; //do i need this??
         while(i < sizeValue){
@@ -103,7 +96,6 @@ public class ArrayDeque<Item> {
                 }
                 System.out.print(items[i] + " ");
             }
-
             i = i + 1;
         }
 
@@ -141,13 +133,23 @@ public class ArrayDeque<Item> {
     }
 
     public Item get(int index){
-        //check piazza post!
+        //int startIndex = nextFirst + 1;
+        Item finalValue = null;
         if (index < size) {
-            return items[index];
+            for (int i = nextFirst + 1; index > 0; i++) {
+                //if(i >= items.length-1) switch (i = 0) {
+               // }
+                finalValue = items[i];
+            }
         }
-        else{
-            return null;
-        }
+        return finalValue;
+       // while(index > 0){
+            //items[startIndex];
+
+        //}
+       // rearrangeList();
+       // return items[index];
+
     }
 
 
