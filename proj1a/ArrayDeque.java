@@ -17,10 +17,10 @@ public class ArrayDeque<Item> {
      * of length 8, size, nextFirst, nextLast and usageRatio.
      */
     public ArrayDeque() {
-        items = (Item[]) new Object[16];
+        items = (Item[]) new Object[8];
         size = 0;
-        nextFirst = 15;
-        nextLast = 0;
+        nextFirst = 2;
+        nextLast = 3;
         usageRatio = 0;
     }
 
@@ -56,7 +56,7 @@ public class ArrayDeque<Item> {
             if (nextVal >= items.length) {
                 nextVal = 0;
             }
-            if (nextLast == 0){
+            if (nextLast == 0) {
                 lastVal = items.length - 1;
                 dest = 0;
             }
