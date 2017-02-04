@@ -59,14 +59,13 @@ public class ArrayDeque<Item> {
                 System.arraycopy(items, 0, a, (items.length - 1) - (nextVal), nextLast - 1);
                 items = a;
                 nextFirst = items.length - 1;
-                nextLast = size;
-                nextLast = size;
+                nextLast = size + 1;
             } else {
                 Item[] a = (Item[]) new Object[size * 3];
                 System.arraycopy(items, nextVal, a, 0, size);
                 items = a;
                 nextFirst = items.length - 1;
-                nextLast = size;
+                nextLast = size + 1;
             }
         }
     }
