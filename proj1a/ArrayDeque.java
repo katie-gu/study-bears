@@ -39,7 +39,7 @@ public class ArrayDeque<Item> {
             nextFirst--;
         }
         size++;
-        checkUsageRatio();
+       // checkUsageRatio();
     }
 
     /**
@@ -63,7 +63,7 @@ public class ArrayDeque<Item> {
      * the list if nextFirst and nextLast point in the same position.
      */
     private void resize() {
-            Item[] a = (Item[]) new Object[size * 2];
+            Item[] a = (Item[]) new Object[size * RFACTOR];
             System.arraycopy(items, nextFirst+1, a, 0, items.length-(nextFirst+1));
             System.arraycopy(items, 0, a, items.length-(nextFirst+1), nextFirst);
             items = a;
@@ -86,7 +86,7 @@ public class ArrayDeque<Item> {
             nextLast = 0;
         }
         size++;
-        checkUsageRatio();
+        //checkUsageRatio();
     }
 
     /**
@@ -134,7 +134,7 @@ public class ArrayDeque<Item> {
         if (nextLast == nextFirst) {
             resize();
         }
-        checkUsageRatio();
+       // checkUsageRatio();
         return first;
     }
 
@@ -157,7 +157,7 @@ public class ArrayDeque<Item> {
         if (nextLast == nextFirst){
             resize();
         }
-        checkUsageRatio();
+        //checkUsageRatio();
         return last;
     }
 
