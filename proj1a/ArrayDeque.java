@@ -17,10 +17,10 @@ public class ArrayDeque<Item> {
      * of length 8, size, nextFirst, nextLast and usageRatio.
      */
     public ArrayDeque() {
-        items = (Item[]) new Object[16]; //make length 8 AGAIN
+        items = (Item[]) new Object[8]; //make length 8 AGAIN
         size = 0;
         nextFirst = 0;
-        nextLast = 14;
+        nextLast = 3;
         usageRatio = 0;
     }
 
@@ -51,10 +51,9 @@ public class ArrayDeque<Item> {
         if ((items.length >= 16) && (usageRatio < 0.25)) {
             Item[] a = (Item[]) new Object[size * 3];
 
-            if(nextLast > nextFirst){
+            if (nextLast > nextFirst) {
                 System.arraycopy(items, nextFirst + 1, a, 0, (nextLast - nextFirst) - 1);
-            }
-            else {
+            } else {
                 if (nextFirst < items.length - 1) {
                     System.arraycopy(items, nextFirst + 1, a, 0, items.length - (nextFirst + 1));
                 }
