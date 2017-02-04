@@ -50,11 +50,20 @@ public class ArrayDeque<Item> {
     private void checkUsageRatio() { //of half it in here. calls resize method
         usageRatio = size / items.length;
         if ((items.length >= 16) && (usageRatio < 0.25)) {
-            Item[] a = (Item[]) new Object[size * 3];
-            System.arraycopy(items, nextFirst + 1, a, 0, size);
-            items = a;
-            nextFirst = items.length - 1;
-            nextLast = size;
+            if (((items.length - 1) - (nextFirst + 1)) < size) {
+                Item[] a = (Item[]) new Object[size * 3];
+                System.arraycopy(items, nextFirst + 1, a, 0, (items.length - 1) - (nextFirst + 1));
+                System.arraycopy(items, 0, a, (items.length - 1) - (nextFirst + 1), nextLast - 1);
+                items = a;
+                nextFirst = items.length - 1;
+                nextLast = size;
+            } else {
+                Item[] a = (Item[]) new Object[size * 3];
+                System.arraycopy(items, nextFirst + 1, a, 0, size);
+                items = a;
+                nextFirst = items.length - 1;
+                nextLast = size;
+            }
         }
     }
 
@@ -157,6 +166,7 @@ public class ArrayDeque<Item> {
         if (nextLast == nextFirst) {
             resize();
         }
+
         checkUsageRatio();
         return last;
     }
