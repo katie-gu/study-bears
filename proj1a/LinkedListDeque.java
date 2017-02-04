@@ -67,8 +67,8 @@ public class LinkedListDeque<Item> {
         if (sentinel.prev == null) {
             sentinel.prev = new Node(sentinel.prev, i, sentinel.next);
             sentinel.next = sentinel.prev;
-            sentinel.prev.prev = sentinel.prev;
-            sentinel.prev.next = sentinel.next;
+            sentinel.prev.prev = sentinel;
+            sentinel.prev.next = sentinel;
         }
         else {
             sentinel.prev.next = new Node(sentinel.prev, i, sentinel);
