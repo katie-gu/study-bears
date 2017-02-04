@@ -39,7 +39,6 @@ public class ArrayDeque<Item> {
             nextFirst--;
         }
         size++;
-       // checkUsageRatio();
     }
 
     /**
@@ -48,18 +47,23 @@ public class ArrayDeque<Item> {
      * as 3 times the size of the array.
      */
     private void checkUsageRatio() { //of half it in here. calls resize method
+        int nextVal = nextFirst + 1;
         usageRatio = size / items.length;
         if ((items.length >= 16) && (usageRatio < 0.25)) {
+            if (nextFirst + 1 >= size) {
+                nextVal = 0;
+            }
             if (((items.length - 1) - (nextFirst + 1)) < size) {
                 Item[] a = (Item[]) new Object[size * 3];
-                System.arraycopy(items, nextFirst + 1, a, 0, (items.length - 1) - (nextFirst + 1));
-                System.arraycopy(items, 0, a, (items.length - 1) - (nextFirst + 1), nextLast - 1);
+                System.arraycopy(items, nextVal, a, 0, (items.length - 1) - nextVal);
+                System.arraycopy(items, 0, a, (items.length - 1) - (nextVal), nextLast - 1);
                 items = a;
                 nextFirst = items.length - 1;
                 nextLast = size;
+                nextLast = size;
             } else {
                 Item[] a = (Item[]) new Object[size * 3];
-                System.arraycopy(items, nextFirst + 1, a, 0, size);
+                System.arraycopy(items, nextVal, a, 0, size);
                 items = a;
                 nextFirst = items.length - 1;
                 nextLast = size;
@@ -95,7 +99,6 @@ public class ArrayDeque<Item> {
             nextLast = 0;
         }
         size++;
-        //checkUsageRatio();
     }
 
     /**
@@ -166,7 +169,6 @@ public class ArrayDeque<Item> {
         if (nextLast == nextFirst) {
             resize();
         }
-
         checkUsageRatio();
         return last;
     }
@@ -181,10 +183,13 @@ public class ArrayDeque<Item> {
         if (index >= size) {
             return null;
         }
+       // int newIndex = index % size;
+
         int newIndex = nextFirst + 1 + index;
         if (newIndex > items.length - 1) {
             newIndex = newIndex - items.length;
         }
+
         return items[newIndex];
     }
 
