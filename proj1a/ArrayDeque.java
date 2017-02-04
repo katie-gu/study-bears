@@ -141,7 +141,7 @@ public class ArrayDeque<Item> {
         if (nextLast == nextFirst) {
             resize();
         }
-        checkUsageRatio();
+       // checkUsageRatio();
         return first;
     }
 
@@ -164,7 +164,7 @@ public class ArrayDeque<Item> {
         if (nextLast == nextFirst) {
             resize();
         }
-        checkUsageRatio();
+       // checkUsageRatio();
         return last;
     }
 
