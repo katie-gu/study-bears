@@ -61,8 +61,8 @@ public class ArrayDeque<Item> {
 
             }
             items = a;
-            nextFirst = 0;
-            nextLast = size;
+            nextFirst = items.length - 1;
+            nextLast = 0;
         }
     }
 
