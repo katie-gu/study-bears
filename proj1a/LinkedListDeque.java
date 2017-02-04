@@ -11,9 +11,9 @@ public class LinkedListDeque<Item> {
      * variables next, item and prev.
      */
     private class Node {
-        public Node next;
-        public Item item;
-        public Node prev;
+        private Node next;
+        private Item item;
+        private Node prev;
 
         /**
          * The constructor creates an instance of the node class with the given
@@ -22,7 +22,7 @@ public class LinkedListDeque<Item> {
          * @param i item in current node
          * @param n pointer to next node
          */
-        public Node(Node p, Item i, Node n) {
+        private Node(Node p, Item i, Node n) {
             prev = p;
             item = i;
             next = n;
@@ -47,10 +47,9 @@ public class LinkedListDeque<Item> {
      */
     public void addFirst(Item i) {
         sentinel.next = new Node(sentinel, i, sentinel.next);
-        if(sentinel.next.next != null) {
+        if (sentinel.next.next != null) {
             sentinel.next.next.prev = sentinel.next;
-        }
-        else {
+        } else {
             sentinel.prev = sentinel.next;
             sentinel.next.next = sentinel;
         }
@@ -69,8 +68,7 @@ public class LinkedListDeque<Item> {
             sentinel.next = sentinel.prev;
             sentinel.prev.prev = sentinel;
             sentinel.prev.next = sentinel;
-        }
-        else {
+        } else {
             sentinel.prev.next = new Node(sentinel.prev, i, sentinel);
             sentinel.prev = sentinel.prev.next;
         }
@@ -83,7 +81,7 @@ public class LinkedListDeque<Item> {
      * @return boolean false or true
      */
     public boolean isEmpty() {
-        if (sentinel.next == null || sentinel.next == sentinel){
+        if (sentinel.next == null || sentinel.next == sentinel) {
             return true;
         }
 
@@ -94,7 +92,7 @@ public class LinkedListDeque<Item> {
      * This method returns the size of the list.
      * @return size
      */
-    public int size(){
+    public int size() {
         return size;
     }
 
@@ -103,7 +101,7 @@ public class LinkedListDeque<Item> {
      */
     public void printDeque() {
         Node p  = sentinel;
-        while(p.next != sentinel){
+        while (p.next != sentinel) {
             System.out.print(p.next.item + " ");
             p = p.next;
         }
@@ -121,7 +119,7 @@ public class LinkedListDeque<Item> {
             size -= 1;
             return removed;
         }
-            return null;
+        return null;
     }
 
     /**
@@ -129,14 +127,14 @@ public class LinkedListDeque<Item> {
      * @return removed item
      */
     public Item removeLast() {
-        if(!isEmpty()) {
+        if (!isEmpty()) {
             Item removed = sentinel.prev.item;
             sentinel.prev = sentinel.prev.prev;
             sentinel.prev.next = sentinel;
             size -= 1;
             return removed;
         }
-            return null;
+        return null;
     }
 
     /**
@@ -147,7 +145,7 @@ public class LinkedListDeque<Item> {
      */
     public Item get(int index) {
         Node p = sentinel;
-        while (index >= 0){
+        while (index >= 0) {
             if (p.next == sentinel) {
                 return null;
             }
@@ -165,7 +163,7 @@ public class LinkedListDeque<Item> {
      */
     public Item getRecursive(int index) {
         //Node p = getNode(sentinel);
-        if (index >= size){
+        if (index >= size) {
             return null;
         }
         return getNode(sentinel, index).item;
@@ -182,7 +180,7 @@ public class LinkedListDeque<Item> {
         if (index == 0) {
             return p.next;
         }
-        return getNode(p.next, index-1);
+        return getNode(p.next, index - 1);
     }
 
 }
