@@ -17,10 +17,10 @@ public class ArrayDeque<Item> {
      * of length 8, size, nextFirst, nextLast and usageRatio.
      */
     public ArrayDeque() {
-        items = (Item[]) new Object[8];
+        items = (Item[]) new Object[16]; //make length 8 AGAIN
         size = 0;
-        nextFirst = 2;
-        nextLast = 3;
+        nextFirst = 0;
+        nextLast = 14;
         usageRatio = 0;
     }
 
@@ -46,7 +46,27 @@ public class ArrayDeque<Item> {
      * usageRatio is less than .25. If this is true, it decreases the size of the stored array
      * as 3 times the size of the array.
      */
+    private void checkUsageRatio() {
+        usageRatio = size / items.length;
+        if ((items.length >= 16) && (usageRatio < 0.25)) {
+            Item[] a = (Item[]) new Object[size * 3];
 
+            if(nextLast > nextFirst){
+                System.arraycopy(items, nextFirst + 1, a, 0, (nextLast - nextFirst) - 1);
+            }
+            else {
+                if (nextFirst < items.length - 1) {
+                    System.arraycopy(items, nextFirst + 1, a, 0, items.length - (nextFirst + 1));
+                }
+                System.arraycopy(items, 0, a, items.length - (nextFirst + 1), nextLast);
+
+            }
+            items = a;
+            nextFirst = 0;
+            nextLast = size;
+        }
+    }
+/*
     private void checkUsageRatio() { //of half it in here. calls resize method
         int nextVal = nextFirst + 1;
         int lastVal = nextLast - 1;
@@ -76,6 +96,7 @@ public class ArrayDeque<Item> {
             }
         }
     }
+    */
 
 /*
     private void checkUsageRatio(){
@@ -169,7 +190,7 @@ public class ArrayDeque<Item> {
         if (nextLast == nextFirst) {
             resize();
         }
-        //checkUsageRatio();
+        checkUsageRatio();
         return first;
     }
 
@@ -192,7 +213,7 @@ public class ArrayDeque<Item> {
         if (nextLast == nextFirst) {
             resize();
         }
-        //checkUsageRatio();
+        checkUsageRatio();
         return last;
     }
 
