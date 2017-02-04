@@ -17,10 +17,10 @@ public class ArrayDeque<Item> {
      * of length 8, size, nextFirst, nextLast and usageRatio.
      */
     public ArrayDeque() {
-        items = (Item[]) new Object[8];
+        items = (Item[]) new Object[16];
         size = 0;
-        nextFirst = 2;
-        nextLast = 3;
+        nextFirst = 15;
+        nextLast = 0;
         usageRatio = 0;
     }
 
@@ -46,30 +46,54 @@ public class ArrayDeque<Item> {
      * usageRatio is less than .25. If this is true, it decreases the size of the stored array
      * as 3 times the size of the array.
      */
+
     private void checkUsageRatio() { //of half it in here. calls resize method
         int nextVal = nextFirst + 1;
+        int lastVal = nextLast - 1;
+        int dest = size - lastVal;
         usageRatio = size / items.length;
         if ((items.length >= 16) && (usageRatio < 0.25)) {
-            if (nextFirst + 1 >= size) {
+            if (nextVal >= items.length) {
                 nextVal = 0;
+            }
+            if (nextLast == 0){
+                lastVal = items.length - 1;
+                dest = 0;
             }
             if (((items.length - 1) - (nextFirst + 1)) < size) {
                 Item[] a = (Item[]) new Object[size * 3];
-                System.arraycopy(items, nextVal, a, 0, (items.length - 1) - nextVal);
-                System.arraycopy(items, 0, a, (items.length - 1) - (nextVal), nextLast - 1);
+                System.arraycopy(items, nextVal, a, 0, items.length - nextVal);
+                System.arraycopy(items, 0, a, dest, dest);
                 items = a;
-                nextFirst = items.length - 1;
-                nextLast = size + 1;
+                nextFirst = 0;
+                nextLast = size;
             } else {
                 Item[] a = (Item[]) new Object[size * 3];
                 System.arraycopy(items, nextVal, a, 0, size);
                 items = a;
-                nextFirst = items.length - 1;
-                nextLast = size + 1;
+                nextFirst = 0;
+                nextLast = size;
             }
         }
     }
 
+/*
+    private void checkUsageRatio(){
+        usageRatio = size / items.length;
+        if ((items.length >= 16) && (usageRatio < 0.25)) {
+            int nextVal = nextFirst + 1;
+            if (nextVal >= items.length){
+                nextVal = 0;
+            }
+            Item[] a = (Item[]) new Object[size*3];
+            System.arraycopy(items, nextVal, a, 0, size);
+            items = a;
+            nextFirst = 0;
+            nextLast = size;
+        }
+    }
+
+*/
     /**
      * Resize changes the size of the array as size times RFACTOR and rearranges
      * the list if nextFirst and nextLast point in the same position.
@@ -168,7 +192,7 @@ public class ArrayDeque<Item> {
         if (nextLast == nextFirst) {
             resize();
         }
-        //checkUsageRatio();
+        checkUsageRatio();
         return last;
     }
 
