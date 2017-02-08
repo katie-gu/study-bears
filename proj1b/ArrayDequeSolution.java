@@ -5,9 +5,12 @@ import java.util.LinkedList;
  * The aesthete will be especially alarmed by the fact that this
  * supposed ArrayDeque is actually using a LinkedList. SAD!
  */
-public class ArrayDequeSolution<Item> extends LinkedList<Item> {
+public class ArrayDequeSolution<Item> extends LinkedList<Item> implements Deque<Item>{
     public void printDeque() {
-        System.out.println("dummy");
+        for (int i = 0; i < size(); i++) {
+            System.out.print(get(i) + " ");
+        }
+        //System.out.println("dummy");
     }
 
     public Item getRecursive(int i) {
