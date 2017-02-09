@@ -1,4 +1,5 @@
 /**
+ * Interface with methods that can be overridden by subclasses.
  * Created by jhinukbarman on 2/7/17.
  */
 public interface Deque<Item> {
