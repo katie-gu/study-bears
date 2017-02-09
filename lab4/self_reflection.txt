@@ -4,23 +4,23 @@ ArrayDeque:
 
 Q: Give an example of at least one idea from the staff solution that would have made your solution better (if any).
 
-A: 
+A: I should have used more private helper functions to keep the code concise and easy to follow. This would have prevented the numerous if statements and edge cases for each method.
 
 Q: What's something you felt proud of in your code, if anything?
 
-A:
+A: I don’t feel proud of anything in particular.
 
 Q: What's something that was particularly inelegant in your code, if anything?
 
-A:
+A: My resize and checkUsageRatio method were almost identical and redundant. Instead, I could have used only the resize method and perhaps private helper functions to tweak the operations within the method.
 
 Q: What do you wish you would have known before writing ArrayDeque, if anything?
 
-A:
+A: I wish I could have known that SystemArrayCopy is not necessary and iteration can be more useful. I also should have clarified the meaning of nextFirst and lastFirst before starting the project.
 
 Q: If you wrote ArrayDeque again, what would you do differently, if anything?
 
-A:
+A: I would use more private helper methods, and use % to wrap around instead of using so many conditional statements.
 
 -----
 
@@ -28,23 +28,23 @@ LinkedListDeque:
 
 Q: Give an example of at least one idea from the staff solution that would have made your solution better (if any).
 
-A: 
+A: I should have used more variables to keep the code concise and for better readability instead of using sentinel.next.next.prev which is hard to understand and follow.
 
 Q: What's something you felt proud of in your code, if anything?
 
-A:
+A: I felt proud of short, concise logic in my methods.
 
 Q: What's something that was particularly inelegant in your code, if anything?
 
-A:
+A: In a addFirst and addLast specifically, there were more conditional statements than necessary.
 
 Q: What do you wish you would have known before writing ArrayDeque, if anything?
 
-A:
+A: Nothing.
 
 Q: If you wrote LinkedListDeque again, what would you do differently, if anything?
 
-A:
+A: I would use variables to store the nodes when keeping track of the pointers.
 
 -----
 
@@ -52,4 +52,4 @@ Meta:
 
 Q: This is the first time we've tried something like this. Did you like this design review process? Anything we should do differently next time?
 
-A: 
+A: I liked this design review process. 
