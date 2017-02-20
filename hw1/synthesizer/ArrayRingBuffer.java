@@ -55,6 +55,7 @@ public class ArrayRingBuffer<T> extends AbstractBoundedDequeue<T>{
         }
         T oldestItem = rb[first];
         first = (first + 1) % capacity;
+        fillCount -= 1;
         return oldestItem;
     }
 
@@ -67,4 +68,30 @@ public class ArrayRingBuffer<T> extends AbstractBoundedDequeue<T>{
     }
 
     // TODO: When you get to part 5, implement the needed code to support iteration.
+
+    private class QueueIterator implements Iterator<T> {
+        private int position;
+
+        public QueueIterator(){
+            position = 0;
+        }
+
+        public boolean hasNext(){
+            return (position != fillCount);
+        }
+
+        public T next(){
+            T returnItem = rb[position];
+            position += 1;
+            return returnItem;
+        }
+
+    }
+
+    public Iterator<T> iterator(){
+        return new QueueIterator();
+    }
+
+
+
 }
