@@ -41,20 +41,22 @@ public class Parser {
                                  INSERT_CLS  = Pattern.compile("(\\S+)\\s+values\\s+(.+?" +
                                                "\\s*(?:,\\s*.+?\\s*)*)");
 
+    /*
     public static void main(String[] args) {
-        /*
+
         if (args.length != 1) {
             System.err.println("Expected a single query argument");
             return;
         }
 
         eval(args[0]);
-        */
+
         Database da = new Database();
         Parser p = new Parser(da);
         p.loadTable("fans");
         System.out.print("hi");
     }
+    */
 
     public static void eval(String query) {
         Matcher m;
@@ -104,17 +106,20 @@ public class Parser {
                 " '%s' from the join of these tables: '%s', filtered by these conditions: '%s'\n", name, exprs, tables, conds);
     }
 
-    private static void loadTable(String name) {
+    public static void loadTable(String name) {
         // "examples/" + name + ".tbl"
        // d.h.put(name, );
         //stack overflow - cite
         Table t = new Table(name);
 
-        String pathName = "/Users/jhinukbarman/cs61b/aej/proj2/examples/fans.tbl";
+        String workingDir = System.getProperty("user.dir");
+        //String pathName = workingDir;
+
+        String pathName = "/Users/jhinukbarman/cs61b/aej/proj2/examples/";
 
         File f = new File(pathName);
 
-        /*
+
         File[] matchingFiles = f.listFiles(new FilenameFilter() {
             public boolean accept(File dir, String name) {
                 return name.startsWith(name) && name.endsWith(".tbl");
@@ -122,32 +127,25 @@ public class Parser {
         });
 
         for (File val : matchingFiles) {
-            //String valString = FileUtils.readFileToString(val);
-            //System.out.println(val);
-            //System.out.println("****");
-            //System.out.println(pathName + name + ".tbl");
-
             String myFile = pathName + name + ".tbl";
-            String fileString = val.toString();
-            if (fileString.equals(myFile)) {
-                String fileName = name + ".tbl";
-                parseTable(fileString, t);
-                //d.getMap().
-                t.printTable();
-                System.out.println(name + ".tbl");
+            String currFileName = val.toString();
+            if (currFileName.equals(myFile)) {
+                //String fileName = name + ".tbl";
+                parseTable(currFileName, t);
+                //t.printTable();
+                //System.out.println(name + ".tbl");
                 break;
-                //d.h.put(name, name + ".tbl");
             }
 
         }
-        */
+
         //System.out.printf("You are trying to load the table named %s\n", name);
         parseTable(f.toString(), t);
-        System.out.print("hello its me");
         d.addTable(t.tableName, t);
         System.out.println("now table contents....");
         d.getMap().get(t.tableName).printTable();
-        System.out.println(d.getMap().get(t.tableName));
+        //System.out.println(d.getMap().keySet());
+
     }
 
 
@@ -163,7 +161,7 @@ public class Parser {
             System.out.println("ERROR: IOE Exception. Cannot convert file contents to string");
         }
 
-        System.out.println(contents);
+       // System.out.println(contents);
 
         //File file = new File(fileName);
        // String lines[] = new String[10];
@@ -171,10 +169,10 @@ public class Parser {
 
         int tokenIndex = 0;
         String lineToken;
-        StringTokenizer st = new StringTokenizer(contents, "\r\n");
+        StringTokenizer st = new StringTokenizer(contents, "\n");
             while (st.hasMoreTokens()) {
                 lineToken = st.nextToken();
-                System.out.println(lineToken);
+                //System.out.println(lineToken);
                 parseLine(lineToken, tokenIndex, t);
                 tokenIndex += 1;
             }
@@ -189,7 +187,6 @@ public class Parser {
             if (index == 0){
                 token = stL.nextToken();
                 parseColumnHead(token, t);
-                //parse column heads
             } else {
                 token = stL.nextToken();
                 insertValue(token, t, colNum);
@@ -207,10 +204,11 @@ public class Parser {
         //    colNames.add(key);
        // }
 
-        String correctColName = t.getColNames().get(cNum); //x
+        String correctCol = t.getColNames().get(cNum); //x
         for (String key : t.getLinkedMap().keySet()) {
-            if (key.equals(correctColName)) {
+            if (key.equals(correctCol)) {
                 t.getLinkedMap().get(key).addVal(myToken);
+                break;
             }
         }
 
@@ -227,7 +225,7 @@ public class Parser {
     private static void createColumn(Table t, String cName, String cType){
         Column c = new Column(cName, cType);
         t.getLinkedMap().put(cName, c);
-        System.out.println(t.getColNames());
+        //System.out.println(t.getColNames());
         t.getColNames().add(cName);
     }
 
@@ -256,6 +254,7 @@ public class Parser {
     }
 
     private static void dropTable(String name) {
+        d.getMap().remove(name);
         System.out.printf("You are trying to drop the table named %s\n", name);
     }
 
@@ -270,9 +269,12 @@ public class Parser {
     }
 
     private static void printTable(String name) {
+        d.getMap().get(name).printTable();
         System.out.printf("You are trying to print the table named %s\n", name);
     }
 
+    //separates expr by calling the overloaded select method
+    //changed to public for jUnit test
     private static void select(String expr) {
         Matcher m = SELECT_CLS.matcher(expr);
         if (!m.matches()) {
@@ -284,7 +286,87 @@ public class Parser {
     }
 
     private static void select(String exprs, String tables, String conds) {
+        String splittedTables[] = tables.split(",\\s+");
+        String table1 = splittedTables[0];
+        String table2 = splittedTables[1];
+
+        if (exprs.equals("*")) {
+            Table t1 = d.getMap().get(table1);
+            Table t2 = d.getMap().get(table2);
+            Table t3 = new Table("t3");
+            if (ifCartesianJoin(t1, t2)) {
+                //doCartesianJoin(t1, t2);
+            } else {
+                //doInnerJoin(t1, t2);
+            }
+            /*
+            for (String t1Key : t1.getLinkedMap().keySet()) {
+                String t1Type = t2.getLinkedMap().get(t1Key).getMyType();
+                //String t2Type = t2.getLinkedMap().get(t1Key).getMyType();
+                if (t2.getLinkedMap().containsKey(t1Key) && (t1Type.equals(t2.getLinkedMap().get(t1Key).getMyType()))) {
+                    Column a1 = t1.getLinkedMap().get(t1Key);
+                    Column a2 = t2.getLinkedMap().get(t1Key);
+                    String colType = t1.getLinkedMap().get(t1Key).getMyType();
+                    Column t3sameCol = new Column(t1Key, colType); //is the key x-int? shouldn't it be just x?
+                    for (String s : getCommonValues(a1, a2)) {
+                        t3sameCol.addVal(s);
+
+                    }
+                    t3.getLinkedMap().put(t3sameCol.getName(), t3sameCol);
+
+                } else {
+                    t3.getLinkedMap().put(t1Key, t1.getLinkedMap().get(t1Key));
+                }
+                */
+
+                //int length = t3.
+            }
+            //ArrayList<>;
+           // for (String key : t1.getLinkedMap().keySet()) {
+              //  t1.getLinkedMap().get(key);
+           // }
+       // }
+
         System.out.printf("You are trying to select these expressions:" +
                 " '%s' from the join of these tables: '%s', filtered by these conditions: '%s'\n", exprs, tables, conds);
+    }
+
+    private static boolean ifCartesianJoin(Table t1, Table t2) {
+        for (String t1Key : t1.getLinkedMap().keySet()) {
+            String t1Type = t2.getLinkedMap().get(t1Key).getMyType();
+            if (t2.getLinkedMap().containsKey(t1Key) && (t1Type.equals(t2.getLinkedMap().get(t1Key).getMyType()))) {
+                return false;
+            }
+        }
+        return true;
+
+        //return (t2.getLinkedMap().containsKey(t1Key) && (t1Type.equals(t2.getLinkedMap().get(t1Key).getMyType())))
+
+
+    }
+
+    private static void doCartesianJoin() {
+
+    }
+
+
+    //do Cartesian join method
+    //do inner join method
+
+    public static boolean equalColVals (Column c1, Column c2, int index) {
+        if(!(c1.getMyType().equals(c2.getMyType()))) {
+            return false;
+        }
+        return (c1.getValues().get(index).equals(c2.getValues().get(index)));
+    }
+
+    public static ArrayList<String> getCommonValues(Column c1, Column c2) {
+        ArrayList<String> commonValues = new ArrayList<>();
+        for (int i = 0; i < c1.myValues.size(); i++) {
+            if (equalColVals(c1, c2, i)) {
+                commonValues.add(c1.getValues().get(i));
+            }
+        }
+        return commonValues;
     }
 }
