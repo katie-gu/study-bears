@@ -29,7 +29,8 @@ public class Database {
        // Parse.
         Parser p = new Parser(this);
         p.eval(query);
-        return "from dataBase class hi";
+        return "";
+        //return "from dataBase class hi";
     }
 
     public HashMap<String, Table> getMap(){

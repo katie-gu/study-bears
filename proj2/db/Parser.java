@@ -106,20 +106,20 @@ public class Parser {
                 " '%s' from the join of these tables: '%s', filtered by these conditions: '%s'\n", name, exprs, tables, conds);
     }
 
-    public static void loadTable(String name) {
+    public static String loadTable(String name) {
         // "examples/" + name + ".tbl"
        // d.h.put(name, );
         //stack overflow - cite
         Table t = new Table(name);
 
         String workingDir = System.getProperty("user.dir");
-        //String pathName = workingDir;
+        String pathName = workingDir + "/examples/";
 
-        String pathName = "/Users/jhinukbarman/cs61b/aej/proj2/examples/";
+       // String pathName = "/Users/jhinukbarman/cs61b/aej/proj2/examples/";
 
         File f = new File(pathName);
 
-
+        //matchingFiles
         File[] matchingFiles = f.listFiles(new FilenameFilter() {
             public boolean accept(File dir, String name) {
                 return name.startsWith(name) && name.endsWith(".tbl");
@@ -132,18 +132,21 @@ public class Parser {
             if (currFileName.equals(myFile)) {
                 //String fileName = name + ".tbl";
                 parseTable(currFileName, t);
-                //t.printTable();
+                t.printTable();
                 //System.out.println(name + ".tbl");
-                break;
+                return "";
             }
 
         }
 
+        throw new NullPointerException("ERROR: File not found");
+
+
         //System.out.printf("You are trying to load the table named %s\n", name);
-        parseTable(f.toString(), t);
-        d.addTable(t.tableName, t);
-        System.out.println("now table contents....");
-        d.getMap().get(t.tableName).printTable();
+        //parseTable(f.toString(), t);
+        //d.addTable(t.tableName, t);
+        //System.out.println("now table contents....");
+        //d.getMap().get(t.tableName).printTable();
         //System.out.println(d.getMap().keySet());
 
     }
