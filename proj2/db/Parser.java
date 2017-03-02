@@ -75,7 +75,7 @@ public class Parser {
         } else if ((m = SELECT_CMD.matcher(query)).matches()) {
              //return select(m.group(1));
         } else {
-            return "ERROR: incorrect command";
+            //return "ERROR: incorrect command";
             //System.err.printf("Malformed query: %s\n", query);
         }
         return "ERROR: incorrect command";
@@ -175,12 +175,14 @@ public class Parser {
         //InputStream i = new FileInputStream(fileName);
         String contents = "";
         //do if statements instead of try catch
+        /*
         try {
             //citation stack overflow
             contents = new String(Files.readAllBytes(Paths.get(fileName)));
         } catch (IOException ie){
             System.out.println("ERROR: IOE Exception. Cannot convert file contents to string");
         }
+        */
 
        // System.out.println(contents);
 
@@ -290,6 +292,7 @@ public class Parser {
     }
 
     private static String printTable(String name) {
+        //System.out.println(d.getMap().get(name));
         return d.getMap().get(name).printTable();
        // System.out.printf("You are trying to print the table named %s\n", name);
     }
