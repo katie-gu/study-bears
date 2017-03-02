@@ -26,7 +26,7 @@ public class Column{
         String curr = myValues.get(index);
 
         if (myType.equals("string")){
-            System.out.print("'" + curr + "'");
+            System.out.print(curr);
         } else if (myType.equals("float")){
             float f = Float.parseFloat(curr);
             System.out.println(BigDecimal.valueOf(f).setScale(3, RoundingMode.CEILING));
@@ -42,6 +42,15 @@ public class Column{
     public ArrayList<String> getValues() {
         return myValues;
     }
+
+    public String getName() {
+        return myName;
+    }
+
+    public String getMyType() {
+        return myType;
+    }
+
 
 
 }
