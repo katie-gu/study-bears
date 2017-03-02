@@ -139,7 +139,7 @@ public class Parser {
 
         }
 
-        throw new NullPointerException("ERROR: File not found");
+        return "ERROR: File not found";
 
 
         //System.out.printf("You are trying to load the table named %s\n", name);
