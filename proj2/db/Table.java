@@ -7,8 +7,8 @@ import java.util.*;
  */
 
 public class Table {
-    public String tableName;
     private ArrayList<String> colNames;
+    public String tableName;
     private LinkedHashMap<String, Column> colMap;
     // A Map of column name and its data type
 
@@ -37,36 +37,17 @@ public class Table {
     public Table(String name){
         tableName = name;
         colMap = new LinkedHashMap<String, Column>();
+        colNames = new ArrayList<String>();
     }
 
 
     public void addRow(List<String> literalList){
-
-    }
-    public void addRow(String rowString) {
-
-        StringTokenizer st = new StringTokenizer(rowString, ",");
-        int tokenIndex = 0;
-        String next;
-        String currentColumn;
-        //List<T> columnList;
-
-        while (st.hasMoreTokens()) {
-            next = st.nextToken();
-            currentColumn = colNames.get(tokenIndex);
-            if (colMap.containsKey(currentColumn)) {
-                //columnList = colMap.get(currentColumn);
-                //columnList.add((T) next);
-                //colMap.put(currentColumn, (ArrayList<T>) columnList);
-            }
-            else {
-               // columnList = new ArrayList<T>();
-               // columnList.add((T) next );
-               // colMap.put(colNames.get(tokenIndex), (ArrayList<T>) columnList);
-            }
-
-            tokenIndex++;
+        int count = 0;
+        for (String key : colMap.keySet()) {
+            colMap.get(key).addVal(literalList.get(count));
+            count += 1;
         }
+
     }
 
     public String getTableName(){
@@ -84,7 +65,9 @@ public class Table {
         }
         System.out.println();
 
-        for (int i = 0; i < colMap.size(); i++) {
+        String c = getColNames().get(0);
+        int length = colMap.get(c).getValues().size();
+        for (int i = 0; i < length; i++) {
             int countB = 0;
             for (String colValue: colMap.keySet()) {
                 colMap.get(colValue).printColVal(i);
@@ -104,4 +87,47 @@ public class Table {
     public ArrayList<String> getColNames(){
         return colNames;
     }
+
+    //TA tip: class is "noun"...join is NOT a noun so it shouldn't be a class
+    //use recursion? later: change parameter to take in any arraylist of tables
+    // (to join multiple tables)
+    public Table join(Table t2) {
+        Table t3 = new Table("t3");
+        if (ifCartesianJoin(t2)) {
+            doCartesianJoin(t2);
+        } else {
+            doInnerJoin(t2);
+        }
+
+
+        return t3;
+    }
+
+    private boolean ifCartesianJoin(Table t2) {
+        for (String t1Key : this.getLinkedMap().keySet()) {
+            //String t1Type = t2.getLinkedMap().get(t1Key).getMyType();
+            //dont need to compare column types
+            if (t2.getLinkedMap().containsKey(t1Key)) {
+                return false;
+            }
+        }
+        return true;
+
+        //return (t2.getLinkedMap().containsKey(t1Key) && (t1Type.equals(t2.getLinkedMap().get(t1Key).getMyType())))
+
+
+    }
+
+    private static void doCartesianJoin(Table t2) {
+
+    }
+
+    //merge method to merge rows?
+
+    private static void doInnerJoin(Table t2) {
+        //use recursive nature
+
+    }
+
+
 }
