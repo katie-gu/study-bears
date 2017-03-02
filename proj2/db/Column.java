@@ -24,10 +24,12 @@ public class Column{
 
     public String printColVal(int index) {
         String curr = myValues.get(index);
+        String temp = curr;
+
 
         if (myType.equals("string")){
-            curr = curr.replace("\'\'", "\'");
-            return curr;
+            temp = temp.replace("\'\'", "\'");
+            return temp;
         } else if (myType.equals("float")){
             float f = Float.parseFloat(curr);
             return (BigDecimal.valueOf(f).setScale(3, RoundingMode.CEILING).toString());

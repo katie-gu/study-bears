@@ -112,18 +112,19 @@ public class Parser {
 
     public static String loadTable(String name) {
         // "examples/" + name + ".tbl"
-       // d.h.put(name, );
+        // d.h.put(name, );
         //stack overflow - cite
         Table t = new Table(name);
 
         //Path root = Paths.get(System.getProperty("user.dir")).getFileSystem()
-               // .getRootDirectories().iterator().next();
-       // System.out.println(root);
+        // .getRootDirectories().iterator().next();
+        // System.out.println(root);
 
-        //String workingDir = System.getProperty("user.dir");
-        //String pathName = workingDir  + "/examples/";// <-- for testing purposes
+        // String workingDir = System.getProperty("user.dir");
+        // String pathName = workingDir  + "/examples/";// <-- for testing purposes
 
         //Autograder tests:
+
 
         File file = new File(name + ".tbl");
         if (file.exists()) {
@@ -134,17 +135,18 @@ public class Parser {
         }
 
         return "ERROR: Invalid file input";
+    }
 
 
         //our tests:
-        /*
-        String pathName = "/Users/jhinukbarman/cs61b/aej/proj2/examples/";
 
-        File f = new File(pathName);
+        //String pathName = "/Users/jhinukbarman/cs61b/aej/proj2/examples/";
+
+        //File f = new File(pathName);
 
         //matchingFiles
 
-
+/*
         File[] matchingFiles = f.listFiles(new FilenameFilter() {
             public boolean accept(File dir, String name) {
                 return name.startsWith(name) && name.endsWith(".tbl");
@@ -175,28 +177,14 @@ public class Parser {
         //System.out.println("now table contents....");
         //d.getMap().get(t.tableName).printTable();
         //System.out.println(d.getMap().keySet());
-        */
+
 
     }
 
 
 
-    private static String readFile(String fileName) throws IOException {
-        BufferedReader br = new BufferedReader(new FileReader(fileName));
-        try {
-            StringBuilder sb = new StringBuilder();
-            String line = br.readLine();
+*/
 
-            while (line != null) {
-                sb.append(line);
-                sb.append("\n");
-                line = br.readLine();
-            }
-            return sb.toString();
-        } finally {
-            br.close();
-        }
-    }
     private static void parseTable(String fileName, Table t) {
         //InputStream i = new FileInputStream(fileName);
         /*
@@ -209,8 +197,9 @@ public class Parser {
         } catch (IOException ie){
             System.out.println("ERROR: IOE Exception. Cannot convert file contents to string");
         }
+        */
 
-
+        String contents = "";
 
 
        // System.out.println(contents);
@@ -218,7 +207,8 @@ public class Parser {
         //File file = new File(fileName);
        // String lines[] = new String[10];
        // String currentColumn;
-        /*
+
+        try {
         InputStream in = new FileInputStream((fileName + ".tbl"));
         BufferedReader buffReader = new BufferedReader(new InputStreamReader(in));
         String line = buffReader.readLine();
@@ -227,12 +217,12 @@ public class Parser {
             sBuild.append(line).append("\n");
             line = buffReader.readLine();
         }
-        */
-        String contents = "";
-        try {
-            contents = readFile(fileName);
-        } catch (IOException ie) {
-            System.out.println("ERROR: IOE Exception. Cannot convert file contents to string");
+        contents = sBuild.toString();
+       // System.out.println("Contents : " + contents);
+        in.close();
+        }
+        catch (IOException ie) {
+            System.out.print("ERROR: invalid.");
         }
 
         int tokenIndex = 0;
@@ -337,33 +327,11 @@ public class Parser {
     }
 
     public static String printTable(String name) {
-        //System.out.println(d.getMap().get(name));
-        //cite source stackoverflow
-
-
-
-        /*
-        try {
-            File file = new File(name + ".tbl");
-            FileReader fileReader = new FileReader(file);
-            StringBuffer stringBuffer = new StringBuffer();
-            int numCharsRead;
-            char[] charArray = new char[1024];
-            while ((numCharsRead = fileReader.read(charArray)) > 0) {
-                stringBuffer.append(charArray, 0, numCharsRead);
-            }
-            fileReader.close();
-            String tablePrint = stringBuffer.toString();
-            return tablePrint;
-        } catch (IOException ie) {
-            ie.printStackTrace();
-            return "ERROR: IOE";
+        if (d.getMap().get(name) == null) {
+            return "ERROR: Table does not exist.";
+        } else {
+            return d.getMap().get(name).printTable();
         }
-        */
-
-
-        //System.out.println(d.getMap().keySet());
-        return d.getMap().get(name).printTable();
        // System.out.printf("You are trying to print the table named %s\n", name);
     }
 
