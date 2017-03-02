@@ -113,7 +113,7 @@ public class Parser {
         Table t = new Table(name);
 
         String workingDir = System.getProperty("user.dir");
-        String pathName = workingDir + "/examples/";
+        String pathName = workingDir;
 
        // String pathName = "/Users/jhinukbarman/cs61b/aej/proj2/examples/";
 
