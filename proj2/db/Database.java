@@ -1,5 +1,6 @@
 package db;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 public class Database {
@@ -25,7 +26,7 @@ public class Database {
         }
     }
 
-    public String transact(String query) {
+    public String transact(String query) throws IOException{
        // Parse.
         Parser p = new Parser(this);
         return p.eval(query);

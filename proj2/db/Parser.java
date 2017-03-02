@@ -7,6 +7,7 @@ import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.io.*;
+import java.io.FileReader;
 import java.nio.file.*;
 //import java.nio.charset.*;
 
@@ -58,7 +59,7 @@ public class Parser {
     }
     */
 
-    public static String eval(String query) {
+    public static String eval(String query) throws IOException{
         Matcher m;
         if ((m = CREATE_CMD.matcher(query)).matches()) {
              //return createTable(m.group(1));
@@ -109,7 +110,7 @@ public class Parser {
                 " '%s' from the join of these tables: '%s', filtered by these conditions: '%s'\n", name, exprs, tables, conds);
     }
 
-    public static String loadTable(String name) {
+    public static String loadTable(String name) throws IOException{
         // "examples/" + name + ".tbl"
        // d.h.put(name, );
         //stack overflow - cite
@@ -125,6 +126,8 @@ public class Parser {
         File file = new File(name + ".tbl");
         if (file.exists()) {
             parseTable(name, t);
+            d.addTable(name, t);
+            //System.out.println(d.getMap().keySet());
             return "";
         }
 
@@ -171,7 +174,7 @@ public class Parser {
 
 
 
-    private static void parseTable(String fileName, Table t){
+    private static void parseTable(String fileName, Table t) throws IOException {
         //InputStream i = new FileInputStream(fileName);
         String contents = "";
         //do if statements instead of try catch
@@ -189,6 +192,15 @@ public class Parser {
         //File file = new File(fileName);
        // String lines[] = new String[10];
        // String currentColumn;
+
+        InputStream in = new FileInputStream((fileName + ".tbl"));
+        BufferedReader buffReader = new BufferedReader(new InputStreamReader(in));
+        String line = buffReader.readLine();
+        StringBuilder sBuild = new StringBuilder();
+        while (line != null) {
+            sBuild.append(line).append("\n");
+            line = buffReader.readLine();
+        }
 
         int tokenIndex = 0;
         String lineToken;
@@ -291,8 +303,33 @@ public class Parser {
         System.out.printf("You are trying to insert the row \"%s\" into the table %s\n", m.group(2), m.group(1));
     }
 
-    private static String printTable(String name) {
+    public static String printTable(String name) {
         //System.out.println(d.getMap().get(name));
+        //cite source stackoverflow
+
+
+
+        /*
+        try {
+            File file = new File(name + ".tbl");
+            FileReader fileReader = new FileReader(file);
+            StringBuffer stringBuffer = new StringBuffer();
+            int numCharsRead;
+            char[] charArray = new char[1024];
+            while ((numCharsRead = fileReader.read(charArray)) > 0) {
+                stringBuffer.append(charArray, 0, numCharsRead);
+            }
+            fileReader.close();
+            String tablePrint = stringBuffer.toString();
+            return tablePrint;
+        } catch (IOException ie) {
+            ie.printStackTrace();
+            return "ERROR: IOE";
+        }
+        */
+
+
+        //System.out.println(d.getMap().keySet());
         return d.getMap().get(name).printTable();
        // System.out.printf("You are trying to print the table named %s\n", name);
     }
