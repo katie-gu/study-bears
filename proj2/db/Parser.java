@@ -275,7 +275,7 @@ public class Parser {
 
     //separates expr by calling the overloaded select method
     //changed to public for jUnit test
-    private static void select(String expr) {
+    public static void select(String expr) {
         Matcher m = SELECT_CLS.matcher(expr);
         if (!m.matches()) {
             System.err.printf("Malformed select: %s\n", expr);
@@ -289,16 +289,21 @@ public class Parser {
         String splittedTables[] = tables.split(",\\s+");
         String table1 = splittedTables[0];
         String table2 = splittedTables[1];
+        Table t1 = d.getMap().get(table1);
+        Table t2 = d.getMap().get(table2);
+        Table joinedTable = new Table("t3");
 
         if (exprs.equals("*")) {
-            Table t1 = d.getMap().get(table1);
-            Table t2 = d.getMap().get(table2);
+            joinedTable = t1.join(t2);
+            /*
+
             Table t3 = new Table("t3");
             if (ifCartesianJoin(t1, t2)) {
-                //doCartesianJoin(t1, t2);
+                doCartesianJoin(t1, t2);
             } else {
-                //doInnerJoin(t1, t2);
+                doInnerJoin(t1, t2);
             }
+            */
             /*
             for (String t1Key : t1.getLinkedMap().keySet()) {
                 String t1Type = t2.getLinkedMap().get(t1Key).getMyType();
@@ -329,25 +334,11 @@ public class Parser {
 
         System.out.printf("You are trying to select these expressions:" +
                 " '%s' from the join of these tables: '%s', filtered by these conditions: '%s'\n", exprs, tables, conds);
+        joinedTable.printTable();
     }
 
-    private static boolean ifCartesianJoin(Table t1, Table t2) {
-        for (String t1Key : t1.getLinkedMap().keySet()) {
-            String t1Type = t2.getLinkedMap().get(t1Key).getMyType();
-            if (t2.getLinkedMap().containsKey(t1Key) && (t1Type.equals(t2.getLinkedMap().get(t1Key).getMyType()))) {
-                return false;
-            }
-        }
-        return true;
-
-        //return (t2.getLinkedMap().containsKey(t1Key) && (t1Type.equals(t2.getLinkedMap().get(t1Key).getMyType())))
 
 
-    }
-
-    private static void doCartesianJoin() {
-
-    }
 
 
     //do Cartesian join method
