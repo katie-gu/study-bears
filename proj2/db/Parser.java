@@ -116,7 +116,7 @@ public class Parser {
         Table t = new Table(name);
 
         String workingDir = System.getProperty("user.dir");
-        String pathName = workingDir;
+        String pathName = workingDir; // + "/examples/" <-- for testing purposes
 
        // String pathName = "/Users/jhinukbarman/cs61b/aej/proj2/examples/";
 
@@ -135,7 +135,7 @@ public class Parser {
             if (currFileName.equals(myFile)) {
                 //String fileName = name + ".tbl";
                 parseTable(currFileName, t);
-                t.printTable();
+                //return t.printTable();
                 //System.out.println(name + ".tbl");
                 return "";
             }
