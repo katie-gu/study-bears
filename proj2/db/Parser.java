@@ -59,7 +59,7 @@ public class Parser {
     }
     */
 
-    public static String eval(String query) throws IOException{
+    public static String eval(String query) {
         Matcher m;
         if ((m = CREATE_CMD.matcher(query)).matches()) {
              //return createTable(m.group(1));
@@ -110,7 +110,7 @@ public class Parser {
                 " '%s' from the join of these tables: '%s', filtered by these conditions: '%s'\n", name, exprs, tables, conds);
     }
 
-    public static String loadTable(String name) throws IOException{
+    public static String loadTable(String name) {
         // "examples/" + name + ".tbl"
        // d.h.put(name, );
         //stack overflow - cite
@@ -174,7 +174,7 @@ public class Parser {
 
 
 
-    private static void parseTable(String fileName, Table t) throws IOException {
+    private static void parseTable(String fileName, Table t) {
         //InputStream i = new FileInputStream(fileName);
         String contents = "";
         //do if statements instead of try catch
@@ -192,7 +192,7 @@ public class Parser {
         //File file = new File(fileName);
        // String lines[] = new String[10];
        // String currentColumn;
-
+        /*
         InputStream in = new FileInputStream((fileName + ".tbl"));
         BufferedReader buffReader = new BufferedReader(new InputStreamReader(in));
         String line = buffReader.readLine();
@@ -201,6 +201,7 @@ public class Parser {
             sBuild.append(line).append("\n");
             line = buffReader.readLine();
         }
+        */
 
         int tokenIndex = 0;
         String lineToken;

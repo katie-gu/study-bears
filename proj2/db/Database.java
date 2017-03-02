@@ -26,7 +26,7 @@ public class Database {
         }
     }
 
-    public String transact(String query) throws IOException{
+    public String transact(String query) {
        // Parse.
         Parser p = new Parser(this);
         return p.eval(query);
