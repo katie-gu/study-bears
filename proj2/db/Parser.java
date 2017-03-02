@@ -115,14 +115,28 @@ public class Parser {
         //stack overflow - cite
         Table t = new Table(name);
 
-        String workingDir = System.getProperty("user.dir");
-        String pathName = workingDir; // + "/examples/" <-- for testing purposes
+        //Path root = Paths.get(System.getProperty("user.dir")).getFileSystem()
+               // .getRootDirectories().iterator().next();
+       // System.out.println(root);
+
+        //String workingDir = System.getProperty("user.dir");
+        //String pathName = workingDir  + "/examples/";// <-- for testing purposes
+
+        File file = new File(name + ".tbl");
+        if (file.exists()) {
+            parseTable(name, t);
+            return "";
+        }
+
+        return "ERROR: Invalid file input";
 
        // String pathName = "/Users/jhinukbarman/cs61b/aej/proj2/examples/";
 
-        File f = new File(pathName);
+        //File f = new File(pathName);
 
         //matchingFiles
+
+        /*
         File[] matchingFiles = f.listFiles(new FilenameFilter() {
             public boolean accept(File dir, String name) {
                 return name.startsWith(name) && name.endsWith(".tbl");
@@ -143,6 +157,7 @@ public class Parser {
         }
 
         return "ERROR: File not found";
+        */
 
 
         //System.out.printf("You are trying to load the table named %s\n", name);
