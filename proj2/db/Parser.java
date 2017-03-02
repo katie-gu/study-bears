@@ -123,6 +123,8 @@ public class Parser {
         //String workingDir = System.getProperty("user.dir");
         //String pathName = workingDir  + "/examples/";// <-- for testing purposes
 
+        //Autograder tests:
+
         File file = new File(name + ".tbl");
         if (file.exists()) {
             parseTable(name, t);
@@ -133,25 +135,30 @@ public class Parser {
 
         return "ERROR: Invalid file input";
 
-       // String pathName = "/Users/jhinukbarman/cs61b/aej/proj2/examples/";
 
-        //File f = new File(pathName);
+        //our tests:
+        /*
+        String pathName = "/Users/jhinukbarman/cs61b/aej/proj2/examples/";
+
+        File f = new File(pathName);
 
         //matchingFiles
 
-        /*
+
         File[] matchingFiles = f.listFiles(new FilenameFilter() {
             public boolean accept(File dir, String name) {
                 return name.startsWith(name) && name.endsWith(".tbl");
             }
         });
 
+        //System.out.println(d.getMap().keySet());
         for (File val : matchingFiles) {
             String myFile = pathName + name + ".tbl";
             String currFileName = val.toString();
             if (currFileName.equals(myFile)) {
                 //String fileName = name + ".tbl";
                 parseTable(currFileName, t);
+                d.addTable(t.tableName, t);
                 //return t.printTable();
                 //System.out.println(name + ".tbl");
                 return "";
@@ -160,32 +167,51 @@ public class Parser {
         }
 
         return "ERROR: File not found";
-        */
+
 
 
         //System.out.printf("You are trying to load the table named %s\n", name);
         //parseTable(f.toString(), t);
-        //d.addTable(t.tableName, t);
         //System.out.println("now table contents....");
         //d.getMap().get(t.tableName).printTable();
         //System.out.println(d.getMap().keySet());
+        */
 
     }
 
 
 
+    private static String readFile(String fileName) throws IOException {
+        BufferedReader br = new BufferedReader(new FileReader(fileName));
+        try {
+            StringBuilder sb = new StringBuilder();
+            String line = br.readLine();
+
+            while (line != null) {
+                sb.append(line);
+                sb.append("\n");
+                line = br.readLine();
+            }
+            return sb.toString();
+        } finally {
+            br.close();
+        }
+    }
     private static void parseTable(String fileName, Table t) {
         //InputStream i = new FileInputStream(fileName);
+        /*
         String contents = "";
         //do if statements instead of try catch
-        /*
+
         try {
             //citation stack overflow
             contents = new String(Files.readAllBytes(Paths.get(fileName)));
         } catch (IOException ie){
             System.out.println("ERROR: IOE Exception. Cannot convert file contents to string");
         }
-        */
+
+
+
 
        // System.out.println(contents);
 
@@ -202,6 +228,12 @@ public class Parser {
             line = buffReader.readLine();
         }
         */
+        String contents = "";
+        try {
+            contents = readFile(fileName);
+        } catch (IOException ie) {
+            System.out.println("ERROR: IOE Exception. Cannot convert file contents to string");
+        }
 
         int tokenIndex = 0;
         String lineToken;

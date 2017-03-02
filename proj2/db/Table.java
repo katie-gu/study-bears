@@ -57,6 +57,7 @@ public class Table {
     public String printTable(){
         int countA = 0;
         String table = "";
+        //System.out.println(colMap.keySet());
         for (String colName : colMap.keySet()) {
             table += colMap.get(colName).printColHead();
             if (countA < colMap.size() - 1) {
