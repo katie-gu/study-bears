@@ -54,30 +54,33 @@ public class Table {
         return tableName;
     }
 
-    public void printTable(){
+    public String printTable(){
         int countA = 0;
+        String table = "";
         for (String colName : colMap.keySet()) {
-            colMap.get(colName).printColHead();
+            table += colMap.get(colName).printColHead();
             if (countA < colMap.size() - 1) {
-                System.out.print(",");
+                table += ",";
                 countA += 1;
             }
         }
-        System.out.println();
+        //System.out.println();
+        table += "\n";
 
         String c = getColNames().get(0);
         int length = colMap.get(c).getValues().size();
         for (int i = 0; i < length; i++) {
             int countB = 0;
             for (String colValue: colMap.keySet()) {
-                colMap.get(colValue).printColVal(i);
+                table += colMap.get(colValue).printColVal(i);
                 if (countB < colMap.size() - 1) {
-                    System.out.print(",");
+                    table += ",";
                     countB += 1;
                 }
             }
-            System.out.println();
+            table += "\n";
         }
+        return table;
     }
 
     public LinkedHashMap<String, Column> getLinkedMap(){

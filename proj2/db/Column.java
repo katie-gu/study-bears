@@ -22,21 +22,23 @@ public class Column{
         myValues.add(val);
     }
 
-    public void printColVal(int index) {
+    public String printColVal(int index) {
         String curr = myValues.get(index);
 
         if (myType.equals("string")){
-            System.out.print(curr);
+            curr = curr.replace("\'\'", "\'");
+            return curr;
         } else if (myType.equals("float")){
             float f = Float.parseFloat(curr);
-            System.out.println(BigDecimal.valueOf(f).setScale(3, RoundingMode.CEILING));
+            return (BigDecimal.valueOf(f).setScale(3, RoundingMode.CEILING).toString());
+            //System.out.println(BigDecimal.valueOf(f).setScale(3, RoundingMode.CEILING));
         } else {
-            System.out.print(curr);
+            return curr;
         }
     }
 
-    public void printColHead() {
-        System.out.print(myName + " " + myType);
+    public String printColHead() {
+        return myName + " " + myType;
     }
 
     public ArrayList<String> getValues() {

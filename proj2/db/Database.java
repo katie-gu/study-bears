@@ -28,8 +28,8 @@ public class Database {
     public String transact(String query) {
        // Parse.
         Parser p = new Parser(this);
-        p.eval(query);
-        return "";
+        return p.eval(query);
+        //return "should return empty string";
         //return "from dataBase class hi";
     }
 

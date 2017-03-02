@@ -58,25 +58,28 @@ public class Parser {
     }
     */
 
-    public static void eval(String query) {
+    public static String eval(String query) {
         Matcher m;
         if ((m = CREATE_CMD.matcher(query)).matches()) {
-             createTable(m.group(1));
+             //return createTable(m.group(1));
         } else if ((m = LOAD_CMD.matcher(query)).matches()) {
-             loadTable(m.group(1));
+             return loadTable(m.group(1));
         } else if ((m = STORE_CMD.matcher(query)).matches()) {
-             storeTable(m.group(1));
+             //return storeTable(m.group(1));
         } else if ((m = DROP_CMD.matcher(query)).matches()) {
-             dropTable(m.group(1));
+             //return dropTable(m.group(1));
         } else if ((m = INSERT_CMD.matcher(query)).matches()) {
-             insertRow(m.group(1));
+             //return insertRow(m.group(1));
         } else if ((m = PRINT_CMD.matcher(query)).matches()) {
-             printTable(m.group(1));
+             return printTable(m.group(1));
         } else if ((m = SELECT_CMD.matcher(query)).matches()) {
-             select(m.group(1));
+             //return select(m.group(1));
         } else {
-            System.err.printf("Malformed query: %s\n", query);
+            return "ERROR: incorrect command";
+            //System.err.printf("Malformed query: %s\n", query);
         }
+        return "ERROR: incorrect command";
+
     }
 
     private static void createTable(String expr) {
@@ -271,9 +274,9 @@ public class Parser {
         System.out.printf("You are trying to insert the row \"%s\" into the table %s\n", m.group(2), m.group(1));
     }
 
-    private static void printTable(String name) {
-        d.getMap().get(name).printTable();
-        System.out.printf("You are trying to print the table named %s\n", name);
+    private static String printTable(String name) {
+        return d.getMap().get(name).printTable();
+       // System.out.printf("You are trying to print the table named %s\n", name);
     }
 
     //separates expr by calling the overloaded select method
