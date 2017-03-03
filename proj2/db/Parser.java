@@ -74,7 +74,7 @@ public class Parser {
         } else if ((m = PRINT_CMD.matcher(query)).matches()) {
              return printTable(m.group(1));
         } else if ((m = SELECT_CMD.matcher(query)).matches()) {
-             //return select(m.group(1));
+             return select(m.group(1));
         } else {
             //return "ERROR: incorrect command";
             //System.err.printf("Malformed query: %s\n", query);
@@ -337,66 +337,36 @@ public class Parser {
 
     //separates expr by calling the overloaded select method
     //changed to public for jUnit test
-    public static void select(String expr) {
+    public static String select(String expr) {
         Matcher m = SELECT_CLS.matcher(expr);
         if (!m.matches()) {
             System.err.printf("Malformed select: %s\n", expr);
-            return;
+            return "ERROR: malformed select";
         }
 
-        select(m.group(1), m.group(2), m.group(3));
+        return select(m.group(1), m.group(2), m.group(3));
     }
 
-    private static void select(String exprs, String tables, String conds) {
+    private static String select(String exprs, String tables, String conds) {
         String splittedTables[] = tables.split(",\\s+");
         String table1 = splittedTables[0];
         String table2 = splittedTables[1];
         Table t1 = d.getMap().get(table1);
         Table t2 = d.getMap().get(table2);
         Table joinedTable = new Table("t3");
-
-        if (exprs.equals("*")) {
-            joinedTable = t1.join(t2);
-            /*
-
-            Table t3 = new Table("t3");
-            if (ifCartesianJoin(t1, t2)) {
-                doCartesianJoin(t1, t2);
-            } else {
-                doInnerJoin(t1, t2);
+        if ((d.getMap().get(table1) == null) || (d.getMap().get(table2) == null)) {
+            return "ERROR: Cannot select from nonexistent tables.";
+        } else {
+            if (exprs.equals("*")) {
+                joinedTable = t1.join(t2, joinedTable);
             }
-            */
-            /*
-            for (String t1Key : t1.getLinkedMap().keySet()) {
-                String t1Type = t2.getLinkedMap().get(t1Key).getMyType();
-                //String t2Type = t2.getLinkedMap().get(t1Key).getMyType();
-                if (t2.getLinkedMap().containsKey(t1Key) && (t1Type.equals(t2.getLinkedMap().get(t1Key).getMyType()))) {
-                    Column a1 = t1.getLinkedMap().get(t1Key);
-                    Column a2 = t2.getLinkedMap().get(t1Key);
-                    String colType = t1.getLinkedMap().get(t1Key).getMyType();
-                    Column t3sameCol = new Column(t1Key, colType); //is the key x-int? shouldn't it be just x?
-                    for (String s : getCommonValues(a1, a2)) {
-                        t3sameCol.addVal(s);
+            //System.out.println("hi");
+            //System.out.println(joinedTable.getLinkedMap().keySet());
+            return joinedTable.printTable();
 
-                    }
-                    t3.getLinkedMap().put(t3sameCol.getName(), t3sameCol);
-
-                } else {
-                    t3.getLinkedMap().put(t1Key, t1.getLinkedMap().get(t1Key));
-                }
-                */
-
-                //int length = t3.
-            }
-            //ArrayList<>;
-           // for (String key : t1.getLinkedMap().keySet()) {
-              //  t1.getLinkedMap().get(key);
-           // }
-       // }
-
-        System.out.printf("You are trying to select these expressions:" +
-                " '%s' from the join of these tables: '%s', filtered by these conditions: '%s'\n", exprs, tables, conds);
-        joinedTable.printTable();
+        }
+       // System.out.printf("You are trying to select these expressions:" +
+         //       " '%s' from the join of these tables: '%s', filtered by these conditions: '%s'\n", exprs, tables, conds);
     }
 
 
