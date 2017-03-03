@@ -349,25 +349,37 @@ public class Parser {
 
     private static String select(String exprs, String tables, String conds) {
         String splittedTables[] = tables.split(",\\s+");
-        String table1 = splittedTables[0];
-        String table2 = splittedTables[1];
-        Table t1 = d.getMap().get(table1);
-        Table t2 = d.getMap().get(table2);
-        Table joinedTable = new Table("t3");
-        if ((d.getMap().get(table1) == null) || (d.getMap().get(table2) == null)) {
-            return "ERROR: Cannot select from nonexistent tables.";
-        } else {
-            if (exprs.equals("*")) {
-                joinedTable = t1.join(t2, joinedTable);
+        if (splittedTables.length > 1) {
+            String table1 = splittedTables[0];
+            String table2 = splittedTables[1];
+            Table t1 = d.getMap().get(table1);
+            Table t2 = d.getMap().get(table2);
+            Table joinedTable = new Table("t3");
+            if ((d.getMap().get(table1) == null) || (d.getMap().get(table2) == null)) {
+                return "ERROR: Cannot select from nonexistent tables.";
+            } else {
+                if (exprs.equals("*")) {
+                    joinedTable = t1.join(t2, joinedTable);
+                }
             }
-            //System.out.println("hi");
-            //System.out.println(joinedTable.getLinkedMap().keySet());
             return joinedTable.printTable();
 
         }
+        else {
+              String table = splittedTables[0];
+              Table tOrig = d.getMap().get(table);
+              Table joinedTable = new Table("t3");
+              joinedTable = tOrig;
+              return joinedTable.printTable();
+
+        }
+            //System.out.println("hi");
+            //System.out.println(joinedTable.getLinkedMap().keySet());
+
+    }
        // System.out.printf("You are trying to select these expressions:" +
          //       " '%s' from the join of these tables: '%s', filtered by these conditions: '%s'\n", exprs, tables, conds);
-    }
+
 
 
 
