@@ -11,9 +11,9 @@ public class Tests {
 
     public static void testLoadTable() throws IOException{
         p.loadTable("examples/t1");
-        p.loadTable("examples/fans");
+        p.loadTable("examples/t2");
        // p.printTable("t1");
-        p.eval("select * from examples/t1, examples/fans");
+        p.eval("select * from examples/t1, examples/t2");
 
         //System.out.print("hi");
     }

@@ -144,30 +144,102 @@ public class Table {
 
 
 
-        }
-        /*
-            for (String t1Key : t1.getLinkedMap().keySet()) {
-                String t1Type = t2.getLinkedMap().get(t1Key).getMyType();
-                //String t2Type = t2.getLinkedMap().get(t1Key).getMyType();
-                if (t2.getLinkedMap().containsKey(t1Key) && (t1Type.equals(t2.getLinkedMap().get(t1Key).getMyType()))) {
-                    Column a1 = t1.getLinkedMap().get(t1Key);
-                    Column a2 = t2.getLinkedMap().get(t1Key);
-                    String colType = t1.getLinkedMap().get(t1Key).getMyType();
-                    Column t3sameCol = new Column(t1Key, colType); //is the key x-int? shouldn't it be just x?
-                    for (String s : getCommonValues(a1, a2)) {
-                        t3sameCol.addVal(s);
+        } else {
 
+        LinkedHashMap<Integer, ArrayList<String>> pairLinkedMap = new LinkedHashMap<>();
+        int mapIndex = 0;
+        int t1ColNum = this.getLinkedMap().keySet().size();
+        int t2ColNum = table2.getLinkedMap().keySet().size();
+        for (Column c1: this.getLinkedMap().values()) {
+            for (Column c2 : table2.getLinkedMap().values()) {
+                if (c1.getName().equals(c2.getName())) {
+                    //create an arraylist row
+                    roughTable.getColNames().add(c1.getName());
+                    String newColName = c1.getName();
+                    String newColType = c1.getMyType();
+                    Column newCol = new Column(newColName, newColType);
+                    roughTable.getLinkedMap().put(newColName, newCol);
+                    for (int i = 0; i < c1.getValues().size(); i ++) {
+                        for(int j = 0 ; j < c2.getValues().size(); j ++) {
+                            if (c1.getValues().get(i).equals(c2.getValues().get(j))){
+
+                                ArrayList<String> row = makeInnerRow(c1.getName(), this, table2, i, j);
+
+                                pairLinkedMap.put(mapIndex, row);
+                                mapIndex += 1;
+                            }
+                        }
                     }
-                    t3.getLinkedMap().put(t3sameCol.getName(), t3sameCol);
+                    t1ColNum -= 1;
+                    t2ColNum -= 1;
 
-                } else {
-                    t3.getLinkedMap().put(t1Key, t1.getLinkedMap().get(t1Key));
+
                 }
-                */
-        //let's hope it returns the new table changed/joined
+                else if (t1ColNum >= 0) {
+                    roughTable.getColNames().add(c1.getName());
+                    String newColName = c1.getName();
+                    String newColType = c1.getMyType();
+                    Column newCol = new Column(newColName, newColType);
+                    roughTable.getLinkedMap().put(newColName, newCol);
+                    //System.out.println(t1ColNum);
+                    t1ColNum -= 1;
+
+                }
+                else if (t2ColNum >= 0) {
+                    roughTable.getColNames().add(c2.getName());
+                    String newColName = c2.getName();
+                    String newColType = c2.getMyType();
+                    Column newCol = new Column(newColName, newColType);
+                    roughTable.getLinkedMap().put(newColName, newCol);
+                    //System.out.println(t2ColNum);
+                    t2ColNum -= 1;
+                }
+
+
+
+            }
+        }
+        for(int indexKey : pairLinkedMap.keySet()) {
+            roughTable.addRow(pairLinkedMap.get(indexKey));
+
+        }
+    }
         return roughTable;
 
     }
+
+    public static ArrayList<String> makeInnerRow(String startColName, Table t1, Table t2, int t1Index, int t2Index) {
+        ArrayList<String> newEditedRow = new ArrayList<>();
+
+        for (Column c1 : t1.getLinkedMap().values()) {
+            String item = c1.getValues().get(t1Index);
+            newEditedRow.add(item);
+
+
+        }
+
+        for (Column c2 : t2.getLinkedMap().values()) {
+            if (!(c2.getName().equals(startColName))) {
+                String item = c2.getValues().get(t2Index);
+                newEditedRow.add(item);
+            }
+        }
+        return  newEditedRow;
+
+    }
+
+    public ArrayList<Integer> checkEqualIndices(Column c1, Column c2) {
+        ArrayList<Integer> indicesCol = new ArrayList<>();
+        for (int i = 0; i < c1.getValues().size(); i++) {
+            for (int j = 0; j < c2.getValues().size(); j++) {
+                if (c1.getValues().get(i).equals(c2.getValues().get(i))) {
+                    indicesCol.add(i);
+                }
+            }
+        }
+        return indicesCol;
+    }
+
 
 
 
