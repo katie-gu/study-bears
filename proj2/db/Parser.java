@@ -368,13 +368,13 @@ public class Parser {
         }
         else {
               String table = splittedTables[0];
-              if (table == null) {
-                  return "ERROR: Cannot select from nonexistent tables.";
-              }
-              Table tOrig = d.getMap().get(table);
+              //if (table == null) {
+            return "ERROR: Cannot select from nonexistent tables.";
+              //}
+              //Table tOrig = d.getMap().get(table);
               //Table joinedTable = new Table("t3");
               //joinedTable = tOrig;
-              return tOrig.printTable();
+              //return tOrig.printTable();
 
         }
             //System.out.println("hi");
