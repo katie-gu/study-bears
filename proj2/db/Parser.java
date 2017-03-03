@@ -68,7 +68,7 @@ public class Parser {
         } else if ((m = STORE_CMD.matcher(query)).matches()) {
              //return storeTable(m.group(1));
         } else if ((m = DROP_CMD.matcher(query)).matches()) {
-             //return dropTable(m.group(1));
+             return dropTable(m.group(1));
         } else if ((m = INSERT_CMD.matcher(query)).matches()) {
              //return insertRow(m.group(1));
         } else if ((m = PRINT_CMD.matcher(query)).matches()) {
@@ -311,9 +311,16 @@ public class Parser {
         System.out.printf("You are trying to store the table named %s\n", name);
     }
 
-    private static void dropTable(String name) {
-        d.getMap().remove(name);
-        System.out.printf("You are trying to drop the table named %s\n", name);
+    private static String dropTable(String name) {
+        if(d.getMap() == null) {
+            return "ERROR: No tables exist.";
+        } else if (!(d.getMap().keySet().contains(name))) {
+            return "ERROR: table does not exist in database.";
+        } else {
+            d.getMap().remove(name);
+            return "";
+        }
+        //System.out.printf("You are trying to drop the table named %s\n", name);
     }
 
     private static void insertRow(String expr) {
@@ -351,9 +358,9 @@ public class Parser {
         String splittedTables[] = tables.split(",");
         if (splittedTables.length > 1) {
             String table1 = splittedTables[0];
-            System.out.println("Table 1: " + table1);
+            //System.out.println("Table 1: " + table1);
             String table2 = splittedTables[1];
-            System.out.println("Table 2: " + table2);
+            //System.out.println("Table 2: " + table2);
 
             Table t1 = d.getMap().get(table1);
             Table t2 = d.getMap().get(table2);
