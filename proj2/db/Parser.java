@@ -352,10 +352,11 @@ public class Parser {
         if (splittedTables.length > 1) {
             String table1 = splittedTables[0];
             String table2 = splittedTables[1];
+
             Table t1 = d.getMap().get(table1);
             Table t2 = d.getMap().get(table2);
             Table joinedTable = new Table("t3");
-            if ((d.getMap().get(table1) == null) || (d.getMap().get(table2) == null)) {
+            if ((t1 == null) || (t2 == null)) {
                 return "ERROR: Cannot select from nonexistent tables.";
             } else {
                 if (exprs.equals("*")) {
@@ -367,10 +368,13 @@ public class Parser {
         }
         else {
               String table = splittedTables[0];
+              if (table == null) {
+                  return "ERROR: Cannot select from nonexistent tables.";
+              }
               Table tOrig = d.getMap().get(table);
-              Table joinedTable = new Table("t3");
-              joinedTable = tOrig;
-              return joinedTable.printTable();
+              //Table joinedTable = new Table("t3");
+              //joinedTable = tOrig;
+              return tOrig.printTable();
 
         }
             //System.out.println("hi");
