@@ -351,7 +351,9 @@ public class Parser {
         String splittedTables[] = tables.split(",\\s+");
         if (splittedTables.length > 1) {
             String table1 = splittedTables[0];
+            System.out.println("Table 1: " + table1);
             String table2 = splittedTables[1];
+            System.out.println("Table 2: " + table2);
 
             Table t1 = d.getMap().get(table1);
             Table t2 = d.getMap().get(table2);
@@ -368,6 +370,7 @@ public class Parser {
         }
         else {
               String table = splittedTables[0];
+              System.out.println("Table: " + table);
               //if (table == null) {
             return "ERROR: Cannot select from nonexistent tables.";
               //}
