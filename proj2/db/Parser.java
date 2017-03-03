@@ -348,7 +348,7 @@ public class Parser {
     }
 
     private static String select(String exprs, String tables, String conds) {
-        String splittedTables[] = tables.split(",\\s+");
+        String splittedTables[] = tables.split(",");
         if (splittedTables.length > 1) {
             String table1 = splittedTables[0];
             System.out.println("Table 1: " + table1);
