@@ -299,13 +299,19 @@ public class Table {
         return commonValues;
     }
 
-
-
-    //merge method to merge rows?
-
-    private static void doInnerJoin(Table t2) {
-        //use recursive nature
-
+    public void insertRow(String vals) {
+        //vals = 1,2,3,4,5,6
+        int tokenIndex = 0;
+        String token;
+        StringTokenizer st = new StringTokenizer(vals, ",");
+        while (st.hasMoreTokens()) {
+            token = st.nextToken();
+            //check type
+            String currColName = this.getColNames().get(tokenIndex);
+            //if the colName type matches type of the token (literal)
+            this.getLinkedMap().get(currColName).addVal(token);
+            tokenIndex += 1;
+        }
     }
 
 

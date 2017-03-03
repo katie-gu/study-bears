@@ -66,11 +66,11 @@ public class Parser {
         } else if ((m = LOAD_CMD.matcher(query)).matches()) {
              return loadTable(m.group(1));
         } else if ((m = STORE_CMD.matcher(query)).matches()) {
-             //return storeTable(m.group(1));
+             return storeTable(m.group(1));
         } else if ((m = DROP_CMD.matcher(query)).matches()) {
              return dropTable(m.group(1));
         } else if ((m = INSERT_CMD.matcher(query)).matches()) {
-             //return insertRow(m.group(1));
+             return insertRow(m.group(1));
         } else if ((m = PRINT_CMD.matcher(query)).matches()) {
              return printTable(m.group(1));
         } else if ((m = SELECT_CMD.matcher(query)).matches()) {
@@ -287,22 +287,18 @@ public class Parser {
         t.getColNames().add(cName);
     }
 
-    private static void storeTable(String name) {
-        //write to a file with name
-        String pathName = "/Users/jhinukbarman/cs61b/aej/proj2/examples/";
-        File f = new File(pathName);
-        File[] matchingFiles = f.listFiles(new FilenameFilter() {
-            public boolean accept(File dir, String name) {
-                return name.startsWith(name) && name.endsWith(".tbl");
-            }
-        });
-        for (File val: matchingFiles){
-            if (val.equals(pathName + name + ".tbl")){
-
-            }
+    private static String storeTable(String name) {
+        try{
+            PrintWriter writer = new PrintWriter(name + ".tbl", "UTF-8");
+            writer.print(d.getMap().get(name).printTable());
+            writer.close();
+            return "";
+        } catch (IOException e) {
+            return "ERROR: cannot store file.";
         }
 
-        System.out.printf("You are trying to store the table named %s\n", name);
+
+        //System.out.printf("You are trying to store the table named %s\n", name);
     }
 
     private static void storeTable(String name, String colSentence) {
@@ -323,14 +319,22 @@ public class Parser {
         //System.out.printf("You are trying to drop the table named %s\n", name);
     }
 
-    private static void insertRow(String expr) {
+    private static String insertRow(String expr) { // expr : examples/t1 values 1,2,3,4
         Matcher m = INSERT_CLS.matcher(expr);
+        String splittedExpr[] = expr.split("\\s+");
+        String table = splittedExpr[0];
+        String valuesKeyword = splittedExpr[1];
+        String actualValues = splittedExpr[2];
         if (!m.matches()) {
             System.err.printf("Malformed insert: %s\n", expr);
-            return;
+            return "ERROR: malformed insert";
+        } else if (d.getMap() == null || !(d.getMap().keySet().contains(table))) {
+            return "ERROR: Cannot insert row into nonexistent table.";
+        } else {
+            d.getMap().get(table).insertRow(actualValues);
         }
-
-        System.out.printf("You are trying to insert the row \"%s\" into the table %s\n", m.group(2), m.group(1));
+        return "";
+       // System.out.printf("You are trying to insert the row \"%s\" into the table %s\n", m.group(2), m.group(1));
     }
 
     public static String printTable(String name) {
@@ -356,39 +360,21 @@ public class Parser {
 
     private static String select(String exprs, String tables, String conds) {
         String splittedTables[] = tables.split(",");
-        if (splittedTables.length > 1) {
-            String table1 = splittedTables[0];
-            //System.out.println("Table 1: " + table1);
-            String table2 = splittedTables[1];
-            //System.out.println("Table 2: " + table2);
+        String table1 = splittedTables[0];
+        String table2 = splittedTables[1];
 
-            Table t1 = d.getMap().get(table1);
-            Table t2 = d.getMap().get(table2);
-            Table joinedTable = new Table("t3");
-            if ((t1 == null) || (t2 == null)) {
-                return "ERROR: Cannot select from nonexistent tables.";
-            } else {
-                if (exprs.equals("*")) {
-                    joinedTable = t1.join(t2, joinedTable);
-                }
-            }
-            return joinedTable.printTable();
-
-        }
-        else {
-              String table = splittedTables[0];
-              System.out.println("Table: " + table);
-              //if (table == null) {
+        Table t1 = d.getMap().get(table1);
+        Table t2 = d.getMap().get(table2);
+        Table joinedTable = new Table("t3");
+        if ((t1 == null) || (t2 == null)) {
             return "ERROR: Cannot select from nonexistent tables.";
-              //}
-              //Table tOrig = d.getMap().get(table);
-              //Table joinedTable = new Table("t3");
-              //joinedTable = tOrig;
-              //return tOrig.printTable();
-
+        } else {
+            if (exprs.equals("*")) {
+                joinedTable = t1.join(t2, joinedTable);
+            }
         }
-            //System.out.println("hi");
-            //System.out.println(joinedTable.getLinkedMap().keySet());
+        return joinedTable.printTable();
+
 
     }
        // System.out.printf("You are trying to select these expressions:" +
