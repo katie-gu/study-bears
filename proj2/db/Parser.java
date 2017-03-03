@@ -321,7 +321,7 @@ public class Parser {
 
     private static String insertRow(String expr) { // expr : examples/t1 values 1,2,3,4
         Matcher m = INSERT_CLS.matcher(expr);
-        String splittedExpr[] = expr.split("\\s+");
+        String splittedExpr[] = expr.split("\\s+"); //cannot split by spaces!
         String table = splittedExpr[0];
         String valuesKeyword = splittedExpr[1];
         String actualValues = splittedExpr[2];
@@ -331,9 +331,9 @@ public class Parser {
         } else if (d.getMap() == null || !(d.getMap().keySet().contains(table))) {
             return "ERROR: Cannot insert row into nonexistent table.";
         } else {
-            d.getMap().get(table).insertRow(actualValues);
+            return d.getMap().get(table).insertRow(actualValues);
         }
-        return "";
+        //return "";
        // System.out.printf("You are trying to insert the row \"%s\" into the table %s\n", m.group(2), m.group(1));
     }
 
@@ -362,7 +362,7 @@ public class Parser {
         String splittedTables[] = tables.split(",");
         String table1 = splittedTables[0];
         String table2 = splittedTables[1];
-
+        //check my code on github
         Table t1 = d.getMap().get(table1);
         Table t2 = d.getMap().get(table2);
         Table joinedTable = new Table("t3");

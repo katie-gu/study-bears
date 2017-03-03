@@ -299,19 +299,36 @@ public class Table {
         return commonValues;
     }
 
-    public void insertRow(String vals) {
+    public String insertRow(String vals) {
         //vals = 1,2,3,4,5,6
         int tokenIndex = 0;
         String token;
         StringTokenizer st = new StringTokenizer(vals, ",");
+        if ((st.countTokens() != this.getColNames().size())) {
+            return "ERROR: invalid value inputs";
+        }
         while (st.hasMoreTokens()) {
+            String type = "";
             token = st.nextToken();
-            //check type
+            //check type. check if wrong type?
+            if (token.startsWith("\'")) {
+                type = "string";
+            } else if (token.contains(".")) {
+                type = "float";
+            } else {
+                type = "int";
+            }
             String currColName = this.getColNames().get(tokenIndex);
             //if the colName type matches type of the token (literal)
-            this.getLinkedMap().get(currColName).addVal(token);
+            String currColType = this.getLinkedMap().get(currColName).getMyType();
+            if (type.equals(currColType)) {
+                this.getLinkedMap().get(currColName).addVal(token);
+             } else {
+                return "ERROR: Value type does not match column type.";
+            }
             tokenIndex += 1;
         }
+        return "";
     }
 
 
