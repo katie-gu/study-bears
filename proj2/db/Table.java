@@ -329,7 +329,7 @@ public class Table {
                     token = "0";
                 }
                 */
-                token = null;
+                token = "NOVALUE";
             } else {
                 type = "int";
             }

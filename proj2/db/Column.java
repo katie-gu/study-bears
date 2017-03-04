@@ -28,12 +28,10 @@ public class Column{
 
 
         if (myType.equals("string")){
-            if (temp != null) {
-                temp = temp.replace("\'\'", "\'");
-            }
+            temp = temp.replace("\'\'", "\'");
             return temp;
         } else if (myType.equals("float")){
-            if (curr == null) {
+            if (curr == "NOVALUE") {
                 return curr;
             }
             float f = Float.parseFloat(curr);
