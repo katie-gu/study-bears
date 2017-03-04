@@ -320,6 +320,7 @@ public class Table {
                 type = "float";
             } else if (token.equals("NOVALUE")) {
                 type = currColType;
+                /*
                 if (type.equals("string")) {
                     token = "";
                 } else if (type.equals("float")) {
@@ -327,7 +328,8 @@ public class Table {
                 } else {
                     token = "0";
                 }
-                //token = null;
+                */
+                token = null;
             } else {
                 type = "int";
             }
