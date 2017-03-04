@@ -1,6 +1,8 @@
 package db;
 
 import java.lang.reflect.Array;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 
 /**
@@ -309,6 +311,8 @@ public class Table {
                 type = "string";
             } else if (token.contains(".")) {
                 type = "float";
+                float f = Float.parseFloat(token);
+                token = (BigDecimal.valueOf(f).setScale(3, RoundingMode.CEILING).toString());
             } else if (token.equals("NOVALUE")) {
                 type = currColType;
                 token = "NOVALUE";

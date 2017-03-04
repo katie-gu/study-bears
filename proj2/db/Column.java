@@ -19,6 +19,7 @@ public class Column{
     }
 
     public void addVal(String val) {
+
         myValues.add(val);
     }
 
@@ -41,6 +42,7 @@ public class Column{
             return curr;
         }
     }
+
 
     public String printColHead() {
         return myName + " " + myType;
