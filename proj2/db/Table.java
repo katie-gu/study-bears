@@ -310,17 +310,20 @@ public class Table {
         while (st.hasMoreTokens()) {
             String type = "";
             token = st.nextToken();
+            String currColName = this.getColNames().get(tokenIndex);
+            String currColType = this.getLinkedMap().get(currColName).getMyType();
+
             //check type. check if wrong type?
             if (token.startsWith("\'")) {
                 type = "string";
             } else if (token.contains(".")) {
                 type = "float";
+            } else if (token.equals("NOVALUE")) {
+                return "";
             } else {
                 type = "int";
             }
-            String currColName = this.getColNames().get(tokenIndex);
             //if the colName type matches type of the token (literal)
-            String currColType = this.getLinkedMap().get(currColName).getMyType();
             if (type.equals(currColType)) {
                 this.getLinkedMap().get(currColName).addVal(token);
              } else {
