@@ -5,7 +5,7 @@ import java.util.HashMap;
 
 public class Database {
     public static HashMap<String, Table> h;
-    Table myTable;
+    //Table myTable;
 
     public Database(){
         h = new HashMap<String, Table>();

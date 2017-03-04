@@ -114,9 +114,13 @@ public class Parser {
         Table createdTable = new Table(name);
         for (String col: cols) {
             //split string. add to colname and type in new table
+
             String splittedColHead[] = col.split("\\s+");
             String colName = splittedColHead[0];
             String colType = splittedColHead[1];
+            if (!(colType.equals("string")) || (!(colType.equals("float")) || !(colType.equals("int")))) {
+                return "ERROR: invalid column type";
+            }
             createdTable.getLinkedMap().put(colName, new Column(colName, colType));
             createdTable.getColNames().add(colName);
         }
@@ -247,8 +251,20 @@ public class Parser {
         //System.out.printf("You are trying to drop the table named %s\n", name);
     }
 
-    private static String insertRow(String expr) { // expr : examples/t1 values 1,2,3,4
+    private static String insertRow(String expr) { // expr : examples/t1 values 1,2,3,'hi bye'
         Matcher m = INSERT_CLS.matcher(expr);
+        //SPLIT BY SPACE DOES NOT WORK (for strings with space in between
+        //      such as 'Golden Bears'
+        String name = m.group(1);
+        String valuesKey = m.group(2);
+        String vals = m.group(3);
+        int tokenIndex = 0;
+        String lineToken;
+        StringTokenizer st = new StringTokenizer(expr, ",");
+        while (st.hasMoreTokens()) {
+            lineToken = st.nextToken();
+            tokenIndex += 1;
+        }
         String splittedExpr[] = expr.split("\\s+"); //cannot split by spaces!
         String table = splittedExpr[0];
         String valuesKeyword = splittedExpr[1];
