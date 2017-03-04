@@ -166,11 +166,14 @@ public class Parser {
             contents = sBuild.toString();
             in.close();
         } catch (IOException ie) {
-            System.out.print("ERROR: invalid.");
+            System.out.println("ERROR: invalid.");
         }
 
         int tokenIndex = 0;
         String lineToken;
+        if (contents.equals("")) {
+            System.out.println("ERROR: malformed table.");
+        }
         StringTokenizer st = new StringTokenizer(contents, "\n");
         while (st.hasMoreTokens()) {
             lineToken = st.nextToken();
@@ -198,9 +201,9 @@ public class Parser {
 
     }
 
-    private static String insertValue(String myToken, Table t, int cNum) {
+    private static void insertValue(String myToken, Table t, int cNum) {
         if (cNum >= t.getColNames().size()) {
-            return "ERROR: malformed list";
+            System.out.print("ERROR: malformed table.");
         }
         String correctCol = t.getColNames().get(cNum);
         for (String key : t.getLinkedMap().keySet()) {
@@ -209,8 +212,6 @@ public class Parser {
                 break;
             }
         }
-        return "";
-
 
     }
 
