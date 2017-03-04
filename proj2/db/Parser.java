@@ -255,9 +255,10 @@ public class Parser {
         Matcher m = INSERT_CLS.matcher(expr);
         //SPLIT BY SPACE DOES NOT WORK (for strings with space in between
         //      such as 'Golden Bears'
-        String name = m.group(1);
-        String valuesKey = m.group(2);
-        String vals = m.group(3);
+        //String name = m.group(1);
+        //String valuesKey = m.group(2);
+        //String vals = m.group(3);
+        /*
         int tokenIndex = 0;
         String lineToken;
         StringTokenizer st = new StringTokenizer(expr, ",");
@@ -265,6 +266,7 @@ public class Parser {
             lineToken = st.nextToken();
             tokenIndex += 1;
         }
+        */
         String splittedExpr[] = expr.split("\\s+"); //cannot split by spaces!
         String table = splittedExpr[0];
         String valuesKeyword = splittedExpr[1];
