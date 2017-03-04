@@ -21,12 +21,16 @@ public class Tests {
    // public static void testJoin() {
     //    p.select("* from t1, t2");
    // }
-    public static void printTable() {
+    public static void testCreateTable() {
+        p.eval("load examples/t1");
+        p.eval("create table examples/t1");
+
     }
 
 
     public static void main(String[] args) throws IOException{
         testLoadTable();
+        testCreateTable();
         //testJoin();
     }
 }

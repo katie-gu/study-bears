@@ -62,7 +62,7 @@ public class Parser {
     public static String eval(String query) {
         Matcher m;
         if ((m = CREATE_CMD.matcher(query)).matches()) {
-             //return createTable(m.group(1));
+             return createTable(m.group(1));
         } else if ((m = LOAD_CMD.matcher(query)).matches()) {
              return loadTable(m.group(1));
         } else if ((m = STORE_CMD.matcher(query)).matches()) {
@@ -83,130 +83,70 @@ public class Parser {
 
     }
 
-    private static void createTable(String expr) {
+    private static String createTable(String expr) { //expr : t0 (x string,y int,z float)
+        //create table <table name> (<column0 name> <type0>, <column1 name> <type1>, ...)
+        //do create table before insertRow
         Matcher m;
         if ((m = CREATE_NEW.matcher(expr)).matches()) {
-            createNewTable(m.group(1), m.group(2).split(COMMA));
+            return createNewTable(m.group(1), m.group(2).split(COMMA));
         } else if ((m = CREATE_SEL.matcher(expr)).matches()) {
-            createSelectedTable(m.group(1), m.group(2), m.group(3), m.group(4));
+            return createSelectedTable(m.group(1), m.group(2), m.group(3), m.group(4));
         } else {
-            System.err.printf("Malformed create: %s\n", expr);
+            //System.err.printf("Malformed create: %s\n", expr);
+            return "ERROR: malformed command";
         }
     }
 
-    private static void createNewTable(String name, String[] cols) {
-        StringJoiner joiner = new StringJoiner(", ");
+    private static String createNewTable(String name, String[] cols) { // name : t0, cols = {'x int', 'y int', 'z int'}
+        if (d.getMap().containsKey(name)) {
+            return "ERROR: cannot create table with same name as an existing table.";
+        }
+       // if (cols.length == 0) {
+            //return "ERROR: cannot create table with no columns.";
+       // }
+        StringJoiner joiner = new StringJoiner(",");
         for (int i = 0; i < cols.length-1; i++) {
             joiner.add(cols[i]);
         }
 
-        String colSentence = joiner.toString() + " and " + cols[cols.length-1];
-        System.out.printf("You are trying to create a table named %s with the columns %s\n", name, colSentence);
+        String colSentence = joiner.toString() + "," + cols[cols.length-1];
+        //colSentence = 'x string,y int,z int"
+        Table createdTable = new Table(name);
+        for (String col: cols) {
+            //split string. add to colname and type in new table
+            String splittedColHead[] = col.split("\\s+");
+            String colName = splittedColHead[0];
+            String colType = splittedColHead[1];
+            createdTable.getLinkedMap().put(colName, new Column(colName, colType));
+            createdTable.getColNames().add(colName);
+        }
+        d.addTable(name, createdTable);
+        //createdTable.printTable();
+        //createTable.
+        //System.out.printf("You are trying to create a table named %s with the columns %s\n", name, colSentence);
+        return "";
         //storeTable(name, colSentence);
     }
 
-    private static void createSelectedTable(String name, String exprs, String tables, String conds) {
+    private static String createSelectedTable(String name, String exprs, String tables, String conds) {
         System.out.printf("You are trying to create a table named %s by selecting these expressions:" +
                 " '%s' from the join of these tables: '%s', filtered by these conditions: '%s'\n", name, exprs, tables, conds);
+        return "";
     }
 
     public static String loadTable(String name) {
-        // "examples/" + name + ".tbl"
-        // d.h.put(name, );
-        //stack overflow - cite
         Table t = new Table(name);
-
-        //Path root = Paths.get(System.getProperty("user.dir")).getFileSystem()
-        // .getRootDirectories().iterator().next();
-        // System.out.println(root);
-
-        // String workingDir = System.getProperty("user.dir");
-        // String pathName = workingDir  + "/examples/";// <-- for testing purposes
-
-        //Autograder tests:
-
-
         File file = new File(name + ".tbl");
         if (file.exists()) {
             parseTable(name, t);
             d.addTable(name, t);
-            //System.out.println(d.getMap().keySet());
             return "";
         }
-
         return "ERROR: Invalid file input";
     }
 
-
-        //our tests:
-
-        //String pathName = "/Users/jhinukbarman/cs61b/aej/proj2/examples/";
-
-        //File f = new File(pathName);
-
-        //matchingFiles
-
-/*
-        File[] matchingFiles = f.listFiles(new FilenameFilter() {
-            public boolean accept(File dir, String name) {
-                return name.startsWith(name) && name.endsWith(".tbl");
-            }
-        });
-
-        //System.out.println(d.getMap().keySet());
-        for (File val : matchingFiles) {
-            String myFile = pathName + name + ".tbl";
-            String currFileName = val.toString();
-            if (currFileName.equals(myFile)) {
-                //String fileName = name + ".tbl";
-                parseTable(currFileName, t);
-                d.addTable(t.tableName, t);
-                //return t.printTable();
-                //System.out.println(name + ".tbl");
-                return "";
-            }
-
-        }
-
-        return "ERROR: File not found";
-
-
-
-        //System.out.printf("You are trying to load the table named %s\n", name);
-        //parseTable(f.toString(), t);
-        //System.out.println("now table contents....");
-        //d.getMap().get(t.tableName).printTable();
-        //System.out.println(d.getMap().keySet());
-
-
-    }
-
-
-
-*/
-
     private static void parseTable(String fileName, Table t) {
-        //InputStream i = new FileInputStream(fileName);
-        /*
         String contents = "";
-        //do if statements instead of try catch
-
-        try {
-            //citation stack overflow
-            contents = new String(Files.readAllBytes(Paths.get(fileName)));
-        } catch (IOException ie){
-            System.out.println("ERROR: IOE Exception. Cannot convert file contents to string");
-        }
-        */
-
-        String contents = "";
-
-
-       // System.out.println(contents);
-
-        //File file = new File(fileName);
-       // String lines[] = new String[10];
-       // String currentColumn;
 
         try {
         InputStream in = new FileInputStream((fileName + ".tbl"));
@@ -218,7 +158,6 @@ public class Parser {
             line = buffReader.readLine();
         }
         contents = sBuild.toString();
-       // System.out.println("Contents : " + contents);
         in.close();
         }
         catch (IOException ie) {
@@ -230,7 +169,6 @@ public class Parser {
         StringTokenizer st = new StringTokenizer(contents, "\n");
             while (st.hasMoreTokens()) {
                 lineToken = st.nextToken();
-                //System.out.println(lineToken);
                 parseLine(lineToken, tokenIndex, t);
                 tokenIndex += 1;
             }
@@ -256,13 +194,7 @@ public class Parser {
     }
 
     private static void insertValue(String myToken, Table t, int cNum) {
-        //not necessary if we input already in parse columnhead method
-        //ArrayList<String> colNames = new ArrayList<>();
-       // for (String key : t.getLinkedMap().keySet()) {
-        //    colNames.add(key);
-       // }
-
-        String correctCol = t.getColNames().get(cNum); //x
+        String correctCol = t.getColNames().get(cNum);
         for (String key : t.getLinkedMap().keySet()) {
             if (key.equals(correctCol)) {
                 t.getLinkedMap().get(key).addVal(myToken);
@@ -283,7 +215,6 @@ public class Parser {
     private static void createColumn(Table t, String cName, String cType){
         Column c = new Column(cName, cType);
         t.getLinkedMap().put(cName, c);
-        //System.out.println(t.getColNames());
         t.getColNames().add(cName);
     }
 
@@ -296,9 +227,6 @@ public class Parser {
         } catch (IOException e) {
             return "ERROR: cannot store file.";
         }
-
-
-        //System.out.printf("You are trying to store the table named %s\n", name);
     }
 
     private static void storeTable(String name, String colSentence) {
