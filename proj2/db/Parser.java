@@ -268,6 +268,9 @@ public class Parser {
         }
         */
         String splittedExpr[] = expr.split("\\s+values\\s+"); //cannot split by spaces!
+        if (splittedExpr.length <= 1) {
+            return "ERROR: Malformed list";
+        }
         String table = splittedExpr[0];
         String actualValues = splittedExpr[1];
         if (!m.matches()) {
