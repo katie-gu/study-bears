@@ -311,8 +311,8 @@ public class Table {
                 type = "string";
             } else if (token.contains(".")) {
                 type = "float";
-                float f = Float.parseFloat(token);
-                token = (BigDecimal.valueOf(f).setScale(3, RoundingMode.CEILING).toString());
+                //float f = Float.parseFloat(token);
+                //token = (BigDecimal.valueOf(f).setScale(3, RoundingMode.DOWN).toString());
             } else if (token.equals("NOVALUE")) {
                 type = currColType;
                 token = "NOVALUE";
