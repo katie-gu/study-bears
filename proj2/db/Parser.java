@@ -118,7 +118,7 @@ public class Parser {
             String splittedColHead[] = col.split("\\s+");
             String colName = splittedColHead[0];
             String colType = splittedColHead[1];
-            if (!(colType.equals("string")) || (!(colType.equals("float")) || !(colType.equals("int")))) {
+            if ((!(colType.equals("string"))) && (!(colType.equals("float"))) && (!(colType.equals("int")))) {
                 return "ERROR: invalid column type";
             }
             createdTable.getLinkedMap().put(colName, new Column(colName, colType));
