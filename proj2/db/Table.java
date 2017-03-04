@@ -210,14 +210,10 @@ public class Table {
 
     public static ArrayList<String> makeInnerRow(String startColName, Table t1, Table t2, int t1Index, int t2Index) {
         ArrayList<String> newEditedRow = new ArrayList<>();
-
         for (Column c1 : t1.getLinkedMap().values()) {
             String item = c1.getValues().get(t1Index);
             newEditedRow.add(item);
-
-
         }
-
         for (Column c2 : t2.getLinkedMap().values()) {
             if (!(c2.getName().equals(startColName))) {
                 String item = c2.getValues().get(t2Index);
@@ -225,7 +221,6 @@ public class Table {
             }
         }
         return  newEditedRow;
-
     }
 
     public ArrayList<Integer> checkEqualIndices(Column c1, Column c2) {
@@ -239,9 +234,6 @@ public class Table {
         }
         return indicesCol;
     }
-
-
-
 
     private boolean isCartesianJoin(Table t2) {
         //no columns in common
@@ -290,12 +282,11 @@ public class Table {
     }
     private static ArrayList<String> getCommonValues(Column c1, Column c2) {
         ArrayList<String> commonValues = new ArrayList<>();
-        for(int i = 0; i < c1.myValues.size(); i ++) {
+        for(int i = 0; i < c1.myValues.size(); i++) {
             if (equalColVals(c1, c2, i)) {
                 commonValues.add(c1.getValues().get(i));
             }
         }
-
         return commonValues;
     }
 
@@ -320,15 +311,6 @@ public class Table {
                 type = "float";
             } else if (token.equals("NOVALUE")) {
                 type = currColType;
-                /*
-                if (type.equals("string")) {
-                    token = "";
-                } else if (type.equals("float")) {
-                    token = "0.000";
-                } else {
-                    token = "0";
-                }
-                */
                 token = "NOVALUE";
             } else {
                 type = "int";
