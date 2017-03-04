@@ -267,10 +267,9 @@ public class Parser {
             tokenIndex += 1;
         }
         */
-        String splittedExpr[] = expr.split("\\s+"); //cannot split by spaces!
+        String splittedExpr[] = expr.split("\\s+values\\s+"); //cannot split by spaces!
         String table = splittedExpr[0];
-        String valuesKeyword = splittedExpr[1];
-        String actualValues = splittedExpr[2];
+        String actualValues = splittedExpr[1];
         if (!m.matches()) {
             System.err.printf("Malformed insert: %s\n", expr);
             return "ERROR: malformed insert";
