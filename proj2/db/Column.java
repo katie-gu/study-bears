@@ -28,9 +28,14 @@ public class Column{
 
 
         if (myType.equals("string")){
-            temp = temp.replace("\'\'", "\'");
+            if (temp != null) {
+                temp = temp.replace("\'\'", "\'");
+            }
             return temp;
         } else if (myType.equals("float")){
+            if (curr == null) {
+                return curr;
+            }
             float f = Float.parseFloat(curr);
             return (BigDecimal.valueOf(f).setScale(3, RoundingMode.CEILING).toString());
             //System.out.println(BigDecimal.valueOf(f).setScale(3, RoundingMode.CEILING));
