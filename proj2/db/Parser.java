@@ -209,11 +209,15 @@ public class Parser {
 
     }
 
-    private static void parseColumnHead(String s, Table t) {
+    private static String parseColumnHead(String s, Table t) {
         String splittedColHead[] = s.split("\\s+");
+        if (splittedColHead.length != 2) {
+            return "ERROR: Malformed table";
+        }
         String colName = splittedColHead[0];
         String colType = splittedColHead[1];
         createColumn(t, colName, colType);
+        return "";
     }
 
     private static void createColumn(Table t, String cName, String cType){
