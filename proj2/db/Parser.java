@@ -197,7 +197,10 @@ public class Parser {
 
     }
 
-    private static void insertValue(String myToken, Table t, int cNum) {
+    private static String insertValue(String myToken, Table t, int cNum) {
+        if (cNum >= t.getColNames().size()) {
+            return "ERROR: malformed list";
+        }
         String correctCol = t.getColNames().get(cNum);
         for (String key : t.getLinkedMap().keySet()) {
             if (key.equals(correctCol)) {
@@ -205,6 +208,7 @@ public class Parser {
                 break;
             }
         }
+        return "";
 
 
     }
@@ -257,20 +261,6 @@ public class Parser {
 
     private static String insertRow(String expr) { // expr : examples/t1 values 1,2,3,'hi bye'
         Matcher m = INSERT_CLS.matcher(expr);
-        //SPLIT BY SPACE DOES NOT WORK (for strings with space in between
-        //      such as 'Golden Bears'
-        //String name = m.group(1);
-        //String valuesKey = m.group(2);
-        //String vals = m.group(3);
-        /*
-        int tokenIndex = 0;
-        String lineToken;
-        StringTokenizer st = new StringTokenizer(expr, ",");
-        while (st.hasMoreTokens()) {
-            lineToken = st.nextToken();
-            tokenIndex += 1;
-        }
-        */
         String splittedExpr[] = expr.split("\\s+values\\s+"); //cannot split by spaces!
         if (splittedExpr.length <= 1) {
             return "ERROR: Malformed list";
@@ -285,7 +275,6 @@ public class Parser {
         } else {
             return d.getMap().get(table).insertRow(actualValues);
         }
-        //return "";
        // System.out.printf("You are trying to insert the row \"%s\" into the table %s\n", m.group(2), m.group(1));
     }
 
