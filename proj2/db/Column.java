@@ -35,7 +35,7 @@ public class Column{
                 return curr;
             }
             float f = Float.parseFloat(curr);
-            return (BigDecimal.valueOf(f).setScale(3, RoundingMode.CEILING).toString());
+            return (BigDecimal.valueOf(f).setScale(3, RoundingMode.DOWN).toString());
             //System.out.println(BigDecimal.valueOf(f).setScale(3, RoundingMode.CEILING));
         } else {
             return curr;
