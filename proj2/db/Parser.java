@@ -333,6 +333,11 @@ public class Parser {
         Table t1 = d.getMap().get(t1Name);
         Table t2 = d.getMap().get(t2Name);
 
+        if (t1Name.equals(t2Name)) {
+            //not sure if this works if combined table is same as 3rd table
+            return t1.printTable();
+        }
+
         if (exprs.equals("*")) {
             joinedTable = t1.join(t2, joinedTable);
             //System.out.print("outer join : " + joinedTable.printTable());
@@ -343,14 +348,14 @@ public class Parser {
                 Table currToken = d.getMap().get(currName);
                 if ((prevToken == null) || (currToken == null)) {
                     return "ERROR: Cannot select from nonexistent tables.";
-                } else if (prevToken.equals(currToken)) {
-                    joinedTable = prevToken; //not sure if this works if combined table is same as 3rd table
-                }
+                } else {
 
-                int random = (int) (Math.random() * 100 + 1);
-                joinedTable = prevToken.join(currToken, new Table("t" + random));
-                prevToken = joinedTable;
-                d.getMap().put(joinedTable.getName(), joinedTable);
+                    int random = (int) (Math.random() * 100 + 1);
+                    joinedTable = prevToken.join(currToken, new Table("t" + random));
+                    prevToken = joinedTable;
+                    d.getMap().put(joinedTable.getName(), joinedTable);
+
+                }
             }
         }
 
