@@ -322,17 +322,18 @@ public class Parser {
         //check my code on github
 
         Table t1 = d.getMap().get(table1);
-       // System.out.println(t1.printTable());
-       // System.out.println(t1.getColNames());
-
         Table t2 = d.getMap().get(table2);
         Table joinedTable = new Table("t3"); //change name later
+
+        if (table1.equals(table2)) {
+            joinedTable = t1;
+        } else if (exprs.equals("*")) {
+            joinedTable = t1.join(t2, joinedTable);
+        }
         //if ((t1.getColNames().size() == 0) || (t2.getColNames().size() == 0)) {
             //return "ERROR: Cannot select from nonexistent tables.";
        // } else {
-            if (exprs.equals("*")) {
-                joinedTable = t1.join(t2, joinedTable);
-            }
+
        // }
         return joinedTable.printTable();
 
