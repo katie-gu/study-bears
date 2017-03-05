@@ -43,6 +43,10 @@ public class Table {
         colNames = new ArrayList<String>();
     }
 
+    public String getName() {
+        return tableName;
+    }
+
 
     public void addRow(List<String> literalList){
         int count = 0;
@@ -139,6 +143,9 @@ public class Table {
             }
             for (int i = 0; i < length1; i++) {
                 for (int j = 0; j < length2; j++) {
+                    System.out.println(this.printTable());
+                    System.out.println(table2.printTable());
+                    System.out.println(roughTable.printTable());
                     ArrayList<String> row = makeCartesianRow(this, table2, i, j);
                     roughTable.addRow(row);
                 }
@@ -186,6 +193,7 @@ public class Table {
                 Column newCol = new Column(arrList.get(0), arrList.get(1));
 
                 if(!(roughTable.getLinkedMap().keySet().contains(arrList.get(0)))){
+                    roughTable.getColNames().add(arrList.get(0));
                     roughTable.getLinkedMap().put(arrList.get(0), newCol);
                 }
                 //put columnName and put column in rough table
@@ -295,6 +303,7 @@ public class Table {
         return true;
 
     }
+
     public void addRow(ArrayList<String> rowToAdd) {
         int count = 0;
         for(Column c : this.getLinkedMap().values()) {
@@ -302,8 +311,6 @@ public class Table {
             c.addVal(valueToAdd);
             count += 1;
         }
-
-
     }
 
     public static ArrayList<String> makeCartesianRow (Table t1, Table t2, int rowNumT1, int rowNumT2) {
@@ -311,7 +318,8 @@ public class Table {
         ArrayList<String> newRow = new ArrayList<>();
 
         for(Column c : t1.getLinkedMap().values()) {
-            String item = c.getValues().get(rowNumT1);
+            System.out.println(c.getValues());
+            String item = c.getValues().get(rowNumT1); //ERROR at dis line
             newRow.add(item);
         }
         for(Column c : t2.getLinkedMap().values()) {

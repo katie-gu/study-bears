@@ -12,11 +12,16 @@ public class Tests {
     public static void testLoadTable() throws IOException{
         p.loadTable("examples/t1");
         p.loadTable("examples/t2");
+        p.loadTable("examples/fans");
        // p.printTable("t1");
-        p.eval("select * from examples/t1, examples/t2");
 
         //System.out.print("hi");
     }
+
+    public static void testSelect() {
+        p.eval("select * from examples/t1, examples/t2, examples/fans");
+    }
+
 
    // public static void testJoin() {
     //    p.select("* from t1, t2");
@@ -30,7 +35,8 @@ public class Tests {
 
     public static void main(String[] args) throws IOException{
         testLoadTable();
-        testCreateTable();
+        testSelect();
+        //testCreateTable();
         //testJoin();
     }
 }

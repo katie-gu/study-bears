@@ -233,6 +233,7 @@ public class Parser {
     }
 
     private static String storeTable(String name) {
+        //http://stackoverflow.com/questions/26251039/saving-files-in-current-directory
         if ((d.getMap() == null) || (!(d.getMap().containsKey(name)))) {
             return "ERROR: table does not exist in database";
         }
@@ -315,26 +316,69 @@ public class Parser {
     }
 
     private static String select(String exprs, String tables, String conds) {
-        tables = tables.replaceAll("\\s+","");
-        String splittedTables[] = tables.split(","); //may change back again
-        String table1 = splittedTables[0];
-        String table2 = splittedTables[1];
-        //check my code on github
-
-        Table t1 = d.getMap().get(table1);
-        Table t2 = d.getMap().get(table2);
+        tables = tables.replaceAll("\\s+",""); //tables = 'A,B,C'
+        exprs = exprs.replaceAll("\\s+","");
         Table joinedTable = new Table("t3"); //change name later
 
-        if (table1.equals(table2)) {
-            joinedTable = t1;
-        } else if (exprs.equals("*")) {
-            joinedTable = t1.join(t2, joinedTable);
+        //tokenize the tables ( multiple table join)
+        int tokenIndex = 0;
+        if (tables.equals("")) {
+            //System.out.println("ERROR: malformed table.");
+            return "ERROR: malformed table.";
         }
-        //if ((t1.getColNames().size() == 0) || (t2.getColNames().size() == 0)) {
-            //return "ERROR: Cannot select from nonexistent tables.";
-       // } else {
+        StringTokenizer st = new StringTokenizer(tables, ",");
+        String prevToken = st.nextToken(); //t1
+        Table prevTable = d.getMap().get(prevToken);
 
-       // }
+        String currToken;
+        while (st.hasMoreTokens()) {
+            currToken = st.nextToken(); //t2
+            Table currTable = d.getMap().get(currToken);
+            if (currToken.equals(prevToken)) {
+                joinedTable = currTable; //not sure if this works if combined table is same as 3rd table
+            }
+            //parseLine(lineToken, tokenIndex, t);
+
+            if ((prevTable == null) || (currTable == null)) {
+                return "ERROR: Cannot select from nonexistent tables.";
+            } else if (exprs.equals("*")) {
+                joinedTable = prevTable.join(currTable, joinedTable);
+            }
+
+            d.getMap().put("newjoinedTable", joinedTable);
+
+            tokenIndex += 1;
+            prevTable = joinedTable;
+        }
+
+
+
+      //  String splittedTables[] = tables.split(","); //may change back again
+      //  String table1 = splittedTables[0];
+      //  String table2 = splittedTables[1];
+        //check my code on github
+
+       // Table t1 = d.getMap().get(table1);
+      //  Table t2 = d.getMap().get(table2);
+
+         /*
+        else {
+            int tokenIndex = 0;
+            String lineToken;
+            StringTokenizer st = new StringTokenizer(exprs, "\n");
+            while (st.hasMoreTokens()) {
+                lineToken = st.nextToken(); //Firstname
+
+                tokenIndex += 1;
+            }
+            */
+            //exprs = 'Firstname,Lastname,TeamName'
+            //select Firstname,Lastname,TeamName from fans where Lastname >= 'Lee'
+
+
+
+
+
         return joinedTable.printTable();
 
 
@@ -347,33 +391,5 @@ public class Parser {
 
 
 
-    //do Cartesian join method
-    //do inner join method
-       // System.out.printf("You are trying to select these expressions:" +
-         //       " '%s' from the join of these tables: '%s', filtered by these conditions: '%s'\n", exprs, tables, conds);
 
-
-
-
-
-
-    //do Cartesian join method
-    //do inner join method
-
-    public static boolean equalColVals (Column c1, Column c2, int index) {
-        if(!(c1.getMyType().equals(c2.getMyType()))) {
-            return false;
-        }
-        return (c1.getValues().get(index).equals(c2.getValues().get(index)));
-    }
-
-    public static ArrayList<String> getCommonValues(Column c1, Column c2) {
-        ArrayList<String> commonValues = new ArrayList<>();
-        for (int i = 0; i < c1.myValues.size(); i++) {
-            if (equalColVals(c1, c2, i)) {
-                commonValues.add(c1.getValues().get(i));
-            }
-        }
-        return commonValues;
-    }
 }
