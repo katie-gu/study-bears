@@ -254,35 +254,13 @@ public class Parser {
         }
         return "";
 
-        /*
-        File file = new File(fileName);
-        if (file.exists()) {
-            file.delete(); //delete old t1
-            File newFile = new File(fileName);
-            newFile.
-        } else {
-            //add file to computer file system
-            file.createNewFile();
-        }
-        */
-
-        /*
-        try{
-            PrintWriter writer = new PrintWriter(name + ".tbl", "UTF-8");
-            writer.print(d.getMap().get(name).printTable());
-            writer.close();
-            return "";
-        } catch (IOException e) {
-            return "ERROR: cannot store file.";
-        }
-        */
     }
 
-    private static void storeTable(String name, String colSentence) {
+    //private static void storeTable(String name, String colSentence) {
         //write to a file with name
 
-        System.out.printf("You are trying to store the table named %s\n", name);
-    }
+        //System.out.printf("You are trying to store the table named %s\n", name);
+    //}
 
     private static String dropTable(String name) {
         if(d.getMap() == null) {
@@ -337,24 +315,39 @@ public class Parser {
     }
 
     private static String select(String exprs, String tables, String conds) {
-        String splittedTables[] = tables.split(",");
+        tables = tables.replaceAll("\\s+","");
+        String splittedTables[] = tables.split(","); //may change back again
         String table1 = splittedTables[0];
         String table2 = splittedTables[1];
         //check my code on github
+
         Table t1 = d.getMap().get(table1);
+       // System.out.println(t1.printTable());
+       // System.out.println(t1.getColNames());
+
         Table t2 = d.getMap().get(table2);
-        Table joinedTable = new Table("t3");
-        if ((t1 == null) || (t2 == null)) {
-            return "ERROR: Cannot select from nonexistent tables.";
-        } else {
+        Table joinedTable = new Table("t3"); //change name later
+        //if ((t1.getColNames().size() == 0) || (t2.getColNames().size() == 0)) {
+            //return "ERROR: Cannot select from nonexistent tables.";
+       // } else {
             if (exprs.equals("*")) {
                 joinedTable = t1.join(t2, joinedTable);
             }
-        }
+       // }
         return joinedTable.printTable();
 
 
     }
+    // System.out.printf("You are trying to select these expressions:" +
+    //       " '%s' from the join of these tables: '%s', filtered by these conditions: '%s'\n", exprs, tables, conds);
+
+
+
+
+
+
+    //do Cartesian join method
+    //do inner join method
        // System.out.printf("You are trying to select these expressions:" +
          //       " '%s' from the join of these tables: '%s', filtered by these conditions: '%s'\n", exprs, tables, conds);
 

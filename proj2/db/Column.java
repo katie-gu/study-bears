@@ -36,8 +36,8 @@ public class Column{
                 return curr;
             }
             float f = Float.parseFloat(curr);
-            String floatasstring = String.format("%.3f", f);
-            return floatasstring;
+            String stringFloat = String.format("%.3f", f);
+            return stringFloat;
             //return (BigDecimal.valueOf(f).setScale(3, RoundingMode.HALF_UP).toString());
             //System.out.println(BigDecimal.valueOf(f).setScale(3, RoundingMode.CEILING));
         } else {
