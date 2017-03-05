@@ -198,6 +198,9 @@ public class Table {
                 }
                 //put columnName and put column in rough table
 
+
+
+
             }
             int ind = 0;
             for (Column col : roughTable.getLinkedMap().values()) { //fill in columns of rough table
@@ -256,6 +259,8 @@ public class Table {
         for (Column c2 : t2.getLinkedMap().values()) { //add unames of the unique columns in table 2, starting from
             //the left most column
             ArrayList<ArrayList<String>> temp2 = new ArrayList<>(colOrder);
+            ArrayList<ArrayList<String>> cNames = new ArrayList<>();
+
             for (ArrayList<String> b : temp2) {
                 if(b.get(0).equals(c2.getName())) {
                     break;

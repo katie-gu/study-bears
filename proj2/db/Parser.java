@@ -316,8 +316,8 @@ public class Parser {
     }
 
     private static String select(String exprs, String tables, String conds) {
-        tables = tables.replaceAll("\\s+",""); //tables = 'A,B,C'
-        exprs = exprs.replaceAll("\\s+","");
+        tables = tables.replaceAll("\\s+", ""); //tables = 'A,B,C'
+        exprs = exprs.replaceAll("\\s+", "");
         Table joinedTable = new Table("t3"); //change name later
 
         //tokenize the tables ( multiple table join)
@@ -334,62 +334,29 @@ public class Parser {
         while (st.hasMoreTokens()) {
             currToken = st.nextToken(); //t2
             Table currTable = d.getMap().get(currToken);
-            if (currToken.equals(prevToken)) {
-                joinedTable = currTable; //not sure if this works if combined table is same as 3rd table
-            }
-            //parseLine(lineToken, tokenIndex, t);
-
             if ((prevTable == null) || (currTable == null)) {
                 return "ERROR: Cannot select from nonexistent tables.";
+            } else if (currToken.equals(prevToken)) {
+                    joinedTable = currTable; //not sure if this works if combined table is same as 3rd table
             } else if (exprs.equals("*")) {
                 joinedTable = prevTable.join(currTable, joinedTable);
             }
-
             d.getMap().put("newjoinedTable", joinedTable);
-
             tokenIndex += 1;
             prevTable = joinedTable;
         }
+            //  String splittedTables[] = tables.split(","); //may change back again
+            //  String table1 = splittedTables[0];
+            //  String table2 = splittedTables[1];
+            //check my code on github
 
-
-
-      //  String splittedTables[] = tables.split(","); //may change back again
-      //  String table1 = splittedTables[0];
-      //  String table2 = splittedTables[1];
-        //check my code on github
-
-       // Table t1 = d.getMap().get(table1);
-      //  Table t2 = d.getMap().get(table2);
-
-         /*
-        else {
-            int tokenIndex = 0;
-            String lineToken;
-            StringTokenizer st = new StringTokenizer(exprs, "\n");
-            while (st.hasMoreTokens()) {
-                lineToken = st.nextToken(); //Firstname
-
-                tokenIndex += 1;
-            }
-            */
+            // Table t1 = d.getMap().get(table1);
+            //  Table t2 = d.getMap().get(table2);
             //exprs = 'Firstname,Lastname,TeamName'
             //select Firstname,Lastname,TeamName from fans where Lastname >= 'Lee'
 
-
-
-
-
+        // System.out.printf("You are trying to select these expressions:" +
+        //       " '%s' from the join of these tables: '%s', filtered by these conditions: '%s'\n", exprs, tables, conds);
         return joinedTable.printTable();
-
-
     }
-    // System.out.printf("You are trying to select these expressions:" +
-    //       " '%s' from the join of these tables: '%s', filtered by these conditions: '%s'\n", exprs, tables, conds);
-
-
-
-
-
-
-
 }
