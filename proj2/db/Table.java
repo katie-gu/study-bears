@@ -143,9 +143,9 @@ public class Table {
             }
             for (int i = 0; i < length1; i++) {
                 for (int j = 0; j < length2; j++) {
-                    System.out.println(this.printTable());
-                    System.out.println(table2.printTable());
-                    System.out.println(roughTable.printTable());
+                   // System.out.println(this.printTable());
+                   // System.out.println(table2.printTable());
+                  //  System.out.println(roughTable.printTable());
                     ArrayList<String> row = makeCartesianRow(this, table2, i, j);
                     roughTable.addRow(row);
                 }
@@ -215,6 +215,7 @@ public class Table {
             }
         }
 
+        //System.out.print("inner join: " + roughTable.printTable());
         return roughTable;
 
     }
@@ -256,27 +257,35 @@ public class Table {
             }
         }
 
+        ArrayList<ArrayList<String>> temp2 = new ArrayList<>(colOrder);
+        ArrayList<String> cNames = new ArrayList<>();
+        for (ArrayList<String> a : temp2) {
+            cNames.add(a.get(0));
+        }
         for (Column c2 : t2.getLinkedMap().values()) { //add unames of the unique columns in table 2, starting from
             //the left most column
-            ArrayList<ArrayList<String>> temp2 = new ArrayList<>(colOrder);
-            ArrayList<ArrayList<String>> cNames = new ArrayList<>();
-
-            for (ArrayList<String> b : temp2) {
-                if(b.get(0).equals(c2.getName())) {
-                    break;
-                }
-                else if (!(b.get(0).equals(c2.getName()))) {
+            if (!(containsItem(colNames, c2.getName()))) {
                     ArrayList<String> newArrList = new ArrayList<>();
                     newArrList.add(c2.getName());
                     newArrList.add(c2.getMyType());
                     colOrder.add(newArrList);
-                    colOrder.add(newArrList);
-                }
+                    colNames.add(c2.getName());
+
             }
         }
 
         return colOrder;
     }
+
+    public static boolean containsItem(ArrayList<String> arr, String s) {
+        for (String str : arr) {
+            if (str.equals(s)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
 
     public static ArrayList<String> makeInnerRow(String startColName, Table t1, Table t2, int t1Index, int t2Index) {
@@ -323,7 +332,7 @@ public class Table {
         ArrayList<String> newRow = new ArrayList<>();
 
         for(Column c : t1.getLinkedMap().values()) {
-            System.out.println(c.getValues());
+            //System.out.println(c.getValues());
             String item = c.getValues().get(rowNumT1); //ERROR at dis line
             newRow.add(item);
         }

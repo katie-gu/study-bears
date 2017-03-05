@@ -144,8 +144,8 @@ public class Parser {
         Table t = new Table(name);
         File file = new File(name + ".tbl");
         if (file.exists()) {
-            parseTable(name, t);
             d.addTable(name, t);
+            parseTable(name, t);
             return "";
         }
         return "ERROR: Invalid file input";
@@ -321,11 +321,42 @@ public class Parser {
         Table joinedTable = new Table("t3"); //change name later
 
         //tokenize the tables ( multiple table join)
-        int tokenIndex = 0;
+        // int tokenIndex = 0;
         if (tables.equals("")) {
             //System.out.println("ERROR: malformed table.");
             return "ERROR: malformed table.";
         }
+
+        StringTokenizer st = new StringTokenizer(tables, ",");
+        String t1Name = st.nextToken(); //t1
+        String t2Name = st.nextToken();
+        Table t1 = d.getMap().get(t1Name);
+        Table t2 = d.getMap().get(t2Name);
+
+        if (exprs.equals("*")) {
+            joinedTable = t1.join(t2, joinedTable);
+            //System.out.print("outer join : " + joinedTable.printTable());
+            Table prevToken = joinedTable;
+
+            while (st.hasMoreTokens()) {
+                String currName = st.nextToken(); //t2
+                Table currToken = d.getMap().get(currName);
+                if ((prevToken == null) || (currToken == null)) {
+                    return "ERROR: Cannot select from nonexistent tables.";
+                } else if (prevToken.equals(currToken)) {
+                    joinedTable = prevToken; //not sure if this works if combined table is same as 3rd table
+                }
+
+                int random = (int) (Math.random() * 100 + 1);
+                joinedTable = prevToken.join(currToken, new Table("t" + random));
+                prevToken = joinedTable;
+                d.getMap().put(joinedTable.getName(), joinedTable);
+            }
+        }
+
+
+
+        /*
         StringTokenizer st = new StringTokenizer(tables, ",");
         String prevToken = st.nextToken(); //t1
         Table prevTable = d.getMap().get(prevToken);
@@ -342,9 +373,11 @@ public class Parser {
                 joinedTable = prevTable.join(currTable, joinedTable);
             }
             d.getMap().put("newjoinedTable", joinedTable);
-            tokenIndex += 1;
+            //tokenIndex += 1;
             prevTable = joinedTable;
         }
+
+        */
             //  String splittedTables[] = tables.split(","); //may change back again
             //  String table1 = splittedTables[0];
             //  String table2 = splittedTables[1];
@@ -359,4 +392,5 @@ public class Parser {
         //       " '%s' from the join of these tables: '%s', filtered by these conditions: '%s'\n", exprs, tables, conds);
         return joinedTable.printTable();
     }
+
 }
