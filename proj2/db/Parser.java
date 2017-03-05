@@ -329,8 +329,11 @@ public class Parser {
 
         StringTokenizer st = new StringTokenizer(tables, ",");
         String t1Name = st.nextToken(); //t1
-        String t2Name = st.nextToken();
         Table t1 = d.getMap().get(t1Name);
+        if (!(st.hasMoreTokens())) {
+            return t1.printTable();
+        }
+        String t2Name = st.nextToken();
         Table t2 = d.getMap().get(t2Name);
 
         if (t1Name.equals(t2Name)) {
