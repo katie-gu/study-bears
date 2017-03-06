@@ -324,11 +324,11 @@ public class Parser {
 
     private static String select(String exprs, String tables, String conds) {
         tables = tables.replaceAll("\\s+", ""); //select x from t1;
-        if (exprs.contains("as")){
-            exprs.split("as");
-        } else {
-            exprs = exprs.replaceAll("\\s+", "");
-        }
+       // if (exprs.contains("as")){
+          //  exprs.split("as");
+      //  } else {
+        exprs = exprs.replaceAll("\\s+", "");
+     //   }
         Table joinedTable = new Table("t3"); //change name later
         ArrayList<String> exprsArr = new ArrayList<String>();
 
@@ -359,7 +359,7 @@ public class Parser {
         if (!(st.hasMoreTokens())) {
             if (exprs.equals("*")) {
                 selectedTable = t1;
-                if (conds != null)
+                //if (conds != null)
                 return t1.printTable();
             }
             if (exprsArr.size() > t1.getColNames().size()) {
