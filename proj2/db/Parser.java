@@ -347,6 +347,9 @@ public class Parser {
 
         //new line added :)
         if (!(st.hasMoreTokens())) {
+            if (exprs.equals("*")) {
+                return t1.printTable();
+            }
             if (exprsArr.size() > t1.getColNames().size()) {
                 return "ERROR: Too many columns inputted";
             }
@@ -364,26 +367,26 @@ public class Parser {
             return t1.printTable();
         }
 
-        if (exprs.equals("*")) {
-            joinedTable = t1.join(t2, joinedTable);
+       // if (exprs.equals("*")) {
+        joinedTable = t1.join(t2, joinedTable);
             //System.out.print("outer join : " + joinedTable.printTable());
-            Table prevToken = joinedTable;
+        Table prevToken = joinedTable;
 
-            while (st.hasMoreTokens()) {
-                String currName = st.nextToken(); //t2
-                Table currToken = d.getMap().get(currName);
-                if ((prevToken == null) || (currToken == null)) {
-                    return "ERROR: Cannot select from nonexistent tables.";
-                } else {
+        while (st.hasMoreTokens()) {
+            String currName = st.nextToken(); //t2
+            Table currToken = d.getMap().get(currName);
+            if ((prevToken == null) || (currToken == null)) {
+                return "ERROR: Cannot select from nonexistent tables.";
+            } else {
 
-                    int random = (int) (Math.random() * 100 + 1);
-                    joinedTable = prevToken.join(currToken, new Table("t" + random));
-                    prevToken = joinedTable;
-                    d.getMap().put(joinedTable.getName(), joinedTable);
+                int random = (int) (Math.random() * 100 + 1);
+                joinedTable = prevToken.join(currToken, new Table("t" + random));
+                prevToken = joinedTable;
+                d.getMap().put(joinedTable.getName(), joinedTable);
 
-                }
             }
         }
+
 
 
 
@@ -421,6 +424,16 @@ public class Parser {
 
         // System.out.printf("You are trying to select these expressions:" +
         //       " '%s' from the join of these tables: '%s', filtered by these conditions: '%s'\n", exprs, tables, conds);
+        if (!(exprs.equals("*"))) {
+            if (exprsArr.size() > joinedTable.getColNames().size()) {
+                return "ERROR: Too many columns inputted";
+            }
+            if (!(isColExistent(exprsArr, joinedTable))) {
+                return "ERROR: column not existent";
+            }
+            return specificSelect(exprsArr, joinedTable).printTable();
+        }
+
         return joinedTable.printTable();
     }
 
@@ -428,9 +441,6 @@ public class Parser {
     public static Table specificSelect(ArrayList<String> colWanted, Table t) {
         Table newT = new Table("newTable");
 
-        if ((colWanted.size() == 1) && (colWanted.get(0) == "*")) {
-            return t;
-        }
         for (String col : colWanted) {
             Column colInput = t.getLinkedMap().get(col);
             //String colType = t.getLinkedMap().get(col).getMyType();
