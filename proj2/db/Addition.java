@@ -9,8 +9,8 @@ public class Addition implements ArithmeticOperators{
         Column newCol;
         if (checkValid(a, b)) {
             if (a.getMyType().equals("string")) {
-                for (String s : a.getValues()) {
-
+                for (int i = 0; i < a.getValues().size(); i++) {
+                    a.getValues().get(i);
                 }
             }
         }

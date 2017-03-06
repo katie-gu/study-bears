@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.HashMap;
 
 public class Database {
-    public static HashMap<String, Table> h;
+    public HashMap<String, Table> h;
     //Table myTable;
 
     public Database(){
@@ -19,12 +19,6 @@ public class Database {
        // ArrayList<>;
     }
  */
-
-    public void join(HashMap<String, Column> a, HashMap<String, Column> b){
-        for (String key : a.keySet()){
-
-        }
-    }
 
     public String transact(String query) {
        // Parse.
