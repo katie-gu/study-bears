@@ -1,6 +1,7 @@
 package db;
 
 //import java.nio.file.Files;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.StringJoiner;
 import java.util.StringTokenizer;
@@ -316,9 +317,22 @@ public class Parser {
     }
 
     private static String select(String exprs, String tables, String conds) {
-        tables = tables.replaceAll("\\s+", ""); //tables = 'A,B,C'
+        tables = tables.replaceAll("\\s+", ""); //select x from t1;
         exprs = exprs.replaceAll("\\s+", "");
         Table joinedTable = new Table("t3"); //change name later
+        ArrayList<String> exprsArr = new ArrayList<String>();
+
+        //expressions Array list (of column names desired)
+        if (exprs.contains(",")) {
+            StringTokenizer colNames = new StringTokenizer(exprs, ",");
+            String token = "";
+            while (colNames.hasMoreTokens()) {
+                token = colNames.nextToken();
+                exprsArr.add(token);
+            }
+        } else {
+            exprsArr.add(exprs);
+        }
 
         //tokenize the tables ( multiple table join)
         // int tokenIndex = 0;
@@ -330,8 +344,17 @@ public class Parser {
         StringTokenizer st = new StringTokenizer(tables, ",");
         String t1Name = st.nextToken(); //t1
         Table t1 = d.getMap().get(t1Name);
+
+        //new line added :)
         if (!(st.hasMoreTokens())) {
-            return t1.printTable();
+            if (exprsArr.size() > t1.getColNames().size()) {
+                return "ERROR: Too many columns inputted";
+            }
+            if (!(isColExistent(exprsArr, t1))) {
+                return "ERROR: column not existent";
+            }
+            return specificSelect(exprsArr, t1).printTable();
+            //return t1.printTable();
         }
         String t2Name = st.nextToken();
         Table t2 = d.getMap().get(t2Name);
@@ -399,6 +422,36 @@ public class Parser {
         // System.out.printf("You are trying to select these expressions:" +
         //       " '%s' from the join of these tables: '%s', filtered by these conditions: '%s'\n", exprs, tables, conds);
         return joinedTable.printTable();
+    }
+
+    //string table can be the final joined table if : select a from t1, t2
+    public static Table specificSelect(ArrayList<String> colWanted, Table t) {
+        Table newT = new Table("newTable");
+
+        if ((colWanted.size() == 1) && (colWanted.get(0) == "*")) {
+            return t;
+        }
+        for (String col : colWanted) {
+            Column colInput = t.getLinkedMap().get(col);
+            //String colType = t.getLinkedMap().get(col).getMyType();
+            newT.getLinkedMap().put(col, colInput);
+            newT.getColNames().add(col);
+            //newT.getLinkedMap().get(col).
+        }
+
+        return newT;
+    }
+
+    public static boolean isColExistent(ArrayList<String> colWanted, Table t) {
+        boolean isCol = false;
+        for (String col : colWanted) {
+            if ((t.getColNames().contains(col))) {
+                isCol = true;
+            } else {
+                isCol = false;
+            }
+        }
+        return isCol;
     }
 
 }
