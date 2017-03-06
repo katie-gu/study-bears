@@ -64,7 +64,7 @@ public class Column {
 
     public String printCol() {
         String col = "";
-        col = this.getName() + "\n";
+        col = this.getName() + " " + this.getMyType() + "\n";
         for (String val : this.getValues()) {
             col += val + "\n";
         }

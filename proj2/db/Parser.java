@@ -343,9 +343,9 @@ public class Parser {
         String alias = ""; //a
         String exprActual = ""; //x+y
         tables = tables.replaceAll("\\s+", ""); //select x from t1;
-        //exprs = exprs.replaceAll("\\s+", "");
         if (exprs.contains(" as ")) {
             String splittedExpr[] = exprs.split("\\s+" + "as" + "\\s+"); //may change back again
+            exprs = exprs.replaceAll("\\s+", "");
             exprs = splittedExpr[0];
             alias = splittedExpr[1];
 
@@ -368,6 +368,7 @@ public class Parser {
      //   }
         Table joinedTable = new Table("t3"); //change name later
         ArrayList<String> exprsArr = new ArrayList<String>();
+        exprs = exprs.replaceAll("\\s+", "");
 
         //expressions Array list (of column names desired)
         if (exprs.contains(",")) {
