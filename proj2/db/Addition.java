@@ -19,7 +19,12 @@ public class Addition extends ArithmeticOperators {
             if (a.getMyType().equals("string")) {
                 Column newCol = new Column(name, "string");
                 for (int i = 0; i < a.getValues().size(); i++) {
-                    newCol.addVal(a.getValues().get(i) + b.getValues().get(i));
+                    String s1 = a.getValues().get(i);
+                    String s2 = b.getValues().get(i);
+                    s1 = s1.replaceAll("'", "");
+                    s2 = s2.replaceAll("'", "");
+                    String newString = s1 + s2;
+                    newCol.addVal("'" + newString + "'");
                 }
                 return newCol;
             } else if (a.getMyType().equals("int") && b.getMyType().equals("int")) {

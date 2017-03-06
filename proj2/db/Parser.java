@@ -330,6 +330,10 @@ public class Parser {
     }
 
     private static String select(String exprs, String tables, String conds) {
+        if (tables.equals("")) {
+            //System.out.println("ERROR: malformed table.");
+            return "ERROR: malformed table.";
+        }
         ArrayList<String> operands = new ArrayList<>();
         operands.add("+");
         operands.add("-");
@@ -342,15 +346,21 @@ public class Parser {
         //exprs = exprs.replaceAll("\\s+", "");
         if (exprs.contains(" as ")) {
             String splittedExpr[] = exprs.split("\\s+" + "as" + "\\s+"); //may change back again
-            exprActual = splittedExpr[0];
+            exprs = splittedExpr[0];
             alias = splittedExpr[1];
+
+            Column combinedCol = operandFilter(operands, exprs, tables, alias);
+
+            if (combinedCol.getName().equals("NONAME")) {
+                return "ERROR: cannot join columns.";
+            }
+            if (!(combinedCol.getName().equals("NOCOL"))) {
+
+                return combinedCol.printCol();
+            }; //returns newly formed column
         }
 
-        Column combinedCol = operandFilter(operands, exprActual, tables, alias);
-        if (!(combinedCol.getName().equals("NOCOL"))) {
 
-            return combinedCol.printCol();
-        }; //returns newly formed column
 
        // if (exprs.contains("as")){
           //  exprs.split("as");
@@ -373,10 +383,7 @@ public class Parser {
 
         //tokenize the tables ( multiple table join)
         // int tokenIndex = 0;
-        if (tables.equals("")) {
-            //System.out.println("ERROR: malformed table.");
-            return "ERROR: malformed table.";
-        }
+
 
         StringTokenizer st = new StringTokenizer(tables, ",");
         String t1Name = st.nextToken(); //t1
@@ -431,8 +438,6 @@ public class Parser {
         }
 
 
-
-
         /*
         StringTokenizer st = new StringTokenizer(tables, ",");
         String prevToken = st.nextToken(); //t1
@@ -479,6 +484,10 @@ public class Parser {
         }
 
         selectedTable = joinedTable;
+
+
+
+
         return joinedTable.printTable();
     }
 
@@ -514,6 +523,7 @@ public class Parser {
          ArithmeticOperators op;
          for (String operand : operands) {
             if (exprs.contains(operand)) {
+                //remove spaces from expression
                 String splitOperand = "\\" + operand;
                 String splittedCol[] = exprs.split(splitOperand); //may change back again
                 String col1 = splittedCol[0];
