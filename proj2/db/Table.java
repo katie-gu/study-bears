@@ -1,20 +1,24 @@
 package db;
 
+import java.awt.image.AreaAveragingScaleFilter;
 import java.lang.reflect.Array;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.*;
 
 /**
- * Created by jhinukbarman on 2/26/17.
+ * Created by Jhinuk Barman on 2/26/2017.
  */
-
 public class Table {
-    private ArrayList<String> colNames;
-    public String tableName;
-    private LinkedHashMap<String, Column> colMap;
-    // A Map of column name and its data type
-
+    String name;
+    LinkedHashMap<String, Column> colMap;
+    ArrayList<String> colNames;
+    public Table (String n) {
+        name = n;
+        colMap = new LinkedHashMap<String, Column>();
+        colNames = new ArrayList<String>();
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -23,92 +27,80 @@ public class Table {
 
         Table table = (Table) o;
 
-        if (tableName != null ? !tableName.equals(table.tableName) : table.tableName != null) return false;
-        if (colMap != null ? !colMap.equals(table.colMap) : table.colMap != null) return false;
-        return colNames != null ? colNames.equals(table.colNames) : table.colNames == null;
+        if (name != null ? !name.equals(table.name) : table.name != null) return false;
+        return colMap != null ? colMap.equals(table.colMap) : table.colMap == null;
     }
 
     @Override
     public int hashCode() {
-        int result = tableName != null ? tableName.hashCode() : 0;
+        int result = name != null ? name.hashCode() : 0;
         result = 31 * result + (colMap != null ? colMap.hashCode() : 0);
-        result = 31 * result + (colNames != null ? colNames.hashCode() : 0);
         return result;
     }
-    // private Map<String, String> colTypes;
 
-    public Table(String name){
-        tableName = name;
-        colMap = new LinkedHashMap<String, Column>();
-        colNames = new ArrayList<String>();
-    }
-
-    public String getName() {
-        return tableName;
-    }
-
-    public void changeName(String name) {
-        this.tableName = name;
-    }
-
-    public void addRow(List<String> literalList){
+    public void addRow(List<String> literalList) {
         int count = 0;
         for (String key : colMap.keySet()) {
             colMap.get(key).addVal(literalList.get(count));
             count += 1;
         }
-
     }
 
-    public String getTableName(){
-        return tableName;
+    public String getName() {
+        return name;
     }
 
-    public String printTable(){
-        int countA = 0;
-        String table = "";
-        //System.out.println(colMap.keySet());
-        for (String colName : colMap.keySet()) {
-            table += colMap.get(colName).printColHead();
-            if (countA < colMap.size() - 1) {
-                table += ",";
-                countA += 1;
+    public boolean mapEmpty() {
+        for(String key : colMap.keySet()) {
+            if (colMap.get(key) != null) {
+                return false;
             }
         }
-        //System.out.println();
-        table += "\n";
+        return true;
 
-        String c = this.getColNames().get(0);
+    }
+
+    public String printTable() {
+        //print out the column heads
+        //String table = "";
+        int countA = 0;
+        String fullTable = "";
+        for(String colName : colMap.keySet()) {
+            fullTable += colMap.get(colName).printColHead();
+            if (countA < colMap.size() - 1) {
+                fullTable += ",";
+                countA+=1;
+
+            }
+        }
+        fullTable += "\n";
+        //prints out the contents of the columns
+
+        if (mapEmpty()) {
+            return "";
+        }
+
+        String c = getColNames().get(0);
+
         int length = colMap.get(c).getValues().size();
         for (int i = 0; i < length; i++) {
             int countB = 0;
-            for (String colValue: colMap.keySet()) {
-                table += colMap.get(colValue).printColVal(i);
+            for (String colValue : colMap.keySet()) {
+                fullTable += colMap.get(colValue).printColVal(i);
                 if (countB < colMap.size() - 1) {
-                    table += ",";
+                    fullTable += ",";
                     countB += 1;
                 }
             }
-            table += "\n";
+            fullTable += "\n";
         }
-        return table;
+        return fullTable; // is this returning null?
+
     }
-
-    public LinkedHashMap<String, Column> getLinkedMap(){
-        return colMap;
-    }
-
-    public ArrayList<String> getColNames(){
-        return colNames;
-    }
-
-    //TA tip: class is "noun"...join is NOT a noun so it shouldn't be a class
-    //use recursion? later: change parameter to take in any arraylist of tables
-    // (to join multiple tables)
-
 
     public Table join(Table table2, Table roughTable) {
         if(isCartesianJoin(table2)) {
+
             String chosenT1Col1Name = this.getColNames().get(0);
             int length1 = this.getLinkedMap().get(chosenT1Col1Name).getValues().size();//# of rows in t1
             String chosenT2Col1Name = table2.getColNames().get(0);
@@ -145,22 +137,23 @@ public class Table {
 
             }
             for (int i = 0; i < length1; i++) {
+
                 for (int j = 0; j < length2; j++) {
-                   // System.out.println(this.printTable());
-                   // System.out.println(table2.printTable());
-                  //  System.out.println(roughTable.printTable());
                     ArrayList<String> row = makeCartesianRow(this, table2, i, j);
                     roughTable.addRow(row);
+
                 }
+
+
             }
+
         }
 
         else {
 
             LinkedHashMap<Integer, ArrayList<String>> pairLinkedMap = new LinkedHashMap<>();
             int mapIndex = 0;
-            int t1ColNum = this.getLinkedMap().keySet().size();
-            int t2ColNum = table2.getLinkedMap().keySet().size();
+            ArrayList<String> sameCols = getSameColumnNames(this, table2);
             for (Column c1: this.getLinkedMap().values()) {
                 for (Column c2 : table2.getLinkedMap().values()) {
                     if (c1.getName().equals(c2.getName())) {
@@ -173,7 +166,29 @@ public class Table {
                         //rough table later
                         for (int i = 0; i < c1.getValues().size(); i++) {
                             for (int j = 0; j < c2.getValues().size(); j++) {
-                                if (canJoin(this, table2, i, j)) {
+
+                                if (sameCols.size() > 1) {
+
+                                    //if doing join(with tables that have multiple similar columns) then do see if row at
+                                    //t1rowIndex in table 1 and row at t2rowIndex in table 2 if similar column pairs exist
+                                    //in both tables; for ex,row 0 of t1 can only join with row 0 of t2 if, the z and w
+                                    //values in row 0 of t1 correspond with z and w values of row 0 of t2.
+                                    if (canJoinMultiple(this, table2, i, j, sameCols)) {
+                                        /*if (mapIndex >= sameCols.size()) {
+                                            break;
+                                        }*/
+                                        ArrayList<String> row = makeMultRow(this, table2, i, j, sameCols);
+                                        pairLinkedMap.put(mapIndex, row);
+                                        mapIndex += 1;
+
+                                    }
+
+
+                                }
+                                else if (canJoin(this, table2, i, j)) {
+
+                                    //if testing to see if you could join for multiple columns, you have to check if
+                                    //if all pairs of zw, are the ssatisfied
 
                                     ArrayList<String> row = makeInnerRow(c1.getName(), this, table2, i, j);
 
@@ -182,12 +197,46 @@ public class Table {
                                 }
                             }
                         }
+                        //t1ColNum -= 1;
+                        //t2ColNum -= 1;
+
+
                     }
                 }
             }
+                   /* else if ((this.getLinkedMap().keySet().size() - t1ColNum) >= 0) {
+                        roughTable.getColNames().add(c1.getName());
+                        String newColName = c1.getName();
+                        String newColType = c1.getMyType();
+                        Column newCol = new Column(newColName, newColType);
+                        roughTable.getLinkedMap().put(newColName, newCol);
+                        t1ColNum -= 1;
 
+                    }
+                    else if ((table2.getLinkedMap().keySet().size() - t2ColNum) >= 0) {
+                        roughTable.getColNames().add(c2.getName());
+                        String newColName = c2.getName();
+                        String newColType = c2.getMyType();
+                        Column newCol = new Column(newColName, newColType);
+                        roughTable.getLinkedMap().put(newColName, newCol);
+                        t2ColNum -= 1;
+                    }
+
+
+
+                }
+
+
+            }*/
             //merged rows created in pariLInked Map
-            ArrayList<ArrayList<String>> columnNamesList = colOrderList(this, table2); //ERROR
+            ArrayList<ArrayList<String>> columnNamesList = colOrderList(this, table2);
+            /*for(ArrayList<String> x : columnNamesList) {
+                for (String s : x) {
+                    System.out.print(s + "   ");
+
+                }
+
+            }*/
 
 
             //gets the columns of new order in correct order ----
@@ -197,16 +246,40 @@ public class Table {
 
                 if(!(roughTable.getLinkedMap().keySet().contains(arrList.get(0)))){
                     roughTable.getColNames().add(arrList.get(0));
+
                     roughTable.getLinkedMap().put(arrList.get(0), newCol);
                 }
                 //put columnName and put column in rough table
 
-
-
-
             }
+
+            if (sameCols.size() > 1) { //remove repeated rows from pairLinkedMap
+
+                /*if (pairLinkedMap.get(0) == null) {
+                    Table emptyTable = new Table("t3");
+                    return emptyTable;
+                }*/
+                ArrayList<Integer> indecesToRemove = new ArrayList<>();
+                for (int i = 0; i < pairLinkedMap.keySet().size(); i++) {
+                    for (int q = i + 1; q < pairLinkedMap.keySet().size(); q++) {
+                        if (pairLinkedMap.get(i).equals(pairLinkedMap.get(q))) {
+                            indecesToRemove.add(q);
+                        }
+
+                    }
+                }
+
+                for (int index : indecesToRemove) {
+                    pairLinkedMap.remove(index);
+
+                }
+            }
+
+
+
             int ind = 0;
             for (Column col : roughTable.getLinkedMap().values()) { //fill in columns of rough table
+
                 for (ArrayList<String> list : pairLinkedMap.values()) { //add values to the columns, add 0th element
                     //of the pair linked Map list to all the columns of  rough table,
                     //then add 1st element of the pair linked Map list to all the
@@ -216,11 +289,59 @@ public class Table {
                 ind += 1;
 
             }
+
+            //System.out.print ("inner join : " + roughTable.printTable());
+
+
         }
 
-        //System.out.print("inner join: " + roughTable.printTable());
+
         return roughTable;
 
+    }
+
+    public static ArrayList<String> makeMultRow(Table t1, Table t2, int t1RowInd, int t2RowInd, ArrayList<String> a) {
+        ArrayList<String> newEditedRow = new ArrayList<>();
+
+        for (String sameName : a) {
+            String item = t1.getLinkedMap().get(sameName).getValues().get(t1RowInd);
+            newEditedRow.add(item);
+
+
+        }
+
+        for (Column c1: t1.getLinkedMap().values()) {
+            if (! (containsItem(a, c1.getName()))) {
+                String item = t1.getLinkedMap().get(c1.getName()).getValues().get(t1RowInd);
+                newEditedRow.add(item);
+            }
+        }
+
+        for (Column c2 : t2.getLinkedMap().values()) {
+            if (! (containsItem(a, c2.getName()))) {
+                String item = t2.getLinkedMap().get(c2.getName()).getValues().get(t2RowInd);
+                newEditedRow.add(item);
+
+            }
+
+        }
+
+        return newEditedRow;
+
+    }
+
+    public static boolean canJoinMultiple(Table t1, Table t2, int t1RowNum, int t2RowNum, ArrayList<String> sameCols) {
+        int count = 0;
+        for (String sameColName : sameCols) {
+            String valueT1 = t1.getLinkedMap().get(sameColName).getValues().get(t1RowNum);
+            String valueT2 = t2.getLinkedMap().get(sameColName).getValues().get(t2RowNum);
+            if (!(valueT1.equals(valueT2))) {
+                return false;
+
+            }
+
+        }
+        return  true;
     }
 
     public static boolean canJoin(Table t1, Table t2, int t1RowNum, int t2RowNum) {
@@ -245,10 +366,9 @@ public class Table {
                 colOrder.add(newArrList);
             }
         }
-
+        ArrayList<ArrayList<String>> temp1 = new ArrayList<>(colOrder);
         for (Column c1 : t1.getLinkedMap().values()) { //add the names of the unique columns in table 1, starting from
             // the left most column
-            ArrayList<ArrayList<String>> temp1 = new ArrayList<>(colOrder);
             for (ArrayList<String> a : temp1) {
                 if (!(a.get(0).equals(c1.getName()))) {
                     ArrayList<String> newArrList = new ArrayList<>();
@@ -259,7 +379,6 @@ public class Table {
                 }
             }
         }
-
         ArrayList<ArrayList<String>> temp2 = new ArrayList<>(colOrder);
         ArrayList<String> cNames = new ArrayList<>();
         for (ArrayList<String> a : temp2) {
@@ -268,17 +387,20 @@ public class Table {
         for (Column c2 : t2.getLinkedMap().values()) { //add unames of the unique columns in table 2, starting from
             //the left most column
             if (!(containsItem(colNames, c2.getName()))) {
-                    ArrayList<String> newArrList = new ArrayList<>();
-                    newArrList.add(c2.getName());
-                    newArrList.add(c2.getMyType());
-                    colOrder.add(newArrList);
-                    colNames.add(c2.getName());
+                ArrayList<String> newArrList = new ArrayList<>();
+                newArrList.add(c2.getName());
+                newArrList.add(c2.getMyType());
+                colOrder.add(newArrList);
+                colNames.add(c2.getName());
 
             }
+
         }
+
 
         return colOrder;
     }
+
 
     public static boolean containsItem(ArrayList<String> arr, String s) {
         for (String str : arr) {
@@ -288,8 +410,6 @@ public class Table {
         }
         return false;
     }
-
-
 
     public static ArrayList<String> makeInnerRow(String startColName, Table t1, Table t2, int t1Index, int t2Index) {
         ArrayList<String> newEditedRow = new ArrayList<>();
@@ -320,7 +440,6 @@ public class Table {
         return true;
 
     }
-
     public void addRow(ArrayList<String> rowToAdd) {
         int count = 0;
         for(Column c : this.getLinkedMap().values()) {
@@ -328,6 +447,8 @@ public class Table {
             c.addVal(valueToAdd);
             count += 1;
         }
+
+
     }
 
     public static ArrayList<String> makeCartesianRow (Table t1, Table t2, int rowNumT1, int rowNumT2) {
@@ -335,8 +456,7 @@ public class Table {
         ArrayList<String> newRow = new ArrayList<>();
 
         for(Column c : t1.getLinkedMap().values()) {
-            //System.out.println(c.getValues());
-            String item = c.getValues().get(rowNumT1); //ERROR at dis line
+            String item = c.getValues().get(rowNumT1);
             newRow.add(item);
         }
         for(Column c : t2.getLinkedMap().values()) {
@@ -355,7 +475,7 @@ public class Table {
 
 
     }
-    private static ArrayList<String> getCommonValues(Column c1, Column c2) {
+    private static ArrayList<String> getCommonValues(Column c1, Column c2) { //get common values between two columns
         ArrayList<String> commonValues = new ArrayList<>();
         for(int i = 0; i < c1.myValues.size(); i ++) {
             if (equalColVals(c1, c2, i)) {
@@ -366,18 +486,16 @@ public class Table {
         return commonValues;
     }
 
-
-
-
-
-
-    //----------------------------------------------------//
-
-
-
-
+    public static ArrayList<String> getSameColumnNames(Table t1, Table t2) {
+        ArrayList<String> similarColNames = new ArrayList<>();
+        for (Column c1 : t1.getLinkedMap().values()) {
+            if (t2.getLinkedMap().keySet().contains(c1.getName())) {
+                similarColNames.add(c1.getName());
+            }
+        }
+        return similarColNames;
+    }
     public String insertRow(String vals) {
-        //vals = 1,2,3,4,5,6
         int tokenIndex = 0;
         String token;
         StringTokenizer st = new StringTokenizer(vals, ",");
@@ -406,7 +524,7 @@ public class Table {
             //if the colName type matches type of the token (literal)
             if (type.equals(currColType)) {
                 this.getLinkedMap().get(currColName).addVal(token);
-             } else {
+            } else {
                 return "ERROR: Value type does not match column type.";
             }
             tokenIndex += 1;
@@ -416,4 +534,11 @@ public class Table {
 
 
 
+    public LinkedHashMap<String, Column> getLinkedMap() {
+        return colMap;
+    }
+
+    public ArrayList<String> getColNames() {
+        return colNames;
+    }
 }
