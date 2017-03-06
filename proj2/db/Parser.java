@@ -149,8 +149,9 @@ public class Parser {
               //  " '%s' from the join of these tables: '%s', filtered by these conditions: '%s'\n", name, exprs, tables, conds);
         select(exprs, tables, conds);
         d.getMap().put(name, selectedTable);
-        //selectedTable.changeName(name);
+        selectedTable.changeName(name);
         //selectedTable.getName()
+
         return "";
     }
 
@@ -355,7 +356,9 @@ public class Parser {
                 return "ERROR: cannot join columns.";
             }
             if (!(combinedCol.getName().equals("NOCOL"))) {
-
+                selectedTable = new Table("t");
+                selectedTable.getLinkedMap().put(combinedCol.getName(), combinedCol);
+                selectedTable.getColNames().add(combinedCol.getName());
                 return combinedCol.printCol();
             }; //returns newly formed column
         }
@@ -527,6 +530,9 @@ public class Parser {
                 //remove spaces from expression
                 String splitOperand = "\\" + operand;
                 String splittedCol[] = exprs.split(splitOperand); //may change back again
+                if (splittedCol.length < 2) {
+                    return new Column("NOCOL", "value");
+                }
                 String col1 = splittedCol[0];
                 String col2 = splittedCol[1];
 

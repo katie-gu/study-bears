@@ -20,6 +20,10 @@ public class Table {
         colNames = new ArrayList<String>();
     }
 
+    public void changeName(String name) {
+        this.name = name;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
