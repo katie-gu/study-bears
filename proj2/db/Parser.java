@@ -16,6 +16,8 @@ public class Parser {
     // Various common constructs, simplifies parsing.
     public static Database d;
 
+    private static Table selectedTable;
+
     public Parser(Database db) {
         d = db;
     }
@@ -136,8 +138,12 @@ public class Parser {
     }
 
     private static String createSelectedTable(String name, String exprs, String tables, String conds) {
-        System.out.printf("You are trying to create a table named %s by selecting these expressions:" +
-                " '%s' from the join of these tables: '%s', filtered by these conditions: '%s'\n", name, exprs, tables, conds);
+        //System.out.printf("You are trying to create a table named %s by selecting these expressions:" +
+              //  " '%s' from the join of these tables: '%s', filtered by these conditions: '%s'\n", name, exprs, tables, conds);
+        select(exprs, tables, conds);
+        d.getMap().put(name, selectedTable);
+        //selectedTable.changeName(name);
+        //selectedTable.getName()
         return "";
     }
 
@@ -348,6 +354,7 @@ public class Parser {
         //new line added :)
         if (!(st.hasMoreTokens())) {
             if (exprs.equals("*")) {
+                selectedTable = t1;
                 return t1.printTable();
             }
             if (exprsArr.size() > t1.getColNames().size()) {
@@ -356,7 +363,8 @@ public class Parser {
             if (!(isColExistent(exprsArr, t1))) {
                 return "ERROR: column not existent";
             }
-            return specificSelect(exprsArr, t1).printTable();
+            selectedTable = specificSelect(exprsArr, t1);
+            return selectedTable.printTable();
             //return t1.printTable();
         }
         String t2Name = st.nextToken();
@@ -431,9 +439,11 @@ public class Parser {
             if (!(isColExistent(exprsArr, joinedTable))) {
                 return "ERROR: column not existent";
             }
-            return specificSelect(exprsArr, joinedTable).printTable();
+            selectedTable = specificSelect(exprsArr, joinedTable);
+            return selectedTable.printTable();
         }
 
+        selectedTable = joinedTable;
         return joinedTable.printTable();
     }
 

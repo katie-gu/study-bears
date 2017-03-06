@@ -47,6 +47,9 @@ public class Table {
         return tableName;
     }
 
+    public void changeName(String name) {
+        this.tableName = name;
+    }
 
     public void addRow(List<String> literalList){
         int count = 0;
@@ -410,6 +413,7 @@ public class Table {
         }
         return "";
     }
+
 
 
 }
