@@ -6,17 +6,19 @@ package db;
 public class Multiplication extends ArithmeticOperators {
     private Column a;
     private Column b;
+    private String name;
 
-    public Multiplication(Column a, Column b) {
+    public Multiplication(Column a, Column b, String name) {
         this.a = a;
         this.b = b;
+        this.name = name;
     }
 
 
     @Override
     public Column combineCols() {
         if (a.getMyType().equals("int") && b.getMyType().equals("int")) {
-            Column newCol = new Column("c", "int");
+            Column newCol = new Column(name, "int");
             for (int i = 0; i < a.getValues().size(); i++) {
                 int a1 = Integer.parseInt(a.getValues().get(i));
                 int b1 = Integer.parseInt(b.getValues().get(i));
@@ -26,7 +28,7 @@ public class Multiplication extends ArithmeticOperators {
             return newCol;
 
         } else {
-            Column newCol = new Column("c", "float");
+            Column newCol = new Column(name, "float");
             for (int i = 0; i < a.getValues().size(); i++) {
                 String s = a.getValues().get(i) + "f";
                 float f = Float.parseFloat(s);

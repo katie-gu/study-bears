@@ -6,22 +6,24 @@ package db;
 public class Addition extends ArithmeticOperators {
     private Column a;
     private Column b;
-    public Addition(Column a, Column b) {
+    private String name;
+    public Addition(Column a, Column b, String name) {
         this.a = a;
         this.b = b;
+        this.name = name;
     }
 
     @Override
     public Column combineCols() {
         if (checkValid(a, b)) {
             if (a.getMyType().equals("string")) {
-                Column newCol = new Column("c", "string");
+                Column newCol = new Column(name, "string");
                 for (int i = 0; i < a.getValues().size(); i++) {
                     newCol.addVal(a.getValues().get(i) + b.getValues().get(i));
                 }
                 return newCol;
             } else if (a.getMyType().equals("int") && b.getMyType().equals("int")) {
-                Column newCol = new Column("c", "int");
+                Column newCol = new Column(name, "int");
                 for (int i = 0; i < a.getValues().size(); i++) {
                     int a1 = Integer.parseInt(a.getValues().get(i));
                     int b1 = Integer.parseInt(b.getValues().get(i));
@@ -41,7 +43,7 @@ public class Addition extends ArithmeticOperators {
 
             //if ((a.getMyType().equals("int") && b.getMyType().equals("float")) ||
                // (a.getMyType().equals("float") && b.getMyType().equals("int"))) {
-                Column newCol = new Column("c", "float");
+                Column newCol = new Column(name, "float");
                 for (int i = 0; i < a.getValues().size(); i++) {
                     String s1 = a.getValues().get(i) + "f";
                     float f = Float.parseFloat(s1);

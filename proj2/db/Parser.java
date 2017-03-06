@@ -2,6 +2,7 @@ package db;
 
 //import java.nio.file.Files;
 //import java.lang.reflect.Array;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.StringJoiner;
 import java.util.StringTokenizer;
@@ -329,11 +330,31 @@ public class Parser {
     }
 
     private static String select(String exprs, String tables, String conds) {
+        ArrayList<String> operands = new ArrayList<>();
+        operands.add("+");
+        operands.add("-");
+        operands.add("*");
+        operands.add("/");
+
+        String alias = ""; //a
+        String exprActual = ""; //x+y
         tables = tables.replaceAll("\\s+", ""); //select x from t1;
+        //exprs = exprs.replaceAll("\\s+", "");
+        if (exprs.contains(" as ")) {
+            String splittedExpr[] = exprs.split("\\s+" + "as" + "\\s+"); //may change back again
+            exprActual = splittedExpr[0];
+            alias = splittedExpr[1];
+        }
+
+        Column combinedCol = operandFilter(operands, exprActual, tables, alias);
+        if (!(combinedCol.getName().equals("NOCOL"))) {
+
+            return combinedCol.printCol();
+        }; //returns newly formed column
+
        // if (exprs.contains("as")){
           //  exprs.split("as");
       //  } else {
-        exprs = exprs.replaceAll("\\s+", "");
      //   }
         Table joinedTable = new Table("t3"); //change name later
         ArrayList<String> exprsArr = new ArrayList<String>();
@@ -487,5 +508,42 @@ public class Parser {
         }
         return isCol;
     }
+
+    public static Column operandFilter(ArrayList<String> operands, String exprs, String tables, String aliasName) {
+        //change parameter to take the joined table later on
+         ArithmeticOperators op;
+         for (String operand : operands) {
+            if (exprs.contains(operand)) {
+                String splitOperand = "\\" + operand;
+                String splittedCol[] = exprs.split(splitOperand); //may change back again
+                String col1 = splittedCol[0];
+                String col2 = splittedCol[1];
+
+                Column c1 = d.getMap().get(tables).getLinkedMap().get(col1);
+                Column c2 = d.getMap().get(tables).getLinkedMap().get(col2);
+
+
+                if (operand.equals("+")) {
+                    op = new Addition(c1, c2, aliasName);
+                    return op.combineCols();
+                } else if (operand.equals("-")) {
+                    op = new Subtraction(c1, c2, aliasName);
+                    return op.combineCols();
+                } else if (operand.equals("/")) {
+                    op = new Division(c1, c2, aliasName);
+                    return op.combineCols();
+                } else {
+                    op = new Multiplication(c1, c2, aliasName);
+                    return op.combineCols();
+                }
+
+
+
+
+            }
+        }
+        return new Column("NOCOL", "value");
+    }
+
 
 }
