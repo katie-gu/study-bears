@@ -1,15 +1,15 @@
 package db;
 
-import java.math.BigDecimal;
-import java.util.*;
-import java.math.RoundingMode;
+//import java.math.BigDecimal;
+import java.util.ArrayList;
+//import java.math.RoundingMode;
 /**
  * Created by jhinukbarman on 2/25/17.
  */
-public class Column{
-    public ArrayList<String> myValues;
-    public String myName;
-    public String myType;
+public class Column {
+    private ArrayList<String> myValues;
+    private String myName;
+    private String myType;
 
 
     public Column(String name, String type) {
@@ -28,11 +28,11 @@ public class Column{
         String temp = curr;
 
 
-        if (myType.equals("string")){
+        if (myType.equals("string")) {
             temp = temp.replace("\'\'", "\'");
             return temp;
-        } else if (myType.equals("float")){
-            if (curr == "NOVALUE") {
+        } else if (myType.equals("float")) {
+            if (curr.equals("NOVALUE")) {
                 return curr;
             }
             float f = Float.parseFloat(curr);

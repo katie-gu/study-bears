@@ -6,10 +6,10 @@ import java.io.IOException;
  * Created by jhinukbarman on 2/27/17.
  */
 public class Tests {
-    public static Database da = new Database();
-    public static Parser p = new Parser(da);
+    private static Database da = new Database();
+    private static Parser p = new Parser(da);
 
-    public static void testLoadTable() throws IOException{
+    public static void testLoadTable() throws IOException {
         p.loadTable("examples/t1");
         p.loadTable("examples/t2");
         p.loadTable("examples/fans");
@@ -33,7 +33,7 @@ public class Tests {
     }
 
 
-    public static void main(String[] args) throws IOException{
+    public static void main(String[] args) throws IOException {
         testLoadTable();
         testSelect();
         //testCreateTable();

@@ -1,8 +1,8 @@
 package db;
 
-import java.awt.image.AreaAveragingScaleFilter;
-import java.lang.reflect.Array;
-import java.util.HashMap;
+//import java.awt.image.AreaAveragingScaleFilter;
+//import java.lang.reflect.Array;
+//import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.*;
@@ -11,10 +11,10 @@ import java.util.*;
  * Created by Jhinuk Barman on 2/26/2017.
  */
 public class Table {
-    String name;
-    LinkedHashMap<String, Column> colMap;
-    ArrayList<String> colNames;
-    public Table (String n) {
+    private String name;
+    private LinkedHashMap<String, Column> colMap;
+    private ArrayList<String> colNames;
+    public Table(String n) {
         name = n;
         colMap = new LinkedHashMap<String, Column>();
         colNames = new ArrayList<String>();
@@ -22,12 +22,18 @@ public class Table {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         Table table = (Table) o;
 
-        if (name != null ? !name.equals(table.name) : table.name != null) return false;
+        if (name != null ? !name.equals(table.name) : table.name != null) {
+            return false;
+        }
         return colMap != null ? colMap.equals(table.colMap) : table.colMap == null;
     }
 
@@ -51,7 +57,7 @@ public class Table {
     }
 
     public boolean mapEmpty() {
-        for(String key : colMap.keySet()) {
+        for (String key : colMap.keySet()) {
             if (colMap.get(key) != null) {
                 return false;
             }
@@ -65,11 +71,11 @@ public class Table {
         //String table = "";
         int countA = 0;
         String fullTable = "";
-        for(String colName : colMap.keySet()) {
+        for (String colName : colMap.keySet()) {
             fullTable += colMap.get(colName).printColHead();
             if (countA < colMap.size() - 1) {
                 fullTable += ",";
-                countA+=1;
+                countA += 1;
 
             }
         }
@@ -99,12 +105,12 @@ public class Table {
     }
 
     public Table join(Table table2, Table roughTable) {
-        if(isCartesianJoin(table2)) {
+        if (isCartesianJoin(table2)) {
 
             String chosenT1Col1Name = this.getColNames().get(0);
-            int length1 = this.getLinkedMap().get(chosenT1Col1Name).getValues().size();//# of rows in t1
+            int length1 = this.getLinkedMap().get(chosenT1Col1Name).getValues().size(); //# of rows in t1
             String chosenT2Col1Name = table2.getColNames().get(0);
-            int length2 = table2.getLinkedMap().get(chosenT2Col1Name).getValues().size();//# of rows in t2
+            int length2 = table2.getLinkedMap().get(chosenT2Col1Name).getValues().size(); //# of rows in t2
             //number or rows in 2nd table
             ArrayList<ArrayList<String>> colHeads = new ArrayList<>();
 
@@ -147,9 +153,7 @@ public class Table {
 
             }
 
-        }
-
-        else {
+        } else {
 
             LinkedHashMap<Integer, ArrayList<String>> pairLinkedMap = new LinkedHashMap<>();
             int mapIndex = 0;
@@ -162,7 +166,7 @@ public class Table {
                         String newColName = c1.getName();
                         String newColType = c1.getMyType();
                         Column newCol = new Column(newColName, newColType);
-                        roughTable.getLinkedMap().put(newColName, newCol);// may delete, well be adding colNames to
+                        roughTable.getLinkedMap().put(newColName, newCol); // may delete, well be adding colNames to
                         //rough table later
                         for (int i = 0; i < c1.getValues().size(); i++) {
                             for (int j = 0; j < c2.getValues().size(); j++) {
@@ -184,8 +188,7 @@ public class Table {
                                     }
 
 
-                                }
-                                else if (canJoin(this, table2, i, j)) {
+                                } else if (canJoin(this, table2, i, j)) {
 
                                     //if testing to see if you could join for multiple columns, you have to check if
                                     //if all pairs of zw, are the ssatisfied
@@ -241,10 +244,10 @@ public class Table {
 
             //gets the columns of new order in correct order ----
 
-            for(ArrayList<String> arrList : columnNamesList) {
+            for (ArrayList<String> arrList : columnNamesList) {
                 Column newCol = new Column(arrList.get(0), arrList.get(1));
 
-                if(!(roughTable.getLinkedMap().keySet().contains(arrList.get(0)))){
+                if (!(roughTable.getLinkedMap().keySet().contains(arrList.get(0)))) {
                     roughTable.getColNames().add(arrList.get(0));
 
                     roughTable.getLinkedMap().put(arrList.get(0), newCol);
@@ -311,14 +314,14 @@ public class Table {
         }
 
         for (Column c1: t1.getLinkedMap().values()) {
-            if (! (containsItem(a, c1.getName()))) {
+            if (!(containsItem(a, c1.getName()))) {
                 String item = t1.getLinkedMap().get(c1.getName()).getValues().get(t1RowInd);
                 newEditedRow.add(item);
             }
         }
 
         for (Column c2 : t2.getLinkedMap().values()) {
-            if (! (containsItem(a, c2.getName()))) {
+            if (!(containsItem(a, c2.getName()))) {
                 String item = t2.getLinkedMap().get(c2.getName()).getValues().get(t2RowInd);
                 newEditedRow.add(item);
 
@@ -432,7 +435,7 @@ public class Table {
     }
     private boolean isCartesianJoin(Table t2) {
         //no columns in common
-        for(String t1Key : this.getLinkedMap().keySet()) {
+        for (String t1Key : this.getLinkedMap().keySet()) {
             if (t2.getLinkedMap().keySet().contains(t1Key)) {
                 return false;
             }
@@ -442,7 +445,7 @@ public class Table {
     }
     public void addRow(ArrayList<String> rowToAdd) {
         int count = 0;
-        for(Column c : this.getLinkedMap().values()) {
+        for (Column c : this.getLinkedMap().values()) {
             String valueToAdd = rowToAdd.get(count);
             c.addVal(valueToAdd);
             count += 1;
@@ -451,25 +454,24 @@ public class Table {
 
     }
 
-    public static ArrayList<String> makeCartesianRow (Table t1, Table t2, int rowNumT1, int rowNumT2) {
+    public static ArrayList<String> makeCartesianRow(Table t1, Table t2, int rowNumT1, int rowNumT2) {
         //returns a full row, at a certaing index between 2 tables
         ArrayList<String> newRow = new ArrayList<>();
 
-        for(Column c : t1.getLinkedMap().values()) {
+        for (Column c : t1.getLinkedMap().values()) {
             String item = c.getValues().get(rowNumT1);
             newRow.add(item);
         }
-        for(Column c : t2.getLinkedMap().values()) {
+        for (Column c : t2.getLinkedMap().values()) {
             String item = c.getValues().get(rowNumT2);
             newRow.add(item);
         }
         return newRow; //does this return null?
     }
-    private static boolean equalColVals (Column c1, Column c2, int index) {
+    private static boolean equalColVals(Column c1, Column c2, int index) {
         if (!((c1.getMyType()).equals(c2.getMyType()))) {
             return false;
-        }
-        else {
+        } else {
             return c1.getValues().get(index).equals(c2.getValues().get(index));
         }
 
@@ -477,7 +479,7 @@ public class Table {
     }
     private static ArrayList<String> getCommonValues(Column c1, Column c2) { //get common values between two columns
         ArrayList<String> commonValues = new ArrayList<>();
-        for(int i = 0; i < c1.myValues.size(); i ++) {
+        for (int i = 0; i < c1.getValues().size(); i++) {
             if (equalColVals(c1, c2, i)) {
                 commonValues.add(c1.getValues().get(i));
             }

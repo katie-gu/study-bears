@@ -1,8 +1,10 @@
+/*
 package db;
 
 /**
  * Created by jhinukbarman on 2/25/17.
  */
+/*
 public class StringType<T> extends Type<T> {
 
     public StringType(T n){
@@ -14,3 +16,4 @@ public class StringType<T> extends Type<T> {
         System.out.print("'" + this.name + "'");
     }
 }
+*/

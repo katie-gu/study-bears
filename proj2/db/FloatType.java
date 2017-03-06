@@ -1,3 +1,4 @@
+/*
 package db;
 
 import java.math.*;
@@ -5,6 +6,8 @@ import java.math.*;
 /**
  * Created by jhinukbarman on 2/25/17.
  */
+
+/*
 public class FloatType<T> extends Type<T> {
 
     public FloatType(T n){
@@ -18,3 +21,4 @@ public class FloatType<T> extends Type<T> {
     }
 
 }
+*/

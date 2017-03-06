@@ -1,25 +1,30 @@
 package db;
 
 //import java.nio.file.Files;
-import java.lang.reflect.Array;
+//import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.StringJoiner;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.io.*;
-import java.io.FileReader;
-import java.nio.file.*;
+//import java.io.FileReader;
+//import java.nio.file.*;
 //import java.nio.charset.*;
 
 public class Parser {
     // Various common constructs, simplifies parsing.
-    public static Database d;
+    private static Database d;
 
     private static Table selectedTable;
 
     public Parser(Database db) {
         d = db;
+    }
+
+    //added this method
+    public Database getDataBase() {
+        return d;
     }
 
     private static final String REST = "\\s*(.*)\\s*",
@@ -36,16 +41,17 @@ public class Parser {
             SELECT_CMD = Pattern.compile("select " + REST);
 
     // Stage 2 syntax, contains the clauses of commands.
-    private static final Pattern CREATE_NEW = Pattern.compile("(\\S+)\\s+\\((\\S+\\s+\\S+\\s*" +
-            "(?:,\\s*\\S+\\s+\\S+\\s*)*)\\)"),
-            SELECT_CLS = Pattern.compile("([^,]+?(?:,[^,]+?)*)\\s+from\\s+" +
-                    "(\\S+\\s*(?:,\\s*\\S+\\s*)*)(?:\\s+where\\s+" +
-                    "([\\w\\s+\\-*/'<>=!]+?(?:\\s+and\\s+" +
-                    "[\\w\\s+\\-*/'<>=!]+?)*))?"),
-            CREATE_SEL = Pattern.compile("(\\S+)\\s+as select\\s+" +
-                    SELECT_CLS.pattern()),
-            INSERT_CLS = Pattern.compile("(\\S+)\\s+values\\s+(.+?" +
-                    "\\s*(?:,\\s*.+?\\s*)*)");
+    private static final Pattern CREATE_NEW = Pattern.compile("(\\S+)\\s+\\((\\S+\\s+\\S+\\s*"
+            + "(?:,\\s*\\S+\\s+\\S+\\s*)*)\\)"),
+            SELECT_CLS = Pattern.compile("([^,]+?(?:,[^,]+?)*)\\s+from\\s+"
+                    + "(\\S+\\s*(?:,\\s*\\S+\\s*)*)(?:\\s+where\\s+"
+                    + "([\\w\\s+\\-*/'<>=!]+?(?:\\s+and\\s+"
+                    + "[\\w\\s+\\-*/'<>=!]+?)*))?"),
+            CREATE_SEL = Pattern.compile("(\\S+)\\s+as select\\s+"
+                    + SELECT_CLS.pattern()),
+            INSERT_CLS = Pattern.compile("(\\S+)\\s+values\\s+(.+?"
+                    + "\\s*(?:,\\s*.+?\\s*)*)");
+
 
     /*
     public static void main(String[] args) {
@@ -80,7 +86,7 @@ public class Parser {
             return printTable(m.group(1));
         } else if ((m = SELECT_CMD.matcher(query)).matches()) {
             return select(m.group(1));
-        } else {
+        //} else {
             //return "ERROR: incorrect command";
             //System.err.printf("Malformed query: %s\n", query);
         }
@@ -271,7 +277,7 @@ public class Parser {
     //}
 
     private static String dropTable(String name) {
-        if(d.getMap() == null) {
+        if (d.getMap() == null) {
             return "ERROR: No tables exist.";
         } else if (!(d.getMap().keySet().contains(name))) {
             return "ERROR: table does not exist in database.";

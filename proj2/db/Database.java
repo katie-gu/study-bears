@@ -1,13 +1,13 @@
 package db;
 
-import java.io.IOException;
+//import java.io.IOException;
 import java.util.HashMap;
 
 public class Database {
-    public HashMap<String, Table> h;
+    private HashMap<String, Table> h;
     //Table myTable;
 
-    public Database(){
+    public Database() {
         h = new HashMap<String, Table>();
     }
 /*
@@ -28,7 +28,7 @@ public class Database {
         //return "from dataBase class hi";
     }
 
-    public HashMap<String, Table> getMap(){
+    public HashMap<String, Table> getMap() {
         return h;
     }
 
