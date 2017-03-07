@@ -4,11 +4,13 @@ package db;
 //import java.lang.reflect.Array;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.StringJoiner;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.io.*;
+import java.util.Arrays;
 //import java.io.FileReader;
 //import java.nio.file.*;
 //import java.nio.charset.*;
@@ -330,11 +332,40 @@ public class Parser {
         return select(m.group(1), m.group(2), m.group(3));
     }
 
-    private static String select(String exprs, String tables, String conds) {
+    private static String select(String exprs, String tables, String conds) { //where y>5 ---> conds: y>5
+        Table tempTable = new Table("tempTable");
+
+        tables = tables.replaceAll("\\s+", "");
+        if (conds != null) {
+            conds = conds.replaceAll("\\s+", "");
+        }
+        String splittedTables[] = tables.split(","); //may change back again
+
+        //either join table or pick single table if choosing from only 1 table
+        if (splittedTables.length <= 1) {
+            tempTable = d.getMap().get(tables);
+        } else {
+            //checks if all tables in the input of tables are valid
+            //if (joinedTable(tables).getName().equals("Invalid Table")) {
+              //  return "ERROR: cannot select from nonexistent tables.";
+            //} else {
+                tempTable = joinedTable(tables);
+           // }
+        }
+
+        //conds --> don't need else for this
+        if (conds != null) {
+            tempTable = editedTable(conds, tempTable);
+        }
+
         if (tables.equals("")) {
             //System.out.println("ERROR: malformed table.");
             return "ERROR: malformed table.";
         }
+
+
+        //-----------------------//
+        /*
         ArrayList<String> operands = new ArrayList<>();
         operands.add("+");
         operands.add("-");
@@ -344,31 +375,7 @@ public class Parser {
         String alias = ""; //a
         String exprActual = ""; //x+y
         tables = tables.replaceAll("\\s+", ""); //select x from t1;
-        if (exprs.contains(" as ")) {
-            String splittedExpr[] = exprs.split("\\s+" + "as" + "\\s+"); //may change back again
-            exprs = exprs.replaceAll("\\s+", "");
-            exprs = splittedExpr[0];
-            alias = splittedExpr[1];
 
-            Column combinedCol = operandFilter(operands, exprs, tables, alias);
-
-            if (combinedCol.getName().equals("NONAME")) {
-                return "ERROR: cannot join columns.";
-            }
-            if (!(combinedCol.getName().equals("NOCOL"))) {
-                selectedTable = new Table("t");
-                selectedTable.getLinkedMap().put(combinedCol.getName(), combinedCol);
-                selectedTable.getColNames().add(combinedCol.getName());
-                return combinedCol.printCol();
-            }; //returns newly formed column
-        }
-
-
-
-       // if (exprs.contains("as")){
-          //  exprs.split("as");
-      //  } else {
-     //   }
         Table joinedTable = new Table("t3"); //change name later
         ArrayList<String> exprsArr = new ArrayList<String>();
         exprs = exprs.replaceAll("\\s+", "");
@@ -441,41 +448,6 @@ public class Parser {
             }
         }
 
-
-        /*
-        StringTokenizer st = new StringTokenizer(tables, ",");
-        String prevToken = st.nextToken(); //t1
-        Table prevTable = d.getMap().get(prevToken);
-
-        String currToken;
-        while (st.hasMoreTokens()) {
-            currToken = st.nextToken(); //t2
-            Table currTable = d.getMap().get(currToken);
-            if ((prevTable == null) || (currTable == null)) {
-                return "ERROR: Cannot select from nonexistent tables.";
-            } else if (currToken.equals(prevToken)) {
-                    joinedTable = currTable; //not sure if this works if combined table is same as 3rd table
-            } else if (exprs.equals("*")) {
-                joinedTable = prevTable.join(currTable, joinedTable);
-            }
-            d.getMap().put("newjoinedTable", joinedTable);
-            //tokenIndex += 1;
-            prevTable = joinedTable;
-        }
-
-        */
-            //  String splittedTables[] = tables.split(","); //may change back again
-            //  String table1 = splittedTables[0];
-            //  String table2 = splittedTables[1];
-            //check my code on github
-
-            // Table t1 = d.getMap().get(table1);
-            //  Table t2 = d.getMap().get(table2);
-            //exprs = 'Firstname,Lastname,TeamName'
-            //select Firstname,Lastname,TeamName from fans where Lastname >= 'Lee'
-
-        // System.out.printf("You are trying to select these expressions:" +
-        //       " '%s' from the join of these tables: '%s', filtered by these conditions: '%s'\n", exprs, tables, conds);
         if (!(exprs.equals("*"))) {
             if (exprsArr.size() > joinedTable.getColNames().size()) {
                 return "ERROR: Too many columns inputted";
@@ -489,22 +461,165 @@ public class Parser {
 
         selectedTable = joinedTable;
 
+        if (exprs.contains(" as ")) {
+            String splittedExpr[] = exprs.split("\\s+" + "as" + "\\s+"); //may change back again
+            exprs = exprs.replaceAll("\\s+", "");
+            exprs = splittedExpr[0];
+            alias = splittedExpr[1];
 
+            Column combinedCol = colFilter(operands, exprs, tables, alias);
 
+            if (combinedCol.getName().equals("NONAME")) {
+                return "ERROR: cannot join columns.";
+            }
+            if (!(combinedCol.getName().equals("NOCOL"))) {
+                selectedTable = new Table("t");
+                selectedTable.getLinkedMap().put(combinedCol.getName(), combinedCol);
+                selectedTable.getColNames().add(combinedCol.getName());
+                return combinedCol.printCol();
+            }
+        }
+        */
 
-        return joinedTable.printTable();
+        return tempTable.printTable();
     }
 
-    //string table can be the final joined table if : select a from t1, t2
+    public static Table copyTable(Table first) {
+        Table newT = new Table("copy" + first.getName());
+        LinkedHashMap<String, Column> copyMap = new LinkedHashMap<>(first.getLinkedMap());
+        newT.colMap = copyMap; //
+        for (String col : first.getColNames()) {
+            newT.getColNames().add(col);
+        }
+        return newT;
+
+    }
+    public static Table editedTable(String conds, Table currTable) {
+        Table newTable = copyTable(currTable);
+        //change split earlier
+        String splittedConds[] = conds.split("\\s+" + "and" + "\\s+");
+        ArrayList<String> condArr = new ArrayList<>((Arrays.asList("==", "!=", "<=", ">=", "<", ">")));
+        //String condArr[] = {"==", "!=", "<", ">", "<=", ">="};
+
+        for (String condition : splittedConds) {
+            for (String condOp : condArr) {
+                if (condition.contains(condOp)) {
+                    newTable = evalOp(condition, condOp, newTable, currTable);
+                    break;
+                }
+            }
+        }
+
+        return newTable;
+
+
+    }
+
+    public static Table evalOp(String condLine, String operand, Table t, Table curr) {
+        ComparisonOperators op;
+        String splittedCondLine[] = condLine.split("\\" + operand);
+        String split1 = splittedCondLine[0];
+        String split2 = splittedCondLine[1];
+
+        if (operand.equals("==")) {
+            op = new EqualTo(split1, split2, operand, t, curr);
+
+        } else if (operand.equals("!=")) {
+            op = new NotEqualTo(split1, split2, operand, t, curr);
+
+        } else if  (operand.equals("<")) {
+            op = new LessThan(split1, split2, operand, t, curr);
+
+        } else if  (operand.equals(">")) {
+            op = new GreaterThan(split1, split2, operand, t, curr);
+
+        } else if  (operand.equals("<=")) {
+            op = new LessThanOrEqual(split1, split2, operand, t, curr);
+
+        } else {
+        //else if  (operand.equals(">=")) {
+            op = new GreaterThanOrEqual(split1, split2, operand, t, curr);
+        }
+        return op.evalOp();
+
+        //return new Table("hi");
+
+    }
+
+    /*
+    public static boolean isValidTables(String tables) {
+        Table joinedTable = new Table("joinedTable"); //change name later
+
+        StringTokenizer st = new StringTokenizer(tables, ",");
+        String t1Name = st.nextToken(); //t1
+
+        //CHECK IF T1 and T2 exist!
+        Table t1 = d.getMap().get(t1Name);
+        String t2Name = st.nextToken();
+        Table t2 = d.getMap().get(t2Name);
+        joinedTable = t1.join(t2, joinedTable);
+        Table prevToken = joinedTable;
+
+        while (st.hasMoreTokens()) {
+            String currName = st.nextToken(); //t2
+            Table currToken = d.getMap().get(currName);
+            if ((prevToken == null) || (currToken == null)) {
+                return false;
+            } else {
+                int random = (int) (Math.random() * 100 + 1);
+                joinedTable = prevToken.join(currToken, new Table("t" + random));
+                prevToken = joinedTable;
+             }
+        }
+
+        return true;
+
+    }
+    */
+
+    public static Table joinedTable(String tables) {
+        Table joinedTable = new Table("joinedTable"); //change name later
+        StringTokenizer st = new StringTokenizer(tables, ",");
+        String t1Name = st.nextToken(); //t1
+        Table t1 = d.getMap().get(t1Name);
+        String t2Name = st.nextToken();
+        Table t2 = d.getMap().get(t2Name);
+
+        if (t1Name.equals(t2Name)) {
+            //not sure if this works if combined table is same as 3rd table
+            return t1;
+        }
+
+        joinedTable = t1.join(t2, joinedTable);
+        Table prevToken = joinedTable;
+
+        while (st.hasMoreTokens()) {
+            String currName = st.nextToken(); //t2
+            Table currToken = d.getMap().get(currName);
+            if ((prevToken == null) || (currToken == null)) {
+                return new Table("Invalid Table");
+            } else {
+                int random = (int) (Math.random() * 100 + 1);
+                joinedTable = prevToken.join(currToken, new Table("t" + random));
+                prevToken = joinedTable;
+                d.getMap().put(joinedTable.getName(), joinedTable);
+            }
+        }
+
+            return joinedTable;
+    }
+
+
+
+
+
     public static Table specificSelect(ArrayList<String> colWanted, Table t) {
         Table newT = new Table("newTable");
 
         for (String col : colWanted) {
             Column colInput = t.getLinkedMap().get(col);
-            //String colType = t.getLinkedMap().get(col).getMyType();
             newT.getLinkedMap().put(col, colInput);
             newT.getColNames().add(col);
-            //newT.getLinkedMap().get(col).
         }
 
         return newT;
@@ -522,8 +637,7 @@ public class Parser {
         return isCol;
     }
 
-    public static Column operandFilter(ArrayList<String> operands, String exprs, String tables, String aliasName) {
-        //change parameter to take the joined table later on
+    public static Column colFilter(ArrayList<String> operands, String exprs, String tables, String aliasName) {
          ArithmeticOperators op;
          for (String operand : operands) {
             if (exprs.contains(operand)) {
@@ -539,7 +653,6 @@ public class Parser {
                 Column c1 = d.getMap().get(tables).getLinkedMap().get(col1);
                 Column c2 = d.getMap().get(tables).getLinkedMap().get(col2);
 
-
                 if (operand.equals("+")) {
                     op = new Addition(c1, c2, aliasName);
                     return op.combineCols();
@@ -553,10 +666,6 @@ public class Parser {
                     op = new Multiplication(c1, c2, aliasName);
                     return op.combineCols();
                 }
-
-
-
-
             }
         }
         return new Column("NOCOL", "value");

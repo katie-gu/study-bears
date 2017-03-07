@@ -10,15 +10,6 @@ public class Database {
     public Database() {
         h = new HashMap<String, Table>();
     }
-/*
-    public Database(Table t) {
-        // YOUR CODE HERE
-        h = new HashMap<String, Table>();
-        myTable = t;
-        h.put(myTable.getTableName(), myTable);
-       // ArrayList<>;
-    }
- */
 
     public String transact(String query) {
        // Parse.

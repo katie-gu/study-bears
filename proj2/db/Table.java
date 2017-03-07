@@ -12,8 +12,8 @@ import java.util.*;
  */
 public class Table {
     private String name;
-    private LinkedHashMap<String, Column> colMap;
-    private ArrayList<String> colNames;
+    public LinkedHashMap<String, Column> colMap;
+    public ArrayList<String> colNames;
     public Table(String n) {
         name = n;
         colMap = new LinkedHashMap<String, Column>();
@@ -501,6 +501,20 @@ public class Table {
         }
         return similarColNames;
     }
+
+    public void removeRows(ArrayList<Integer> rowIndicesToRemove) {
+        //LinkedHashMap<String, Column> copyMap = new LinkedHashMap<String, Column>(this.getLinkedMap());
+        //it's ok, cux we need to change the actual hMap
+        for(int rowIndex : rowIndicesToRemove) {
+            for (Column col : colMap.values()) {
+                col.getValues().remove(rowIndex); //is this ok that columns change as loop progresses?
+            }
+
+        }
+    }
+
+
+
     public String insertRow(String vals) {
         int tokenIndex = 0;
         String token;
