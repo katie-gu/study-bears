@@ -5,6 +5,9 @@ import java.util.StringJoiner;
 
 public class Parse {
     // Various common constructs, simplifies parsing.
+    public Parse(){
+
+    }
     private static final String REST  = "\\s*(.*)\\s*",
                                 COMMA = "\\s*,\\s*",
                                 AND   = "\\s+and\\s+";
@@ -79,6 +82,7 @@ public class Parse {
 
         String colSentence = joiner.toString() + " and " + cols[cols.length-1];
         System.out.printf("You are trying to create a table named %s with the columns %s\n", name, colSentence);
+        //storeTable(name, colSentence);
     }
 
     private static void createSelectedTable(String name, String exprs, String tables, String conds) {
@@ -91,6 +95,14 @@ public class Parse {
     }
 
     private static void storeTable(String name) {
+        //write to a file with name
+
+        System.out.printf("You are trying to store the table named %s\n", name);
+    }
+
+    private static void storeTable(String name, String colSentence) {
+        //write to a file with name
+
         System.out.printf("You are trying to store the table named %s\n", name);
     }
 
