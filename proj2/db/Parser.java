@@ -332,8 +332,10 @@ public class Parser {
         return select(m.group(1), m.group(2), m.group(3));
     }
 
-    private static String select(String exprs, String tables, String conds) { //where y>5 ---> conds: y>5
-        Table tempTable = new Table("tempTable");
+    private static String select(String exprs, String tables, String conds) {
+        String alias = ""; //where y>5 ---> conds: y>5
+        int random = (int) (Math.random() * 100 + 1);
+        Table tempTable = new Table("tempTable" + random);//random name
 
         tables = tables.replaceAll("\\s+", "");
         if (conds != null) {
@@ -361,6 +363,15 @@ public class Parser {
         if (tables.equals("")) {
             //System.out.println("ERROR: malformed table.");
             return "ERROR: malformed table.";
+        }
+
+        if (tempTable.equals("ErroredTable")) {
+            return "ERROR: column types of condition do not match";
+        }
+
+        //exprs != null????
+        if (exprs != "*") {
+            tempTable = editedExprsTable(exprs, tempTable, alias);
         }
 
 
@@ -484,6 +495,41 @@ public class Parser {
         return tempTable.printTable();
     }
 
+    public static Table editedExprsTable (String exprs, Table input, String alias) {
+        ArrayList<String> operands = new ArrayList<>((Arrays.asList("+", "-", "/", "*")));
+        //String splittedExpr[] =
+
+        if (exprs.contains(" as ")) {
+            return evalExprWithAs(operands, exprs, input, alias);
+        }
+
+        System.out.println("WTF");
+        return new Table("hi");
+
+
+    }
+
+    public static Table evalExprWithAs(ArrayList<String> operands, String exprs, Table t, String alias) {
+        Table n = new Table("newCombinedT");
+        String splittedExpr[] = exprs.split("\\s+" + "as" + "\\s+"); //may change back again
+        exprs = exprs.replaceAll("\\s+", "");
+        exprs = splittedExpr[0];
+        alias = splittedExpr[1];
+
+        exprs.replaceAll("\\s+", "");
+        String splitExpr[] = exprs.split(",");
+
+        for (String expr : splitExpr) {
+            Column combinedCol = colFilter(operands, exprs, t, alias);
+            n.getLinkedMap().put(alias, combinedCol);
+            n.getColNames().add(alias);
+        }
+
+        return n;
+
+    }
+
+
     public static Table copyTable(Table first) {
         Table newT = new Table("copy" + first.getName());
         LinkedHashMap<String, Column> copyMap = new LinkedHashMap<>(first.getLinkedMap());
@@ -522,30 +568,98 @@ public class Parser {
         String split2 = splittedCondLine[1];
 
         if (operand.equals("==")) {
-            op = new EqualTo(split1, split2, operand, t, curr);
+            if (isUnary(t, split2)) {
+                op = new EqualTo(split1, split2, operand, t, curr, "Unary");
+                return op.evalOp();
+            } else {
+                if (isSameColType(t, split1, split2)) {
+                    op = new EqualTo(split1, split2, operand, t, curr, "Binary");
+                    return op.evalOp();
+                }
+            }
 
         } else if (operand.equals("!=")) {
-            op = new NotEqualTo(split1, split2, operand, t, curr);
-
+            if (isUnary(t, split2)) {
+                op = new NotEqualTo(split1, split2, operand, t, curr, "Unary");
+                return op.evalOp();
+            } else {
+                if (isSameColType(t, split1, split2)) {
+                    op = new NotEqualTo(split1, split2, operand, t, curr, "Binary");
+                    return op.evalOp();
+                }
+            }
         } else if  (operand.equals("<")) {
-            op = new LessThan(split1, split2, operand, t, curr);
-
+            if (isUnary(t, split2)) {
+                op = new LessThan(split1, split2, operand, t, curr, "Unary");
+                return op.evalOp();
+            } else {
+                if (isSameColType(t, split1, split2)) {
+                    op = new LessThan(split1, split2, operand, t, curr, "Binary");
+                    return op.evalOp();
+                }
+            }
         } else if  (operand.equals(">")) {
-            op = new GreaterThan(split1, split2, operand, t, curr);
-
+            if (isUnary(t, split2)) {
+                op = new GreaterThan(split1, split2, operand, t, curr, "Unary");
+                return op.evalOp();
+            } else {
+                if (isSameColType(t, split1, split2)) {
+                    op = new GreaterThan(split1, split2, operand, t, curr, "Binary");
+                    return op.evalOp();
+                }
+            }
         } else if  (operand.equals("<=")) {
-            op = new LessThanOrEqual(split1, split2, operand, t, curr);
+            if (isUnary(t, split2)) {
+                op = new LessThanOrEqual(split1, split2, operand, t, curr, "Unary");
+                return op.evalOp();
+            } else {
+                if (isSameColType(t, split1, split2)) {
+                    op = new LessThanOrEqual(split1, split2, operand, t, curr, "Binary");
+                    return op.evalOp();
+                }
+            }
+            // } else {
+        } else if  (operand.equals(">=")) {
+            if (isUnary(t, split2)) {
+                op = new GreaterThanOrEqual(split1, split2, operand, t, curr, "Unary");
+                return op.evalOp();
+            } else {
+                if (isSameColType(t, split1, split2)) {
+                    op = new GreaterThanOrEqual(split1, split2, operand, t, curr, "Binary");
+                    return op.evalOp();
+                }
 
-        } else {
-        //else if  (operand.equals(">=")) {
-            op = new GreaterThanOrEqual(split1, split2, operand, t, curr);
+            }
         }
-        return op.evalOp();
+        return new Table("ErrorTable");
 
         //return new Table("hi");
 
     }
 
+    public static boolean isSameColType(Table t, String split1, String split2) {
+        if (t.getLinkedMap().get(split1).getMyType().equals(t.getLinkedMap().get(split2).getMyType())) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    //public static boolean isBinary(Table t, String[] conds) {
+     //   return t.getLinkedMap().keySet().contains(conds[2]);
+        //if the item at the right of the operator position in array is a column name, then condition is binary
+   // }
+
+    public static boolean isUnary(Table t, String split2) {
+        if(!(t.getLinkedMap().keySet().contains(split2))) {
+            //if the item at the right of the operator position in array is not a column name and is a literal
+            // then condition is binary
+
+            return true;
+        }
+        return false;
+        //if the item at the right of the operator position in array is a column name, then condition is binary
+    }
     /*
     public static boolean isValidTables(String tables) {
         Table joinedTable = new Table("joinedTable"); //change name later
@@ -637,7 +751,7 @@ public class Parser {
         return isCol;
     }
 
-    public static Column colFilter(ArrayList<String> operands, String exprs, String tables, String aliasName) {
+    public static Column colFilter(ArrayList<String> operands, String exprs, Table t, String aliasName) {
          ArithmeticOperators op;
          for (String operand : operands) {
             if (exprs.contains(operand)) {
@@ -650,8 +764,8 @@ public class Parser {
                 String col1 = splittedCol[0];
                 String col2 = splittedCol[1];
 
-                Column c1 = d.getMap().get(tables).getLinkedMap().get(col1);
-                Column c2 = d.getMap().get(tables).getLinkedMap().get(col2);
+                Column c1 = t.getLinkedMap().get(col1);
+                Column c2 = t.getLinkedMap().get(col2);
 
                 if (operand.equals("+")) {
                     op = new Addition(c1, c2, aliasName);

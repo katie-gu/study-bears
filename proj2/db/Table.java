@@ -505,12 +505,25 @@ public class Table {
     public void removeRows(ArrayList<Integer> rowIndicesToRemove) {
         //LinkedHashMap<String, Column> copyMap = new LinkedHashMap<String, Column>(this.getLinkedMap());
         //it's ok, cux we need to change the actual hMap
-        for(int rowIndex : rowIndicesToRemove) {
-            for (Column col : colMap.values()) {
-                col.getValues().remove(rowIndex); //is this ok that columns change as loop progresses?
+        ArrayList<String> removeVals = new ArrayList<>();
+        int removeIndex;
+        int count = 0;
+        for(int i = 0; i < rowIndicesToRemove.size(); i++) {
+            if (i == 0) {
+                removeIndex = rowIndicesToRemove.get(i);
+                //count += 1;
+            } else {
+                removeIndex = rowIndicesToRemove.get(i) - count;
             }
+            for (Column col : colMap.values()) {
+                col.getValues().remove(removeIndex); //is this ok that columns change as loop progresses?
+
+            }
+            count += 1;
+
 
         }
+
     }
 
 
