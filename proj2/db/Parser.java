@@ -370,7 +370,7 @@ public class Parser {
         }
 
         //exprs != null????
-        if (exprs != "*") {
+        if (!(exprs.equals("*"))) {
             tempTable = editedExprsTable(exprs, tempTable, alias);
         }
 
