@@ -90,7 +90,8 @@ public class Table {
             return "";
         }
 
-        String c = getColNames().get(0);
+        String c = colMap.keySet().iterator().next();
+        //String c = getColNames().get(0);
 
         int length = colMap.get(c).getValues().size();
         for (int i = 0; i < length; i++) {
