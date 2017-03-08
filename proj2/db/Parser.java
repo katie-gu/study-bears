@@ -488,20 +488,40 @@ public class Parser {
 
         exprs = exprs.replaceAll("\\s+", "");
         String splitExpr[] = exprs.split(",");
+        String aliasTemp = alias;
 
         for (String expr : splitExpr) {
+            boolean containsOperand = false;
             if (splitExpr.length > 1) {
-                if (alias.equals("")) {
-                    alias = expr;
+                for (String operand : operands) {
+                    if ((expr.contains(operand))) {
+                        containsOperand = true;
+                        break;
+                    }
+                }
+                if (!(containsOperand)) {
+                    //alias = expr;
+                    Column combinedCol = colFilter(operands, expr, t, expr);
+                    n.getLinkedMap().put(expr, combinedCol);
+                    n.getColNames().add(expr);
                 } else {
-                    int random = (int) (Math.random() * 100 + 1);
-                    alias += random;
+                    Column combinedCol = colFilter(operands, expr, t, alias);
+                    n.getLinkedMap().put(alias, combinedCol);
+                    n.getColNames().add(alias);
                 }
 
+                //if (alias.equals("")) {
+                 //   alias = expr;
+               // } //else {
+                //  int random = (int) (Math.random() * 100 + 1);
+                //    alias += random;
+                //  }
+            } else {
+                Column combinedCol = colFilter(operands, expr, t, alias);
+                n.getLinkedMap().put(alias, combinedCol);
+                n.getColNames().add(alias);
             }
-            Column combinedCol = colFilter(operands, expr, t, alias);
-            n.getLinkedMap().put(alias, combinedCol);
-            n.getColNames().add(alias);
+
         }
 
         return n;
