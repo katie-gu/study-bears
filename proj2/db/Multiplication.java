@@ -27,6 +27,7 @@ public class Multiplication extends ArithmeticOperators {
         if (!(a.getMyType().equals(b.getMyType()))) {
             return new Column("NONAME", "string");
         }
+
         if (a.getMyType().equals("int") && b.getMyType().equals("int")) {
             Column newCol = new Column(name, "int");
             for (int i = 0; i < a.getValues().size(); i++) {

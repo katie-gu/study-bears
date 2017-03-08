@@ -27,6 +27,12 @@ public class Column {
         String curr = myValues.get(index);
         String temp = curr;
 
+        if (curr.equals("NOVALUE")) {
+            return curr;
+        }
+        if (curr.equals("NaN")) {
+            return curr;
+        }
 
         if (myType.equals("string")) {
             temp = temp.replace("\'\'", "\'");

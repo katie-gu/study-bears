@@ -32,8 +32,14 @@ public class Addition extends ArithmeticOperators {
                     String s2 = b.getValues().get(i);
                     s1 = s1.replaceAll("'", "");
                     s2 = s2.replaceAll("'", "");
-                    String newString = s1 + s2;
-                    newCol.addVal("'" + newString + "'");
+                    String newString;
+                    if (s1.equals("NaN") || s2.equals("NaN")) {
+                        newCol.addVal("NaN");
+                    } else {
+                        newString = s1 + s2;
+                        newCol.addVal("'" + newString + "'");
+                    }
+
                 }
                 return newCol;
             } else if (a.getMyType().equals("int") && b.getMyType().equals("int")) {

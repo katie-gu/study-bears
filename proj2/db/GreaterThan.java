@@ -66,7 +66,7 @@ public class GreaterThan extends ComparisonOperators{
             if (c.getMyType().equals("string")) {
                 //means that both column type and split2 are strings.
                 for (int i = 0; i < c.getValues().size(); i++) {
-                    if (c.getValues().get(i).compareTo(c2.getValues().get(i)) <= 0) {
+                    if ((!c.getValues().get(i).equals("NaN")) || c.getValues().get(i).compareTo(c2.getValues().get(i)) <= 0) {
                         removeRowIndices.add(i);
                     }
                 }
@@ -81,11 +81,14 @@ public class GreaterThan extends ComparisonOperators{
 
                 for (int i = 0; i < c.getValues().size(); i++) {
                     //System.out.println(c2.getValues());
-                    float f = Float.parseFloat(c2.getValues().get(i));
-                    float colVal = Float.parseFloat(c.getValues().get(i));
-                    if (colVal <= f) {
-                        removeRowIndices.add(i);
+                    if (!(c.getValues().get(i).equals("NaN"))){
+                        float f = Float.parseFloat(c2.getValues().get(i));
+                        float colVal = Float.parseFloat(c.getValues().get(i));
+                        if (colVal <= f) {
+                            removeRowIndices.add(i);
+                        }
                     }
+
                 }
 
                 newT.removeRows(removeRowIndices);
