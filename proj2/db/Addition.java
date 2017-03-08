@@ -7,10 +7,19 @@ public class Addition extends ArithmeticOperators {
     private Column a;
     private Column b;
     private String name;
+    private String s;
+    private String unarycheck;
     public Addition(Column a, Column b, String name) {
         this.a = a;
         this.b = b;
         this.name = name;
+    }
+
+    public Addition(Column a, String s, String name, String unarycheck) {
+        this.a = a;
+        this.s = s;
+        this.name = name;
+        this.unarycheck = unarycheck;
     }
 
     @Override
@@ -62,6 +71,64 @@ public class Addition extends ArithmeticOperators {
 
         }
        // for ()
+        return new Column("NONAME", "string"); //replace this line
+    }
+
+    @Override
+    public Column combineUnaryCols() {
+        String correctType = a.getMyType();
+        if (isValidType(correctType, s)) {
+            if (correctType.equals("string")) {
+                Column newCol = new Column(name, "string");
+                for (int i = 0; i < a.getValues().size(); i++) {
+                    String s1 = a.getValues().get(i);
+                    s1 = s1.replaceAll("'", "");
+                    s = s.replaceAll("'", "");
+                    String newString = s1 + s;
+                    newCol.addVal("'" + newString + "'");
+                }
+                return newCol;
+            } else if (correctType.equals("int") && (!(s.contains(".")))) {
+                Column newCol = new Column(name, "int");
+                for (int i = 0; i < a.getValues().size(); i++) {
+                    int a1 = Integer.parseInt(a.getValues().get(i));
+                    int b1 = Integer.parseInt(s);
+                    String newVal = String.valueOf(a1 + b1);
+                    newCol.addVal(newVal);
+                }
+                return newCol;
+            /*}  else if (a.getMyType().equals("float") && b.getMyType().equals("float")) {
+                Column newCol = new Column("c", "float");
+                for (int i = 0; i < a.getValues().size(); i++) {
+                    //convert
+                    newCol.addVal(a.getValues().get(i) + b.getValues().get(i));
+                }
+                return newCol;
+                */
+            } else {
+
+                //if ((a.getMyType().equals("int") && b.getMyType().equals("float")) ||
+                // (a.getMyType().equals("float") && b.getMyType().equals("int"))) {
+                Column newCol = new Column(name, "float");
+                for (int i = 0; i < a.getValues().size(); i++) {
+                    String s1 = a.getValues().get(i) + "f";
+                    float f = Float.parseFloat(s1);
+                    String s2 = s + "f";
+                    float f1 = Float.parseFloat(s2);
+                    String newVal = String.valueOf(f + f1);
+                    newCol.addVal(newVal);
+                }
+                return newCol;
+            }
+
+
+
+
+        }
+
+
+
+        // for ()
         return new Column("NONAME", "string"); //replace this line
     }
 }

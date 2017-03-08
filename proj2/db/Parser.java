@@ -487,8 +487,8 @@ public class Parser {
         String splitExpr[] = exprs.split(",");
 
         for (String expr : splitExpr) {
-            int random = (int) (Math.random() * 100 + 1);
-            alias += random;
+            //int random = (int) (Math.random() * 100 + 1);
+            //alias += random;
             Column combinedCol = colFilter(operands, expr, t, alias);
             n.getLinkedMap().put(alias, combinedCol);
             n.getColNames().add(alias);
@@ -735,6 +735,7 @@ public class Parser {
 
     public static Column colFilter(ArrayList<String> operands, String exprs, Table t, String aliasName) {
          ArithmeticOperators op;
+         boolean ifUnary = false;
 
          for (String operand : operands) {
             if (exprs.contains(operand)) {
@@ -749,18 +750,43 @@ public class Parser {
                 String col2 = splittedCol[1];
 
                 Column c1 = t.getLinkedMap().get(col1);
+                if (t.getLinkedMap().get(col2) == null) {
+                    ifUnary = true;
+                }
                 Column c2 = t.getLinkedMap().get(col2);
 
+
                 if (operand.equals("+")) {
-                    op = new Addition(c1, c2, aliasName);
-                    return op.combineCols();
+                    if (ifUnary) {
+                        op = new Addition(c1, col2, aliasName, "Unary");
+                        return op.combineUnaryCols();
+                    } else {
+                        op = new Addition(c1, c2, aliasName);
+                        return op.combineCols();
+                    }
+
                 } else if (operand.equals("-")) {
-                    op = new Subtraction(c1, c2, aliasName);
-                    return op.combineCols();
+                    if (ifUnary) {
+                        op = new Subtraction(c1, col2, aliasName, "Unary");
+                        return op.combineUnaryCols();
+                    } else {
+                        op = new Subtraction(c1, c2, aliasName);
+                        return op.combineCols();
+
+                    }
                 } else if (operand.equals("/")) {
-                    op = new Division(c1, c2, aliasName);
-                    return op.combineCols();
+                    if (ifUnary) {
+                        op = new Division(c1, col2, aliasName, "Unary");
+                        return op.combineUnaryCols();
+                    } else {
+                        op = new Division(c1, c2, aliasName);
+                        return op.combineCols();
+                    }
                 } else {
+                    if (ifUnary) {
+                        op = new Multiplication(c1, col2, aliasName, "Unary");
+                        return op.combineUnaryCols();
+                    }
                     op = new Multiplication(c1, c2, aliasName);
                     return op.combineCols();
                 }

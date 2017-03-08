@@ -21,6 +21,7 @@ public class ArithmeticOperators {
         return new Column("c", "string");
     }
 
+    public Column combineUnaryCols() { return new Column("c", "string"); }
 
 
     //do conditional checks in parser?
@@ -32,6 +33,23 @@ public class ArithmeticOperators {
 
             return false;
         }
+        return true;
+
+    }
+
+    public boolean isValidType(String type1, String actual) {
+        String actualType = "";
+        if (actual.contains("'")) {
+            actualType = "string";
+            if (type1.equals(actualType)) {
+                return true;
+            }
+        } else {
+            if (type1.equals("string")) {
+                return false;
+            }
+        }
+
         return true;
 
     }
