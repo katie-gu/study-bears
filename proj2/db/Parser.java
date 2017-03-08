@@ -542,11 +542,21 @@ public class Parser {
 
     public static Table copyTable(Table first) {
         Table newT = new Table("copy" + first.getName());
-        LinkedHashMap<String, Column> copyMap = new LinkedHashMap<>(first.getLinkedMap());
-        newT.colMap = copyMap; //
-        for (String col : first.getColNames()) {
-            newT.getColNames().add(col);
+
+        for (Column c : first.getLinkedMap().values()) {
+            Column n = new Column(c.getName(), c.getMyType());
+            newT.getLinkedMap().put(c.getName(), n);
+            for (int i = 0; i < c.getValues().size(); i++) {
+                newT.getLinkedMap().get(c.getName()).addVal(c.getValues().get(i));
+            }
         }
+
+        //LinkedHashMap<String, Column> copyMap = new LinkedHashMap<>();
+        //newT =  first.colMap.clone();
+        //newT.colMap = copyMap; //
+        //for (String col : first.getColNames()) {
+          //  newT.getColNames().add(col);
+      //  }
         return newT;
 
     }

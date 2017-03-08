@@ -25,7 +25,7 @@ public class GreaterThanOrEqual extends ComparisonOperators{
     @Override
     public Table evalOp() {
         //dont need to check the type because it should all be the same ????
-        System.out.println("Orig : " + t.printTable());
+        //System.out.println("Orig : " + t.printTable());
         Parser p = new Parser();
         ArrayList<Integer> removeRowIndices = new ArrayList<>();
         Table newT = p.copyTable(t);
@@ -42,10 +42,10 @@ public class GreaterThanOrEqual extends ComparisonOperators{
                         removeRowIndices.add(i);
                     }
                 }
-                System.out.println("Before remove row : " + t.printTable());
+              //  System.out.println("Before remove row : " + t.printTable());
                 newT.removeRows(removeRowIndices);
-                System.out.println("After remove row : " + t.printTable());
-                System.out.println("Currtable : " + curr.printTable());
+              //  System.out.println("After remove row : " + t.printTable());
+               // System.out.println("Currtable : " + curr.printTable());
                 return newT;
             } else {
                 float f = Float.parseFloat(split2);

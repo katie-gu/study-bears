@@ -532,6 +532,7 @@ public class Table {
             */
 
         //Table newT = this.;
+       // LinkedHashMap<String, Column> nColMap = new nColMap<>();
         ArrayList<String> removeVals = new ArrayList<>();
         int removeIndex;
         int count = 0;
