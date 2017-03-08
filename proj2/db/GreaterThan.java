@@ -27,9 +27,13 @@ public class GreaterThan extends ComparisonOperators{
 
     @Override
     public Table evalOp() {
+        Parser p = new Parser();
+        //Table newT = new Table("tableNew");
+        Table newT = p.copyTable(t);
+        //newT.colMap = t.getLinkedMap();
         //dont need to check the type because it should all be the same ????
         ArrayList<Integer> removeRowIndices = new ArrayList<>();
-        Column c = t.getLinkedMap().get(split1);
+        Column c = newT.getLinkedMap().get(split1);
 
         if (condition.equals("Unary")) {
             if (isValidStringOperand(split1, split2, operand, curr)) {
@@ -40,9 +44,9 @@ public class GreaterThan extends ComparisonOperators{
                     }
                 }
 
-                t.removeRows(removeRowIndices);
+                newT.removeRows(removeRowIndices);
 
-                return t;
+                return newT;
             } else {
                 float f = Float.parseFloat(split2);
 
@@ -53,12 +57,12 @@ public class GreaterThan extends ComparisonOperators{
                     }
                 }
 
-                t.removeRows(removeRowIndices);
+                newT.removeRows(removeRowIndices);
 
-                return t;
+                return newT;
             }
         } else {
-            Column c2 = t.getLinkedMap().get(split2);
+            Column c2 = newT.colMap.get(split2);
             if (c.getMyType().equals("string")) {
                 //means that both column type and split2 are strings.
                 for (int i = 0; i < c.getValues().size(); i++) {
@@ -67,9 +71,9 @@ public class GreaterThan extends ComparisonOperators{
                     }
                 }
 
-                t.removeRows(removeRowIndices);
+                newT.removeRows(removeRowIndices);
 
-                return t;
+                return newT;
             } else {
                // System.out.println(c.getValues());
 
@@ -84,9 +88,9 @@ public class GreaterThan extends ComparisonOperators{
                     }
                 }
 
-                t.removeRows(removeRowIndices);
+                newT.removeRows(removeRowIndices);
 
-                return t;
+                return newT;
             }
         }
     }

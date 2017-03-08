@@ -26,6 +26,10 @@ public class Parser {
         d = db;
     }
 
+    public Parser() {
+
+    }
+
     //added this method
     public Database getDataBase() {
         return d;
@@ -349,7 +353,8 @@ public class Parser {
 
         //either join table or pick single table if choosing from only 1 table
         if (splittedTables.length <= 1) {
-            tempTable = d.getMap().get(tables);
+            tempTable = copyTable(d.getMap().get(tables));
+            //tempTable = d.getMap().get(tables);
             if (tempTable == null) {
                 return "ERROR: table non existent";
             }
@@ -479,7 +484,9 @@ public class Parser {
     }
 
     public static Table evalExprWithAs(ArrayList<String> operands, String exprs, Table t, String alias) {
-        Table n = new Table("newCombinedT");
+        int random = (int) (Math.random() * 100 + 1);
+        //    alias += random;
+        Table n = new Table("newCombinedT"+random);
         String splittedExpr[] = exprs.split("\\s+" + "as" + "\\s+"); //may change back again
         exprs = exprs.replaceAll("\\s+", "");
         exprs = splittedExpr[0];
@@ -698,7 +705,9 @@ public class Parser {
     */
 
     public static Table joinedTable(String tables) {
-        Table joinedTable = new Table("joinedTable"); //change name later
+        //HEY
+        int random = (int) (Math.random() * 100 + 1);
+        Table joinedTable = new Table("joinedTable" + random); //change name later
         StringTokenizer st = new StringTokenizer(tables, ",");
         String t1Name = st.nextToken(); //t1
         Table t1 = d.getMap().get(t1Name);
@@ -727,8 +736,8 @@ public class Parser {
             if ((prevToken == null) || (currToken == null)) {
                 return new Table("Invalid Table");
             } else {
-                int random = (int) (Math.random() * 100 + 1);
-                joinedTable = prevToken.join(currToken, new Table("t" + random));
+                int rand = (int) (Math.random() * 100 + 1);
+                joinedTable = prevToken.join(currToken, new Table("t" + rand));
                 prevToken = joinedTable;
                 d.getMap().put(joinedTable.getName(), joinedTable);
             }

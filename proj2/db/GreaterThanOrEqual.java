@@ -25,8 +25,14 @@ public class GreaterThanOrEqual extends ComparisonOperators{
     @Override
     public Table evalOp() {
         //dont need to check the type because it should all be the same ????
+        System.out.println("Orig : " + t.printTable());
+        Parser p = new Parser();
         ArrayList<Integer> removeRowIndices = new ArrayList<>();
-        Column c = t.getLinkedMap().get(split1);
+        Table newT = p.copyTable(t);
+
+        //Table newT = new Table("tableNew");
+        //newT.colMap = t.getLinkedMap();
+        Column c = newT.getLinkedMap().get(split1);
 
         if (condition.equals("Unary")) {
             if (isValidStringOperand(split1, split2, operand, curr)) {
@@ -36,10 +42,11 @@ public class GreaterThanOrEqual extends ComparisonOperators{
                         removeRowIndices.add(i);
                     }
                 }
-
-                t.removeRows(removeRowIndices);
-
-                return t;
+                System.out.println("Before remove row : " + t.printTable());
+                newT.removeRows(removeRowIndices);
+                System.out.println("After remove row : " + t.printTable());
+                System.out.println("Currtable : " + curr.printTable());
+                return newT;
             } else {
                 float f = Float.parseFloat(split2);
 
@@ -50,9 +57,9 @@ public class GreaterThanOrEqual extends ComparisonOperators{
                     }
                 }
 
-                t.removeRows(removeRowIndices);
+                newT.removeRows(removeRowIndices);
 
-                return t;
+                return newT;
             }
         } else {
             if (isValidStringOperand(split1, split2, operand, curr)) {
@@ -63,9 +70,9 @@ public class GreaterThanOrEqual extends ComparisonOperators{
                     }
                 }
 
-                t.removeRows(removeRowIndices);
+                newT.removeRows(removeRowIndices);
 
-                return t;
+                return newT;
             } else {
                 float f = Float.parseFloat(split2);
 
@@ -76,9 +83,9 @@ public class GreaterThanOrEqual extends ComparisonOperators{
                     }
                 }
 
-                t.removeRows(removeRowIndices);
+                newT.removeRows(removeRowIndices);
 
-                return t;
+                return newT;
             }
         }
 

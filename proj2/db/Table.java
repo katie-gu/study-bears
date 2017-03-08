@@ -504,8 +504,34 @@ public class Table {
     }
 
     public void removeRows(ArrayList<Integer> rowIndicesToRemove) {
+        /*
         //LinkedHashMap<String, Column> copyMap = new LinkedHashMap<String, Column>(this.getLinkedMap());
         //it's ok, cux we need to change the actual hMap
+        LinkedHashMap<String, Column> filteredMap = new LinkedHashMap<String, Column>();
+        //it's ok, cux we need to change the actual hMap
+        int colInd = 0;
+
+        for (Column c : this.getLinkedMap().values()) {
+            String [] tempColVals = new String[c.getValues().size()];
+            tempColVals = c.getValues().toArray(tempColVals);
+            for (int i = 0; i < tempColVals.length; i ++) { // check each value in the column (basically goes down each
+                //column
+                if (rowIndicesToRemove.contains(i)) {
+                    tempColVals[i] = null;
+                }
+
+            }
+            ArrayList<String> newVals = new ArrayList<>();
+            for (String item : tempColVals) {
+                if (item != null) {
+                    newVals.add(item);
+                }
+            }
+            c.myValues = newVals;
+
+            */
+
+        //Table newT = this.;
         ArrayList<String> removeVals = new ArrayList<>();
         int removeIndex;
         int count = 0;
@@ -521,6 +547,7 @@ public class Table {
 
             }
             count += 1;
+
 
 
         }

@@ -7,7 +7,7 @@ import java.util.ArrayList;
  * Created by jhinukbarman on 2/25/17.
  */
 public class Column {
-    private ArrayList<String> myValues;
+    public ArrayList<String> myValues;
     private String myName;
     private String myType;
 
