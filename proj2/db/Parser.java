@@ -18,8 +18,9 @@ import java.util.Arrays;
 public class Parser {
     // Various common constructs, simplifies parsing.
     private static Database d;
-
     private static Table selectedTable;
+
+    //private static Table selectedTable;
 
     public Parser(Database db) {
         d = db;
@@ -459,7 +460,7 @@ public class Parser {
 
 
         */
-
+        selectedTable = tempTable;
         return tempTable.printTable();
     }
 
