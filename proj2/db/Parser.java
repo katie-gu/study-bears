@@ -487,8 +487,8 @@ public class Parser {
         String splitExpr[] = exprs.split(",");
 
         for (String expr : splitExpr) {
-            //int random = (int) (Math.random() * 100 + 1);
-            //alias += random;
+            int random = (int) (Math.random() * 100 + 1);
+            alias += random;
             Column combinedCol = colFilter(operands, expr, t, alias);
             n.getLinkedMap().put(alias, combinedCol);
             n.getColNames().add(alias);
