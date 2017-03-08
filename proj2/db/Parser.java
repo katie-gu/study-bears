@@ -486,13 +486,18 @@ public class Parser {
             alias = splittedExpr[1];
         }
 
-        exprs.replaceAll("\\s+", "");
+        exprs = exprs.replaceAll("\\s+", "");
         String splitExpr[] = exprs.split(",");
 
         for (String expr : splitExpr) {
             if (splitExpr.length > 1) {
-                int random = (int) (Math.random() * 100 + 1);
-                alias += random;
+                if (alias.equals("")) {
+                    alias = expr;
+                } else {
+                    int random = (int) (Math.random() * 100 + 1);
+                    alias += random;
+                }
+
             }
             Column combinedCol = colFilter(operands, expr, t, alias);
             n.getLinkedMap().put(alias, combinedCol);
@@ -542,6 +547,7 @@ public class Parser {
 
     public static Table evalOp(String condLine, String operand, Table t, Table curr) {
         ComparisonOperators op;
+        condLine = condLine.replaceAll("\\s+", "");
         String splittedCondLine[] = condLine.split("\\" + operand);
         String split1 = splittedCondLine[0];
         String split2 = splittedCondLine[1];
