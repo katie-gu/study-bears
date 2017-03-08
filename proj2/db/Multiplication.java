@@ -24,6 +24,7 @@ public class Multiplication extends ArithmeticOperators {
 
     @Override
     public Column combineCols() {
+
         if (!(a.getMyType().equals(b.getMyType()))) {
             return new Column("NONAME", "string");
         }
@@ -31,6 +32,9 @@ public class Multiplication extends ArithmeticOperators {
         if (a.getMyType().equals("int") && b.getMyType().equals("int")) {
             Column newCol = new Column(name, "int");
             for (int i = 0; i < a.getValues().size(); i++) {
+                if (a.getValues().get(i).contains("'") || b.getValues().get(i).contains("'")) {
+                    return new Column("NONAME", "string");
+                }
                 int a1 = Integer.parseInt(a.getValues().get(i));
                 int b1 = Integer.parseInt(b.getValues().get(i));
                 String newVal = String.valueOf(a1 * b1);

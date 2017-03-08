@@ -818,18 +818,18 @@ public class Parser {
                     return new Column("NOCOL", "value");
                 }
                 String col1 = splittedCol[0];
-                String col2 = splittedCol[1];
+                String potential = splittedCol[1];
 
                 Column c1 = t.getLinkedMap().get(col1);
-                if (t.getLinkedMap().get(col2) == null) {
+                if (t.getLinkedMap().get(potential) == null) {
                     ifUnary = true;
                 }
-                Column c2 = t.getLinkedMap().get(col2);
+                Column c2 = t.getLinkedMap().get(potential);
 
 
                 if (operand.equals("+")) {
                     if (ifUnary) {
-                        op = new Addition(c1, col2, aliasName, "Unary");
+                        op = new Addition(c1, potential, aliasName, "Unary");
                         return op.combineUnaryCols();
                     } else {
                         op = new Addition(c1, c2, aliasName);
@@ -838,7 +838,7 @@ public class Parser {
 
                 } else if (operand.equals("-")) {
                     if (ifUnary) {
-                        op = new Subtraction(c1, col2, aliasName, "Unary");
+                        op = new Subtraction(c1, potential, aliasName, "Unary");
                         return op.combineUnaryCols();
                     } else {
                         op = new Subtraction(c1, c2, aliasName);
@@ -847,7 +847,7 @@ public class Parser {
                     }
                 } else if (operand.equals("/")) {
                     if (ifUnary) {
-                        op = new Division(c1, col2, aliasName, "Unary");
+                        op = new Division(c1, potential, aliasName, "Unary");
                         return op.combineUnaryCols();
                     } else {
                         op = new Division(c1, c2, aliasName);
@@ -855,7 +855,7 @@ public class Parser {
                     }
                 } else {
                     if (ifUnary) {
-                        op = new Multiplication(c1, col2, aliasName, "Unary");
+                        op = new Multiplication(c1, potential, aliasName, "Unary");
                         return op.combineUnaryCols();
                     }
                     op = new Multiplication(c1, c2, aliasName);

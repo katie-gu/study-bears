@@ -55,6 +55,9 @@ public class Division extends ArithmeticOperators {
             String newVal;
             Column newCol = new Column(name, "float");
             for (int i = 0; i < a.getValues().size(); i++) {
+                if (a.getValues().get(i).contains("'") || b.getValues().get(i).contains("'")) {
+                    return new Column("NONAME", "string");
+                }
                 String s1 = a.getValues().get(i) + "f";
                 float f = Float.parseFloat(s1);
                 String s2 = b.getValues().get(i) + "f";
