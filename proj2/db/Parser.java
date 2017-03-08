@@ -346,6 +346,9 @@ public class Parser {
         //either join table or pick single table if choosing from only 1 table
         if (splittedTables.length <= 1) {
             tempTable = d.getMap().get(tables);
+            if (tempTable == null) {
+                return "ERROR: table non existent";
+            }
         } else {
             //checks if all tables in the input of tables are valid
             //if (joinedTable(tables).getName().equals("Invalid Table")) {
@@ -353,6 +356,10 @@ public class Parser {
             //} else {
                 tempTable = joinedTable(tables);
            // }
+        }
+
+        if (tempTable.getName().equals("Invalid Table")) {
+            return "ERROR : Invalid table";
         }
 
         //conds --> don't need else for this
@@ -365,7 +372,7 @@ public class Parser {
             return "ERROR: malformed table.";
         }
 
-        if (tempTable.equals("ErroredTable")) {
+        if (tempTable.getName().equals("ErroredTable")) {
             return "ERROR: column types of condition do not match";
         }
 
@@ -480,7 +487,9 @@ public class Parser {
         String splitExpr[] = exprs.split(",");
 
         for (String expr : splitExpr) {
-            Column combinedCol = colFilter(operands, exprs, t, alias);
+            int random = (int) (Math.random() * 100 + 1);
+            alias += random;
+            Column combinedCol = colFilter(operands, expr, t, alias);
             n.getLinkedMap().put(alias, combinedCol);
             n.getColNames().add(alias);
         }
@@ -502,8 +511,13 @@ public class Parser {
     }
     public static Table editedTable(String conds, Table currTable) {
         Table newTable = copyTable(currTable);
+        String splittedConds[] = conds.split(",");
         //change split earlier
-        String splittedConds[] = conds.split("\\s+" + "and" + "\\s+");
+        if (conds.contains("and")) {
+            splittedConds = conds.split("and");
+        } else {
+            splittedConds = conds.split(",");
+        }
         ArrayList<String> condArr = new ArrayList<>((Arrays.asList("==", "!=", "<=", ">=", "<", ">")));
         //String condArr[] = {"==", "!=", "<", ">", "<=", ">="};
 
@@ -656,8 +670,16 @@ public class Parser {
         StringTokenizer st = new StringTokenizer(tables, ",");
         String t1Name = st.nextToken(); //t1
         Table t1 = d.getMap().get(t1Name);
+        if (t1 == null) {
+            return new Table("Invalid Table");
+        }
+
         String t2Name = st.nextToken();
         Table t2 = d.getMap().get(t2Name);
+
+        if (t2 == null) {
+            return new Table("Invalid Table");
+        }
 
         if (t1Name.equals(t2Name)) {
             //not sure if this works if combined table is same as 3rd table
@@ -745,6 +767,10 @@ public class Parser {
             }
 
         }
+
+       // if (exprs.contains(",")) {
+           //  String splittedCol[] = exprs.split(splitOperand);
+       // }
         return t.getLinkedMap().get(exprs);
     }
 

@@ -76,7 +76,7 @@ public class GreaterThan extends ComparisonOperators{
                // System.out.println(c2.getValues());
 
                 for (int i = 0; i < c.getValues().size(); i++) {
-                    System.out.println(c2.getValues());
+                    //System.out.println(c2.getValues());
                     float f = Float.parseFloat(c2.getValues().get(i));
                     float colVal = Float.parseFloat(c.getValues().get(i));
                     if (colVal <= f) {

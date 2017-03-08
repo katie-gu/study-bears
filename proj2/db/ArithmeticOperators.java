@@ -25,6 +25,8 @@ public class ArithmeticOperators {
 
     //do conditional checks in parser?
     public boolean checkValid(Column a, Column b) {
+
+
         if (((a.getMyType().equals("string")) && (!b.getMyType().equals("string")))
                 || (b.getMyType().equals("string") && (!a.getMyType().equals("string")))) {
 

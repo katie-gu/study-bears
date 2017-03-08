@@ -394,12 +394,12 @@ public class Table {
         }
         for (Column c2 : t2.getLinkedMap().values()) { //add unames of the unique columns in table 2, starting from
             //the left most column
-            if (!(containsItem(colNames, c2.getName()))) {
+            if (!(containsItem(cNames, c2.getName()))) {
                 ArrayList<String> newArrList = new ArrayList<>();
                 newArrList.add(c2.getName());
                 newArrList.add(c2.getMyType());
                 colOrder.add(newArrList);
-                colNames.add(c2.getName());
+                cNames.add(c2.getName());
 
             }
 
