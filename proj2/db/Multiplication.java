@@ -24,6 +24,9 @@ public class Multiplication extends ArithmeticOperators {
 
     @Override
     public Column combineCols() {
+        if (!(a.getMyType().equals(b.getMyType()))) {
+            return new Column("NONAME", "string");
+        }
         if (a.getMyType().equals("int") && b.getMyType().equals("int")) {
             Column newCol = new Column(name, "int");
             for (int i = 0; i < a.getValues().size(); i++) {
@@ -62,6 +65,7 @@ public class Multiplication extends ArithmeticOperators {
 
     @Override
     public Column combineUnaryCols() {
+
         String correctType = a.getMyType();
         if (correctType.equals("string")) {
             return new Column("NONAME", "string"); //replace this line

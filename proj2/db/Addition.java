@@ -74,8 +74,11 @@ public class Addition extends ArithmeticOperators {
         return new Column("NONAME", "string"); //replace this line
     }
 
-    @Override
+
     public Column combineUnaryCols() {
+        //if (!(a.getMyType().equals(b.getMyType()))) {
+         //   return new Column("NONAME", "string");
+      //  }
         String correctType = a.getMyType();
         if (isValidType(correctType, s)) {
             if (correctType.equals("string")) {
