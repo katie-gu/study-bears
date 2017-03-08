@@ -562,6 +562,7 @@ public class Parser {
     }
     public static Table editedTable(String conds, Table currTable) {
         Table newTable = copyTable(currTable);
+        conds = conds.replaceAll("\\s+", "");
         String splittedConds[] = conds.split(",");
         //change split earlier
         if (conds.contains("and")) {
