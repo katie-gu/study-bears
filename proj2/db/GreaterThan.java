@@ -35,7 +35,7 @@ public class GreaterThan extends ComparisonOperators{
             if (isValidStringOperand(split1, split2, operand, curr)) {
                 //means that both column type and split2 are strings.
                 for (int i = 0; i < c.getValues().size(); i++) {
-                    if (c.getValues().get(i).compareTo(split2) >= 0) {
+                    if (c.getValues().get(i).compareTo(split2) <= 0) {
                         removeRowIndices.add(i);
                     }
                 }
@@ -62,7 +62,7 @@ public class GreaterThan extends ComparisonOperators{
             if (c.getMyType().equals("string")) {
                 //means that both column type and split2 are strings.
                 for (int i = 0; i < c.getValues().size(); i++) {
-                    if (c.getValues().get(i).compareTo(c2.getValues().get(i)) >= 0) {
+                    if (c.getValues().get(i).compareTo(c2.getValues().get(i)) <= 0) {
                         removeRowIndices.add(i);
                     }
                 }
