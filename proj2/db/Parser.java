@@ -466,7 +466,7 @@ public class Parser {
 
         */
         selectedTable = tempTable;
-        if (tempTable.printTable().equals("NONAME")) {
+        if (tempTable.getLinkedMap().containsKey("NONAME")) {
             return "ERROR: NONAME";
         }
         return tempTable.printTable();
@@ -513,12 +513,22 @@ public class Parser {
                 if (!(containsOperand)) {
                     //alias = expr;
                     Column combinedCol = colFilter(operands, expr, t, expr);
+                    if (combinedCol.getName().equals("NONAME")) {
+                        n.getLinkedMap().put("NONAME", combinedCol);
+                        n.getColNames().add("NONAME");
+                    }
                     n.getLinkedMap().put(expr, combinedCol);
                     n.getColNames().add(expr);
                 } else {
                     Column combinedCol = colFilter(operands, expr, t, alias);
-                    n.getLinkedMap().put(alias, combinedCol);
-                    n.getColNames().add(alias);
+                    if (combinedCol.getName().equals("NONAME")) {
+                        n.getLinkedMap().put("NONAME", combinedCol);
+                        n.getColNames().add("NONAME");
+                    } else {
+                        n.getLinkedMap().put(alias, combinedCol);
+                        n.getColNames().add(alias);
+                    }
+
                 }
 
                 //if (alias.equals("")) {
@@ -529,6 +539,12 @@ public class Parser {
                 //  }
             } else {
                 Column combinedCol = colFilter(operands, expr, t, alias);
+
+                if (combinedCol.getName().equals("NONAME")) {
+                    n.getLinkedMap().put("NONAME", combinedCol);
+                    n.getColNames().add("NONAME");
+                }
+
                 n.getLinkedMap().put(alias, combinedCol);
                 n.getColNames().add(alias);
             }

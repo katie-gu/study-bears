@@ -10,9 +10,9 @@ public class Tests {
     private static Parser p = new Parser(da);
 
     public static void testLoadTable() throws IOException {
-        p.loadTable("examples/t1");
-        p.loadTable("examples/t2");
         p.loadTable("examples/fans");
+        //p.loadTable("examples/t2");
+        //p.loadTable("examples/fans");
        // p.printTable("t1");
 
         //System.out.print("hi");

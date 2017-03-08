@@ -1,1 +1,1 @@
-Trouble with select method
+Our select wasn’t working properly so we had to change out design thoroughly. We didn’t realize select. We weren’t aware that select would have so many edge cases. Reflecting now, we should have started a lot earlier than we did. Our debugging took a very long time which made our process very lengthy. Furthermore our code became extremely complex due to each edge case we had to handle.
