@@ -445,51 +445,9 @@ public class Parser {
         Table prevToken = joinedTable;
 
         while (st.hasMoreTokens()) {
-            String currName = st.nextToken(); //t2
-            Table currToken = d.getMap().get(currName);
-            if ((prevToken == null) || (currToken == null)) {
-                return "ERROR: Cannot select from nonexistent tables.";
-            } else {
 
-                int random = (int) (Math.random() * 100 + 1);
-                joinedTable = prevToken.join(currToken, new Table("t" + random));
-                prevToken = joinedTable;
-                d.getMap().put(joinedTable.getName(), joinedTable);
 
-            }
-        }
 
-        if (!(exprs.equals("*"))) {
-            if (exprsArr.size() > joinedTable.getColNames().size()) {
-                return "ERROR: Too many columns inputted";
-            }
-            if (!(isColExistent(exprsArr, joinedTable))) {
-                return "ERROR: column not existent";
-            }
-            selectedTable = specificSelect(exprsArr, joinedTable);
-            return selectedTable.printTable();
-        }
-
-        selectedTable = joinedTable;
-
-        if (exprs.contains(" as ")) {
-            String splittedExpr[] = exprs.split("\\s+" + "as" + "\\s+"); //may change back again
-            exprs = exprs.replaceAll("\\s+", "");
-            exprs = splittedExpr[0];
-            alias = splittedExpr[1];
-
-            Column combinedCol = colFilter(operands, exprs, tables, alias);
-
-            if (combinedCol.getName().equals("NONAME")) {
-                return "ERROR: cannot join columns.";
-            }
-            if (!(combinedCol.getName().equals("NOCOL"))) {
-                selectedTable = new Table("t");
-                selectedTable.getLinkedMap().put(combinedCol.getName(), combinedCol);
-                selectedTable.getColNames().add(combinedCol.getName());
-                return combinedCol.printCol();
-            }
-        }
         */
 
         return tempTable.printTable();
@@ -499,12 +457,12 @@ public class Parser {
         ArrayList<String> operands = new ArrayList<>((Arrays.asList("+", "-", "/", "*")));
         //String splittedExpr[] =
 
-        if (exprs.contains(" as ")) {
+       // if (exprs.contains(" as ")) {
             return evalExprWithAs(operands, exprs, input, alias);
-        }
+       // }
 
-        System.out.println("WTF");
-        return new Table("hi");
+       // System.out.println("WTF");
+       // return new Table("hi");
 
 
     }
@@ -514,7 +472,9 @@ public class Parser {
         String splittedExpr[] = exprs.split("\\s+" + "as" + "\\s+"); //may change back again
         exprs = exprs.replaceAll("\\s+", "");
         exprs = splittedExpr[0];
-        alias = splittedExpr[1];
+        if (splittedExpr.length > 1) {
+            alias = splittedExpr[1];
+        }
 
         exprs.replaceAll("\\s+", "");
         String splitExpr[] = exprs.split(",");
@@ -753,11 +713,13 @@ public class Parser {
 
     public static Column colFilter(ArrayList<String> operands, String exprs, Table t, String aliasName) {
          ArithmeticOperators op;
+
          for (String operand : operands) {
             if (exprs.contains(operand)) {
                 //remove spaces from expression
                 String splitOperand = "\\" + operand;
                 String splittedCol[] = exprs.split(splitOperand); //may change back again
+
                 if (splittedCol.length < 2) {
                     return new Column("NOCOL", "value");
                 }
@@ -781,8 +743,9 @@ public class Parser {
                     return op.combineCols();
                 }
             }
+
         }
-        return new Column("NOCOL", "value");
+        return t.getLinkedMap().get(exprs);
     }
 
 

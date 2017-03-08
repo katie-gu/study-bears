@@ -71,9 +71,9 @@ public class GreaterThan extends ComparisonOperators{
 
                 return t;
             } else {
-                System.out.println(c.getValues());
+               // System.out.println(c.getValues());
 
-                System.out.println(c2.getValues());
+               // System.out.println(c2.getValues());
 
                 for (int i = 0; i < c.getValues().size(); i++) {
                     System.out.println(c2.getValues());
