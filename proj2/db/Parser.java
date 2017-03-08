@@ -151,7 +151,10 @@ public class Parser {
               //  " '%s' from the join of these tables: '%s', filtered by these conditions: '%s'\n", name, exprs, tables, conds);
         select(exprs, tables, conds);
         d.getMap().put(name, selectedTable);
-        selectedTable.changeName(name);
+        if (selectedTable == null) {
+            return "ERROR";
+        }
+        //selectedTable.changeName(name);
         //selectedTable.getName()
 
         return "";
@@ -487,8 +490,10 @@ public class Parser {
         String splitExpr[] = exprs.split(",");
 
         for (String expr : splitExpr) {
-            int random = (int) (Math.random() * 100 + 1);
-            alias += random;
+            if (splitExpr.length > 1) {
+                int random = (int) (Math.random() * 100 + 1);
+                alias += random;
+            }
             Column combinedCol = colFilter(operands, expr, t, alias);
             n.getLinkedMap().put(alias, combinedCol);
             n.getColNames().add(alias);
