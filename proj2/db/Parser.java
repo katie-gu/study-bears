@@ -466,6 +466,9 @@ public class Parser {
 
         */
         selectedTable = tempTable;
+        if (tempTable.printTable().equals("NONAME")) {
+            return "ERROR: NONAME";
+        }
         return tempTable.printTable();
     }
 
