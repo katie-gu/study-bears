@@ -8,15 +8,15 @@ public class PercolationStats {
     private Percolation p;
     private int row;
     private int col;
-    private int percolationThreshold;
-    private int[] percThres;
+    private double percolationThreshold;
+    private double[] percThres;
 
     public PercolationStats(int N, int T) {  // perform T independent experiments on an N-by-N grid
         if ((N <= 0) || (T <= 0)) {
             throw new IllegalArgumentException("ERROR: Incorrect arguments for N or T");
         }
         //p = new Percolation(N);
-        percThres = new int[T];
+        percThres = new double[T];
 
         int count = 0;
         while (T > 0) {
