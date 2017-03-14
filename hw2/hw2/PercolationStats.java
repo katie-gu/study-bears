@@ -18,17 +18,25 @@ public class PercolationStats {
         //p = new Percolation(N);
         percThres = new int[T];
 
-        while (T >= 0) {
+        int count = 0;
+        while (T > 0) {
+            //System.out.println("WORKING ");
             p = new Percolation(N);
             //keep opening until percolates
+
             while (!p.percolates()) { // check for nulls!!
                 row = (StdRandom.uniform(N)); // [0, N)
+                //System.out.println("row : " + row);
+
                 col = (StdRandom.uniform(N)); // [0, N)
                 p.open(row, col);
             }
 
+
             percolationThreshold = p.numberOfOpenSites() / (N * N);
-            percThres[T] = percolationThreshold;
+            percThres[count] = percolationThreshold;
+            count += 1;
+            T -= 1;
         }
 
     }
@@ -50,4 +58,33 @@ public class PercolationStats {
     public double confidenceHigh() {         // high endpoint of 95% confidence interval
         return mean() + ((1.96 * stddev()) / Math.sqrt(percThres.length));
     }
-}                       
+
+
+    public static void main(String args []) {
+        PercolationStats p = new PercolationStats(6, 10);
+        System.out.println("Items in array: " + p.percThres.length);
+        for (int i = 0; i < p.percThres.length; i++) {
+            System.out.println("Item : " + p.percThres[i]);
+        }
+        System.out.println(p.mean());
+        System.out.println(p.mean());
+        System.out.println(p.stddev());
+        System.out.println(p.confidenceLow());
+        System.out.println(p.confidenceHigh());
+
+
+        System.out.println("\n Second percStat object: ");
+        PercolationStats p1 = new PercolationStats(6, 20);
+        System.out.println(p1.mean());
+        System.out.println(p1.mean());
+        System.out.println(p1.stddev());
+        System.out.println(p1.confidenceLow());
+        System.out.println(p1.confidenceHigh());
+
+
+
+    }
+
+}
+
+

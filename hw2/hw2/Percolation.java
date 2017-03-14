@@ -294,11 +294,12 @@ public class Percolation {
         //junit tests
         //testOpen();
         Percolation p = new Percolation(3);
-        p.open(2, 2);
+        System.out.println(p.isFull(0,2));
+        //p.open(2, 2);
         //p.open(0, 1);
         //p.open(0, 2);
-        p.open(1, 2);
-        p.open(0,2);
+        //p.open(1, 2);
+        //p.open(0,2);
         //p.open(1, 1);
         //p.open(1, 2);
         //p.open(2, 0);
@@ -316,6 +317,7 @@ public class Percolation {
         System.out.println("Are 3 and 6 now connected? : " + w.connected(3,6));
         */
     }
+
 
 
 
