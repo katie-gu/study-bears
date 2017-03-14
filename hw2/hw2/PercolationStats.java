@@ -33,7 +33,7 @@ public class PercolationStats {
             }
 
 
-            percolationThreshold = p.numberOfOpenSites() / (N * N);
+            percolationThreshold = ((double) p.numberOfOpenSites()) / (N * N);
             percThres[count] = percolationThreshold;
             count += 1;
             T -= 1;
@@ -60,7 +60,7 @@ public class PercolationStats {
     }
 
 
-    public static void main(String args []) {
+    public static void main(String[] args) {
         PercolationStats p = new PercolationStats(6, 10);
         System.out.println("Items in array: " + p.percThres.length);
         for (int i = 0; i < p.percThres.length; i++) {
@@ -80,8 +80,6 @@ public class PercolationStats {
         System.out.println(p1.stddev());
         System.out.println(p1.confidenceLow());
         System.out.println(p1.confidenceHigh());
-
-
 
     }
 

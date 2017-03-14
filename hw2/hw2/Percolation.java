@@ -16,8 +16,8 @@ public class Percolation {
             throw new IllegalArgumentException("Error: Illegal Argument");
         }
         arr = new boolean[N][N];
-        weightedU = new WeightedQuickUnionUF(1000000);
-        percolateTracker = new WeightedQuickUnionUF(1000000);
+        weightedU = new WeightedQuickUnionUF(10000000);
+        percolateTracker = new WeightedQuickUnionUF(10000000);
         topUnion = 9999;
         bottomUnion = 8888;
         count = 0;
@@ -27,7 +27,7 @@ public class Percolation {
         if (((row > arr.length - 1) || row < 0) || ((col > arr.length - 1) || col < 0)) {
             throw new IndexOutOfBoundsException("Row or Col Index out of bounds!");
         }
-        if (arr[row][col] != true) {
+        if (!arr[row][col]) { // changed to simpler expression
             int num = rcto1D(row, col);
             if (row == 0) {
                 weightedU.union(num, topUnion);
@@ -38,7 +38,7 @@ public class Percolation {
             checkNeighbors(row, col, num);
             if (row == (arr.length - 1)) {
                 //if (isFull(row, col)) {
-                    weightedU.union(num, bottomUnion);
+                weightedU.union(num, bottomUnion);
                 // else {
                     //percolateTracker.union(num, bottomUnion);
                     //bottomCheck = num;
@@ -56,204 +56,141 @@ public class Percolation {
 
     private void checkNeighbors(int row, int col, int numConvert) {
         int newNum;
-        //not constant calls to union ???
         if (col == 0) {
-            if ((isOpen(row, col + 1))) {
-                newNum = rcto1D(row, col + 1);
-                weightedU.union(numConvert, newNum);
-                percolateTracker.union(numConvert, newNum);
-               // if (isFull(row, col)) {
-               //     percolateTracker.union(numConvert, newNum);
-              //  }
-            }
-            if ((row != 0) && (row != arr.length - 1)) {
-                if (isOpen(row - 1, col)) {
-                    newNum = rcto1D(row - 1, col);
-                    weightedU.union(numConvert, newNum);
-                    percolateTracker.union(numConvert, newNum);
-
-                    // if (isFull(row, col)) {
-                   //     percolateTracker.union(numConvert, newNum);
-                  //  }
-                }
-                if (isOpen(row + 1, col)) {
-                    newNum = rcto1D(row + 1,col);
-                    weightedU.union(numConvert, newNum);
-                    percolateTracker.union(numConvert, newNum);
-
-                    //   if (isFull(row, col)) {
-                  //      percolateTracker.union(numConvert, newNum);
-                  //  }
-                }
-
-            } else if (row == 0) {
-                if (isOpen(row + 1, col)) {
-                    newNum = rcto1D(row + 1, col);
-                    weightedU.union(numConvert, newNum);
-                    percolateTracker.union(numConvert, newNum);
-
-                    //   if (isFull(row, col)) {
-                 //       percolateTracker.union(numConvert, newNum);
-                 //   }
-                }
-            } else { // row = arr.length - 1
-                if (isOpen(row - 1, col)) {
-                    newNum = rcto1D(row - 1, col);
-                    weightedU.union(numConvert, newNum);
-                    percolateTracker.union(numConvert, newNum);
-
-                    //     if (isFull(row, col)) {
-                //        percolateTracker.union(numConvert, newNum);
-                //    }
-                }
-            }
+            checkNeighborsZeroCol(row, col, numConvert);
+        } else if (row == 0) {
+            checkNeighborsZeroRow(row, col, numConvert);
         } else if (col == arr[0].length - 1) {
-            if ((isOpen(row, col - 1))) {
-                newNum = rcto1D(row, col - 1);
-                weightedU.union(numConvert, newNum);
-                percolateTracker.union(numConvert, newNum);
-
-                // if (isFull(row, col)) {
-               //     percolateTracker.union(numConvert, newNum);
-              //  }
-            }
-            if ((row != 0) && (row != (arr.length - 1))) {
-                if (isOpen(row - 1, col)) {
-                    newNum = rcto1D(row - 1, col);
-                    weightedU.union(numConvert, newNum);
-                    percolateTracker.union(numConvert, newNum);
-
-                    //  if (isFull(row, col)) {
-                  //      percolateTracker.union(numConvert, newNum);
-                  //  }
-                }
-                if (isOpen(row + 1, col)) {
-                    newNum = rcto1D(row + 1,col);
-                    weightedU.union(numConvert, newNum);
-                    percolateTracker.union(numConvert, newNum);
-
-                    //  if (isFull(row, col)) {
-                  //      percolateTracker.union(numConvert, newNum);
-                 //   }
-                }
-
-            } else if (row == 0) {
-                if (isOpen(row + 1, col)) {
-                    newNum = rcto1D(row + 1, col);
-                    weightedU.union(numConvert, newNum);
-                    percolateTracker.union(numConvert, newNum);
-
-                    //  if (isFull(row, col)) {
-                 //       percolateTracker.union(numConvert, newNum);
-                  //  }
-                }
-            } else { // row = arr.length - 1
-                if (isOpen(row - 1, col)) {
-                    newNum = rcto1D(row - 1, col);
-                    weightedU.union(numConvert, newNum);
-                    percolateTracker.union(numConvert, newNum);
-
-                    //   if (isFull(row, col)) {
-                 //       percolateTracker.union(numConvert, newNum);
-                 //   }
-                }
-            }
+            checkNeighborsLastRow(row, col, numConvert);
         } else if (row == 0) {
             if (isOpen(row, col + 1)) {
                 newNum = rcto1D(row, col + 1);
                 weightedU.union(numConvert, newNum);
                 percolateTracker.union(numConvert, newNum);
-
-                //  if (isFull(row, col)) {
-              //      percolateTracker.union(numConvert, newNum);
-              //  }
             }
             if (isOpen(row, col - 1)) {
                 newNum = rcto1D(row, col - 1);
                 weightedU.union(numConvert, newNum);
                 percolateTracker.union(numConvert, newNum);
-
-                //  if (isFull(row, col)) {
-              //      percolateTracker.union(numConvert, newNum);
-               // }
             }
             if (isOpen(row + 1, col)) {
                 newNum = rcto1D(row + 1, col);
                 weightedU.union(numConvert, newNum);
                 percolateTracker.union(numConvert, newNum);
-
-                //  if (isFull(row, col)) {
-              //      percolateTracker.union(numConvert, newNum);
-              //  }
             }
         } else if (row == arr.length - 1) {
             if (isOpen(row, col + 1)) {
                 newNum = rcto1D(row, col + 1);
                 weightedU.union(numConvert, newNum);
                 percolateTracker.union(numConvert, newNum);
-
-                //  if (isFull(row, col)) {
-               //     percolateTracker.union(numConvert, newNum);
-               // }
             }
             if (isOpen(row, col - 1)) {
                 newNum = rcto1D(row, col - 1);
                 weightedU.union(numConvert, newNum);
                 percolateTracker.union(numConvert, newNum);
-
-                //  if (isFull(row, col)) {
-              //      percolateTracker.union(numConvert, newNum);
-              //  }
             }
             if (isOpen(row - 1, col)) {
                 newNum = rcto1D(row - 1, col);
                 weightedU.union(numConvert, newNum);
                 percolateTracker.union(numConvert, newNum);
-
-                // if (isFull(row, col)) {
-              //      percolateTracker.union(numConvert, newNum);
-               // }
             }
         } else {
             if (isOpen(row, col + 1)) {
                 newNum = rcto1D(row, col + 1);
                 weightedU.union(numConvert, newNum);
                 percolateTracker.union(numConvert, newNum);
-
-                // if (isFull(row, col)) {
-               //     percolateTracker.union(numConvert, newNum);
-               // }
             }
             if (isOpen(row, col - 1)) {
                 newNum = rcto1D(row, col - 1);
                 weightedU.union(numConvert, newNum);
                 percolateTracker.union(numConvert, newNum);
-
-                //  if (isFull(row, col)) {
-               //     percolateTracker.union(numConvert, newNum);
-              //  }
             }
             if (isOpen(row - 1, col)) {
                 newNum = rcto1D(row - 1, col);
                 weightedU.union(numConvert, newNum);
                 percolateTracker.union(numConvert, newNum);
-
-                //  if (isFull(row, col)) {
-              //      percolateTracker.union(numConvert, newNum);
-              //  }
             }
             if (isOpen(row + 1, col)) {
                 newNum = rcto1D(row + 1, col);
                 weightedU.union(numConvert, newNum);
                 percolateTracker.union(numConvert, newNum);
-
-                // if (isFull(row, col)) {
-               //     percolateTracker.union(numConvert, newNum);
-               // }
             }
         }
 
     }
+
+    private void checkNeighborsZeroCol(int row, int col, int numConvert) {
+        int newNum;
+        if ((isOpen(row, col + 1))) {
+            newNum = rcto1D(row, col + 1);
+            weightedU.union(numConvert, newNum);
+            percolateTracker.union(numConvert, newNum);
+        }
+        if ((row != 0) && (row != arr.length - 1)) {
+            if (isOpen(row - 1, col)) {
+                newNum = rcto1D(row - 1, col);
+                weightedU.union(numConvert, newNum);
+                percolateTracker.union(numConvert, newNum);
+            }
+            if (isOpen(row + 1, col)) {
+                newNum = rcto1D(row + 1, col);
+                weightedU.union(numConvert, newNum);
+                percolateTracker.union(numConvert, newNum);
+            }
+        }
+
+    }
+
+    private void checkNeighborsZeroRow(int row, int col, int numConvert) {
+        int newNum;
+        if (isOpen(row + 1, col)) {
+            newNum = rcto1D(row + 1, col);
+            weightedU.union(numConvert, newNum);
+            percolateTracker.union(numConvert, newNum);
+        } else { // row = arr.length - 1
+            if (isOpen(row - 1, col)) {
+                newNum = rcto1D(row - 1, col);
+                weightedU.union(numConvert, newNum);
+                percolateTracker.union(numConvert, newNum);
+            }
+        }
+    }
+
+    private void checkNeighborsLastRow(int row, int col, int numConvert) {
+        int newNum;
+        if ((isOpen(row, col - 1))) {
+            newNum = rcto1D(row, col - 1);
+            weightedU.union(numConvert, newNum);
+            percolateTracker.union(numConvert, newNum);
+        }
+        if ((row != 0) && (row != (arr.length - 1))) {
+            if (isOpen(row - 1, col)) {
+                newNum = rcto1D(row - 1, col);
+                weightedU.union(numConvert, newNum);
+                percolateTracker.union(numConvert, newNum);
+            }
+            if (isOpen(row + 1, col)) {
+                newNum = rcto1D(row + 1, col);
+                weightedU.union(numConvert, newNum);
+                percolateTracker.union(numConvert, newNum);
+            }
+
+        } else if (row == 0) {
+            if (isOpen(row + 1, col)) {
+                newNum = rcto1D(row + 1, col);
+                weightedU.union(numConvert, newNum);
+                percolateTracker.union(numConvert, newNum);
+            }
+        } else { // row = arr.length - 1
+            if (isOpen(row - 1, col)) {
+                newNum = rcto1D(row - 1, col);
+                weightedU.union(numConvert, newNum);
+                percolateTracker.union(numConvert, newNum);
+            }
+        }
+
+    }
+
 
     private int rcto1D(int r, int c) {
         return (r * arr[0].length) + (c + 1);
@@ -281,12 +218,13 @@ public class Percolation {
     }
 
     //fix percolates method!
-    public boolean percolates() {// does the system percolate?
-        if (weightedU.connected(topUnion, bottomUnion) && (percolateTracker.find(topUnion) != topUnion)) {
-            return true;
-        } else {
-            return false;
-        }
+    public boolean percolates() { // does the system percolate?
+        return ((weightedU.connected(topUnion, bottomUnion))
+                && (percolateTracker.find(topUnion) != topUnion));
+            //return true;
+        //} else {
+        //    return false;
+        //}
     }
 
 
@@ -294,7 +232,7 @@ public class Percolation {
         //junit tests
         //testOpen();
         Percolation p = new Percolation(3);
-        System.out.println(p.isFull(0,2));
+        System.out.println(p.isFull(0, 2));
         //p.open(2, 2);
         //p.open(0, 1);
         //p.open(0, 2);
