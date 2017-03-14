@@ -16,8 +16,8 @@ public class Percolation {
             throw new IllegalArgumentException("Error: Illegal Argument");
         }
         arr = new boolean[N][N];
-        weightedU = new WeightedQuickUnionUF(10000000);
-        percolateTracker = new WeightedQuickUnionUF(10000000);
+        weightedU = new WeightedQuickUnionUF(100000);
+        percolateTracker = new WeightedQuickUnionUF(100000);
         topUnion = 9999;
         bottomUnion = 8888;
         count = 0;
