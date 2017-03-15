@@ -17,11 +17,11 @@ public class Percolation {
             throw new IllegalArgumentException("Error: Illegal Argument");
         }
         arr = new boolean[N][N];
-        int weightedUMax = ((N - 1) * arr[0].length) + N + 1;
-        weightedU = new WeightedQuickUnionUF(100000);
-        percolateTracker = new WeightedQuickUnionUF(100000);
-        topUnion = 9991;
-        bottomUnion = 8881;
+        int weightedUMax = ((N - 1) * arr[0].length) + N + 3;
+        weightedU = new WeightedQuickUnionUF(weightedUMax);
+        percolateTracker = new WeightedQuickUnionUF(weightedUMax);
+        topUnion = weightedUMax - 1;
+        bottomUnion = weightedUMax - 2;
         count = 0;
     }
 
@@ -101,9 +101,7 @@ public class Percolation {
         //System.out.println("N val : " + N);
         //System.out.println("Num connect : " + num);
         //System.out.println("topunion: " + topUnion);
-        if (numberOfOpenSites() == 0) {
-            return false;
-        }
+
         return percolateTracker.connected(num, topUnion);
 
 
@@ -123,15 +121,16 @@ public class Percolation {
     public static void main(String[] args) {
         //junit tests
         //testOpen();
-        Percolation p = new Percolation(512);
+        Percolation p = new Percolation(1024);
+        System.out.println("N is : " + p.N);
         p.open(0, 1);
         p.open(1, 1);
         p.open(2, 1);
 
         System.out.println(p.isFull(0, 1));
 
-        Percolation p1 = new Percolation(101);
-        System.out.println(p.isFull(98, 100));
+        //Percolation p1 = new Percolation(101);
+        //System.out.println(p.isFull(98, 100));
         //p.open(0, 1);
         //p.open(1, 0);
         //p.open(1, 1);
