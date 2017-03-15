@@ -98,9 +98,9 @@ public class Percolation {
             throw new IndexOutOfBoundsException("Row or Col Index out of bounds!");
         }
         int num = rcto1D(row, col);
-        System.out.println("N val : " + N);
-        System.out.println("Num connect : " + num);
-        System.out.println("topunion: " + topUnion);
+        //System.out.println("N val : " + N);
+        //System.out.println("Num connect : " + num);
+        //System.out.println("topunion: " + topUnion);
         return percolateTracker.connected(num, topUnion);
 
 
