@@ -18,8 +18,8 @@ public class Percolation {
         }
         arr = new boolean[N][N];
         int weightedUMax = ((N - 1) * arr[0].length) + N + 1;
-        weightedU = new WeightedQuickUnionUF(10000);
-        percolateTracker = new WeightedQuickUnionUF(10000);
+        weightedU = new WeightedQuickUnionUF(100000);
+        percolateTracker = new WeightedQuickUnionUF(100000);
         topUnion = 9991;
         bottomUnion = 8881;
         count = 0;
@@ -37,10 +37,7 @@ public class Percolation {
                 percolateTracker.union(num, topUnion);
             }
             arr[row][col] = true;
-
-            //if (N != 1) {
             checkNeighbors(row, col, num);
-            //}
             if (row == (arr.length - 1)) {
                 weightedU.union(num, bottomUnion);
             }
@@ -101,6 +98,9 @@ public class Percolation {
             throw new IndexOutOfBoundsException("Row or Col Index out of bounds!");
         }
         int num = rcto1D(row, col);
+        System.out.println("N val : " + N);
+        System.out.println("Num connect : " + num);
+        System.out.println("topunion: " + topUnion);
         return percolateTracker.connected(num, topUnion);
 
 
@@ -114,10 +114,6 @@ public class Percolation {
     public boolean percolates() { // does the system percolate?
         return ((weightedU.connected(topUnion, bottomUnion))
                 && (percolateTracker.find(topUnion) != topUnion));
-            //return true;
-        //} else {
-        //    return false;
-        //}
     }
 
 
