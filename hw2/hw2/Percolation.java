@@ -101,6 +101,9 @@ public class Percolation {
         //System.out.println("N val : " + N);
         //System.out.println("Num connect : " + num);
         //System.out.println("topunion: " + topUnion);
+        if (numberOfOpenSites() == 0) {
+            return false;
+        }
         return percolateTracker.connected(num, topUnion);
 
 
