@@ -45,6 +45,7 @@ public class Percolation {
                 weightedU.union(num, bottomUnion);
             }
         }
+        count += 1;
     }
 
     private boolean isValidRowCol(int position) {
@@ -143,7 +144,7 @@ public class Percolation {
         //p.open(2, 2);
         System.out.println("Percolates? " + p.percolates());
 
-        //System.out.println(p.numberOfOpenSites());
+        System.out.println(p.numberOfOpenSites());
 
         //System.out.println("********");
         /*
