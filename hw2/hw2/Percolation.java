@@ -18,10 +18,10 @@ public class Percolation {
         }
         arr = new boolean[N][N];
         int weightedUMax = ((N - 1) * arr[0].length) + N + 1;
-        weightedU = new WeightedQuickUnionUF(10000000);
-        percolateTracker = new WeightedQuickUnionUF(1000000);
-        topUnion = 9999;
-        bottomUnion = 8888;
+        weightedU = new WeightedQuickUnionUF(9999999);
+        percolateTracker = new WeightedQuickUnionUF(9999999);
+        topUnion = 99993;
+        bottomUnion = 88883;
         count = 0;
     }
 
@@ -44,8 +44,8 @@ public class Percolation {
             if (row == (arr.length - 1)) {
                 weightedU.union(num, bottomUnion);
             }
+            count += 1;
         }
-        count += 1;
     }
 
     private boolean isValidRowCol(int position) {
@@ -126,6 +126,9 @@ public class Percolation {
         //testOpen();
         Percolation p = new Percolation(512);
         p.open(0, 1);
+        p.open(1, 1);
+        p.open(2, 1);
+
         System.out.println(p.isFull(0, 1));
 
         Percolation p1 = new Percolation(101);
