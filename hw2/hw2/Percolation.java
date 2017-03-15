@@ -18,10 +18,10 @@ public class Percolation {
         }
         arr = new boolean[N][N];
         int weightedUMax = ((N - 1) * arr[0].length) + N + 1;
-        weightedU = new WeightedQuickUnionUF(weightedUMax);
-        percolateTracker = new WeightedQuickUnionUF(weightedUMax);
-        topUnion = 999999999;
-        bottomUnion = 888888888;
+        weightedU = new WeightedQuickUnionUF(10000000);
+        percolateTracker = new WeightedQuickUnionUF(1000000);
+        topUnion = 9999;
+        bottomUnion = 8888;
         count = 0;
     }
 
