@@ -77,7 +77,7 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
 
 
     public V get(K key) {
-        int hash = key.hashCode() & 0x7fffffff;
+        int hash = key.hashCode(); //& 0x7fffffff;
         int index = hashCodetoIndex(hash);
         for (Entry<K, V> e = table[index]; e != null; e = e.next) {
             if (key.equals(e.key)) {
@@ -142,31 +142,39 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
     }
 
     public void put(K key, V value) {
-        //similar to get
-        //arr.add(new Entry(key, value, null));
-        //hash key . hashcode
-        //int index = hashCodetoIndex(hashCode());
-        int hash = key.hashCode() & 0x7fffffff;
+        int hash = key.hashCode(); //& 0x7fffffff;
         int index = hashCodetoIndex(hash);
         Entry<K, V> newEnt = new Entry(key, value, null); //create a new entry for the key and value
 
         //for each entry in the table[index[ while e is not null and change e to e.next
             //if new entry equals e then
             //e.setvalue(value)
+        boolean keyFound = false;
+        Entry<K, V> placeHolder = new Entry(key, value, null); //initalization doesn't matter
 
-        for (Entry<K, V> e = table[index]; e != null; e = e.next) {
-            if (newEnt.equals(e)) {
-                e.val = value;
-                return;
+        if (table[index] != null) {
+            for (Entry<K, V> e = table[index]; e != null; e = e.next) {
+                if (newEnt.equals(e)) {
+                    e.val = value;
+                    keyFound = true;
+                    break;
+                    //return;
+                }
+                placeHolder = e;
             }
-            if (e.next == null) {
-                e.next = newEnt;
+            if (keyFound == false) {
+                placeHolder.next = newEnt;
             }
+        } else {
+            table[index] = newEnt;
+
         }
 
-        if (size > loadFactor) {
-            resize();
-        }
+
+
+        //if (size > loadFactor) {
+         //   resize();
+       // }
 
         //if size s greater than threshold then resize]]
         size += 1;
