@@ -8,23 +8,23 @@ import java.util.Iterator;
 /**
  * Created by jhinukbarman on 3/16/17.
  */
-public class MyHashMap<K, V> implements Map61B<K,V> {
+public class MyHashMap<K, V> implements Map61B<K, V> {
     private int size;
-    private Entry<K,V>[] table;
+    private Entry<K, V>[] table;
     private int initialCapacity;
     private double loadFactor;
     private HashSet keys = new HashSet();
     //private int threshold;
 
-    private static final int dInitCapacity = 16;
-    private static final double dLoadFactor = 0.75;
+    private static final int DEFAULT_INITCAPACITY = 16;
+    private static final double DEFAULT_LOADFACTOR = 0.75;
 
     public MyHashMap() {
-        this(dInitCapacity, dLoadFactor);
+        this(DEFAULT_INITCAPACITY, DEFAULT_LOADFACTOR);
     }
 
     public MyHashMap(int initialSize) {
-        this(initialSize, dLoadFactor);
+        this(initialSize, DEFAULT_LOADFACTOR);
 
     }
     public MyHashMap(int initialSize, double loadFactor) {
@@ -67,9 +67,9 @@ public class MyHashMap<K, V> implements Map61B<K,V> {
 
 
     public void clear() {
-        table = (Entry<K,V>[]) new Entry[dInitCapacity];
+        table = (Entry<K, V>[]) new Entry[dInitCapacity];
         size = 0;
-        initialCapacity = dInitCapacity;
+        initialCapacity = DEFAULT_INITCAPACITY;
        // threshold = (int) (initialCapacity * loadFactor);
 
     }
@@ -79,7 +79,7 @@ public class MyHashMap<K, V> implements Map61B<K,V> {
     public V get(K key) {
         int hash = key.hashCode() & 0x7fffffff;
         int index = hashCodetoIndex(hash);
-        for (Entry<K,V> e = table[index]; e != null; e = e.next) {
+        for (Entry<K, V> e = table[index]; e != null; e = e.next) {
             if (key.equals(e.key)) {
                 return e.val;
             }
@@ -99,7 +99,7 @@ public class MyHashMap<K, V> implements Map61B<K,V> {
 
     public void resize() {
         size *= 2;
-        Entry<K,V>[] newTable = new Entry[size];
+        Entry<K, V>[] newTable = new Entry[size];
         //newtable = new table
         int index = 0;
         Entry newTableEntry = null;
@@ -148,13 +148,13 @@ public class MyHashMap<K, V> implements Map61B<K,V> {
         //int index = hashCodetoIndex(hashCode());
         int hash = key.hashCode() & 0x7fffffff;
         int index = hashCodetoIndex(hash);
-        Entry<K, V> newEnt= new Entry(key, value, null); //create a new entry for the key and value
+        Entry<K, V> newEnt = new Entry(key, value, null); //create a new entry for the key and value
 
         //for each entry in the table[index[ while e is not null and change e to e.next
             //if new entry equals e then
             //e.setvalue(value)
 
-        for (Entry<K,V> e = table[index]; e != null; e = e.next) {
+        for (Entry<K, V> e = table[index]; e != null; e = e.next) {
             if (newEnt.equals(e)) {
                 e.val = value;
                 return;
