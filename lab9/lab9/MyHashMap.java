@@ -67,7 +67,7 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
 
 
     public void clear() {
-        table = (Entry<K, V>[]) new Entry[dInitCapacity];
+        table = (Entry<K, V>[]) new Entry[DEFAULT_INITCAPACITY];
         size = 0;
         initialCapacity = DEFAULT_INITCAPACITY;
        // threshold = (int) (initialCapacity * loadFactor);
