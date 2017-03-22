@@ -141,10 +141,15 @@ public class Board implements WorldState {
     }
 
     public boolean equals(Object y) {
-        Board b = (Board) y;
-        if (y.getClass() != b.getClass()) {
+        if (this.getClass() != y.getClass()) {
             return false;
         }
+        Board b = (Board) y;
+
+        if ((this.tiles.length != b.tiles.length) || (this.tiles[0].length != b.tiles[0].length)) {
+            return false;
+        }
+
         for (int row = 0; row < tiles.length; row++) {
             for (int col = 0; col < tiles[0].length; col++) {
                 if (this.tiles[row][col] != b.tiles[row][col]) {
