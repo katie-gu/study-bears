@@ -13,11 +13,10 @@ public class WordPuzzleSolver {
         //File f = new File ("words10000.txt");
         //File.setWorkingDir("words10000.txt");
 
-        String start = "stories";
-        String goal = "shore";
+        String start = "horse";
+        String goal = "nurse";
 
         Word startState = new Word(start, goal);
-        //System.out.println(startState.neighbors());
         Solver solver = new Solver(startState);
 
         StdOut.println("Minimum number of moves = " + solver.moves());
