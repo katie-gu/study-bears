@@ -21,15 +21,11 @@ public class Solver {
         SearchNode currNode = new SearchNode(curr, 0, null);
         m.insert(currNode);
 
-
         while (!m.isEmpty()) {
             currNode = m.delMin();
-            //System.out.println("CurrNode : " + currNode.w);
             if (currNode.isGoal()) {
                 break;
             }
-            //System.out.println(currNode.moves);
-
             for (WorldState n : currNode.neighbors()) {
                 if (currNode.prev == null) {
                     SearchNode next = new SearchNode(n, currNode.moves + 1, currNode);
@@ -45,8 +41,6 @@ public class Solver {
             arr.addFirst(parent.w);
             parent = parent.prev;
         }
-
-
     }
 
     public int moves() {
@@ -59,12 +53,12 @@ public class Solver {
 
     private class SearchNode implements WorldState, Comparable<SearchNode> {
         private WorldState w;
-        private int moves; //moves from original to current world state
+        private int moves; //moves from initial to current world state
         private SearchNode prev;
         private int estimatedDistance;
 
         public SearchNode(WorldState w, int moves, SearchNode prev) {
-            this.w = w; //u can't instantiate an interface!
+            this.w = w;
             this.moves = moves;
             this.prev = prev;
             this.estimatedDistance = this.estimatedDistanceToGoal();
@@ -82,16 +76,8 @@ public class Solver {
         public int compareTo(SearchNode s) {
             int nodeA = this.estimatedDistance + this.moves;
             int nodeB = s.estimatedDistance + s.moves;
-
             return nodeA - nodeB;
         }
-
-
-
     }
-
-
-
-
 }
 
