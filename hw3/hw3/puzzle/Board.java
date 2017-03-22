@@ -4,17 +4,34 @@ import edu.princeton.cs.algs4.Queue;
 
 public class Board implements WorldState {
     private int[][] tiles; // final int[][] tiles?
-    private int dimensions;
+    private int[][] goalBoard;
+    private int N;
     private int BLANK = 0;
 
 
     public Board(int[][] tiles) {
         this.tiles = (int[][]) tiles.clone(); //deep copy the array to make immutable
-        dimensions = tiles.length - 1;
+        //this.tiles = tiles;
+        N = tiles.length;
+        goalBoard = new int[N][N];
+        int count = 1;
+
+        //set the goalBoard
+        for (int row = 0; row < N; row++) {
+            for (int col = 0; col < N; col++) {
+                if ((row == N - 1) && (col == N - 1)) {
+                    goalBoard[row][col] = 0;
+                } else {
+                    goalBoard[row][col] = count;
+                    count += 1;
+                }
+            }
+        }
+
     }
 
     public int tileAt(int i, int j) {
-        if (i < 0 || i > dimensions || j < 0 || j > dimensions) {
+        if (i < 0 || i > N - 1 || j < 0 || j > N - 1) {
             throw new IndexOutOfBoundsException("ERROR: index out of bounds");
         }
         if (tiles[i][j] == BLANK) {
@@ -66,11 +83,47 @@ public class Board implements WorldState {
     }
 
     public int hamming() {
-        return 1;
+        int incorrectPos = 0;
+        for (int row = 0; row < N; row++) {
+            for (int col = 0; col < N; col++) {
+                if (tiles[row][col] != goalBoard[row][col]) {
+                    incorrectPos += 1;
+                }
+            }
+        }
+        return incorrectPos;
+    }
+
+    private int column(int num, int N) {
+        return Math.abs((num % N) - 1);
+    }
+
+    private int row(int num, int N) {
+        return Math.abs(((num - 1) / N));
     }
 
     public int manhattan() {
-        return 1;
+        int num = 0;
+        int goalCol = 0;
+        int goalRow = 0;
+        int manhattanCol = 0;
+        int manhattanRow = 0;
+        int manhattanEstimate = 0;
+        for (int row = 0; row < N; row++) {
+            for (int col = 0; col < N; col++) {
+                if ((tiles[row][col] != goalBoard[row][col]) && tiles[row][col] != 0) {
+                    num = tiles[row][col];
+                    goalCol = column(num, N);
+                    goalRow = row(num, N);
+                    manhattanCol = Math.abs(row - goalRow);
+                    manhattanRow = Math.abs(col - goalCol);
+                    manhattanEstimate += manhattanCol + manhattanRow;
+                }
+            }
+        }
+
+        return manhattanEstimate;
+
     }
 
     public int estimatedDistanceToGoal() {
@@ -78,22 +131,27 @@ public class Board implements WorldState {
     }
 
     public boolean isGoal() {
-        return this.isGoal();
+       // System.out.println(this.toString());
+        //System.out.println("Manhattan: " + manhattan());
+        return manhattan() == 0;
+       // return this.equals(goalBoard);
     }
 
     public boolean equals(Object y) {
         Board b = (Board) y;
         for (int row = 0; row < tiles.length; row++) {
             for (int col = 0; col < tiles.length; col++) {
-                if (this.tileAt(row, col) != b.tileAt(row, col)) {
+                if (tiles[row][col] != b.tiles[row][col]) { //or should i use tilesAt()?
                     return false;
                 }
-
             }
         }
         return true;
     }
 
+    //public int hashCode() {
+    //    return 1;
+    //}
 
     public String toString() {
         StringBuilder s = new StringBuilder();
@@ -101,7 +159,7 @@ public class Board implements WorldState {
         s.append(N + "\n");
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
-                s.append(String.format("%2d ", tileAt(i,j)));
+                s.append(String.format("%2d ", tileAt(i, j)));
             }
             s.append("\n");
         }

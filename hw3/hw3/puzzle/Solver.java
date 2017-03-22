@@ -57,25 +57,12 @@ public class Solver {
         private SearchNode prev;
         private int estimatedDistance;
 
-        public SearchNode(WorldState w, int moves, SearchNode prev) {
+        SearchNode(WorldState w, int moves, SearchNode prev) {
             this.w = w;
             this.moves = moves;
             this.prev = prev;
             this.estimatedDistance = w.estimatedDistanceToGoal();
         }
-
-        /*
-        @Override
-        public int estimatedDistanceToGoal() {
-            return w.estimatedDistanceToGoal();
-        }
-
-
-        @Override
-        public Iterable<WorldState> neighbors() {
-            return w.neighbors();
-        }
-        */
 
         @Override
         public int compareTo(SearchNode s) {
