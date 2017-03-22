@@ -86,6 +86,8 @@ public class Board implements WorldState {
 
     public int hamming() {
         int incorrectPos = 0;
+        while ()
+        /*
         for (int row = 0; row < N; row++) {
             for (int col = 0; col < N; col++) {
                 if (tiles[row][col] != goalBoardArr[row][col]) {
@@ -94,6 +96,7 @@ public class Board implements WorldState {
             }
         }
         return incorrectPos;
+        */
     }
 
     private int column(int num, int n) {
