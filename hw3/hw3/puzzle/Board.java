@@ -9,7 +9,6 @@ public class Board implements WorldState {
     private int N;
     private int BLANK = 0;
     //private int manhattan;
-    int manhattanEstimate = 0;
 
 
     public Board(int[][] tiles) {
@@ -98,7 +97,7 @@ public class Board implements WorldState {
         for (int row = 0; row < N; row++) {
             for (int col = 0; col < N; col++) {
                 if (tilesCopy[row][col] != BLANK) {
-                    if ((tilesCopy[row][col] != goalBoardArr[row][col])) {
+                    if (tilesCopy[row][col] != goalBoardArr[row][col]) {
                         incorrectPos += 1;
                     }
                 }
@@ -116,13 +115,13 @@ public class Board implements WorldState {
         return Math.abs(((num - 1) / n));
     }
 
-    private void calcManhattan() {
+    public int manhattan() {
         int num = 0;
         int goalCol = 0;
         int goalRow = 0;
         int manhattanCol = 0;
         int manhattanRow = 0;
-        //int manhattanEstimate = 0;
+        int manhattanEstimate = 0;
         for (int row = 0; row < N; row++) {
             for (int col = 0; col < N; col++) {
                 if (tilesCopy[row][col] != BLANK) {
@@ -137,17 +136,12 @@ public class Board implements WorldState {
                 }
             }
         }
-
-    }
-
-    public int manhattan() {
-        calcManhattan();
         return manhattanEstimate;
 
     }
 
     public int estimatedDistanceToGoal() {
-        return manhattanEstimate; //manhattan() ?
+        return manhattan(); //manhattan() ?
     }
 
     public boolean isGoal() {
