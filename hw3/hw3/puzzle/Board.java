@@ -3,17 +3,26 @@ package hw3.puzzle;
 import edu.princeton.cs.algs4.Queue;
 
 public class Board implements WorldState {
-    private int[][] tiles; // final int[][] tiles?
+    private int[][] tilesCopy; // final int[][] tiles?
     private int[][] goalBoardArr;
     //private Board goalBoard;
     private int N;
     private int BLANK = 0;
-    private int manhattan;
+    //private int manhattan;
+    int manhattanEstimate = 0;
+
 
     public Board(int[][] tiles) {
-        this.tiles = (int[][]) tiles.clone(); //deep copy the array to make immutable
-        //this.tiles = tiles;
+        //this.tiles = (int[][]) tiles.clone(); //deep copy the array to make immutable
         N = tiles.length;
+        tilesCopy = new int[N][N];
+        for (int row = 0; row < tiles.length; row++) {
+            for (int col = 0; col < tiles[0].length; col++) {
+                tilesCopy[row][col] = tiles[row][col];
+            }
+        }
+
+        //this.tiles = tiles;
         goalBoardArr = new int[N][N];
         int count = 1;
 
@@ -36,14 +45,14 @@ public class Board implements WorldState {
         if (i < 0 || i > N - 1 || j < 0 || j > N - 1) {
             throw new IndexOutOfBoundsException("ERROR: index out of bounds");
         }
-        if (tiles[i][j] == BLANK) {
+        if (tilesCopy[i][j] == BLANK) {
             return 0;
         }
-        return tiles[i][j];
+        return tilesCopy[i][j];
     }
 
     public int size() {
-        return tiles.length;
+        return tilesCopy.length;
     }
 
     /*
@@ -88,8 +97,10 @@ public class Board implements WorldState {
         int incorrectPos = 0;
         for (int row = 0; row < N; row++) {
             for (int col = 0; col < N; col++) {
-                if ((tiles[row][col] != goalBoardArr[row][col]) && (tiles[row][col] != BLANK)) {
-                    incorrectPos += 1;
+                if (tilesCopy[row][col] != BLANK) {
+                    if ((tilesCopy[row][col] != goalBoardArr[row][col])) {
+                        incorrectPos += 1;
+                    }
                 }
             }
         }
@@ -105,38 +116,42 @@ public class Board implements WorldState {
         return Math.abs(((num - 1) / n));
     }
 
-    public int manhattan() {
+    private void calcManhattan() {
         int num = 0;
         int goalCol = 0;
         int goalRow = 0;
         int manhattanCol = 0;
         int manhattanRow = 0;
-        int manhattanEstimate = 0;
+        //int manhattanEstimate = 0;
         for (int row = 0; row < N; row++) {
             for (int col = 0; col < N; col++) {
-                if ((tiles[row][col] != goalBoardArr[row][col]) && tiles[row][col] != BLANK) {
-                    num = tiles[row][col];
-                    goalCol = column(num, N);
-                    goalRow = row(num, N);
-                    manhattanRow = Math.abs(row - goalRow);
-                    manhattanCol = Math.abs(col - goalCol);
-                    manhattanEstimate += manhattanCol + manhattanRow;
+                if (tilesCopy[row][col] != BLANK) {
+                    if (tilesCopy[row][col] != goalBoardArr[row][col]) {
+                        num = tilesCopy[row][col];
+                        goalCol = column(num, N);
+                        goalRow = row(num, N);
+                        manhattanRow = Math.abs(row - goalRow);
+                        manhattanCol = Math.abs(col - goalCol);
+                        manhattanEstimate += manhattanCol + manhattanRow;
+                    }
                 }
             }
         }
 
-        manhattan = manhattanEstimate;
+    }
 
+    public int manhattan() {
+        calcManhattan();
         return manhattanEstimate;
 
     }
 
     public int estimatedDistanceToGoal() {
-        return manhattan();
+        return manhattanEstimate; //manhattan() ?
     }
 
     public boolean isGoal() {
-        return manhattan() == 0;
+        return manhattan() == 0; //or manhattan()?
         // return this.equals(goalBoard);
     }
 
@@ -147,13 +162,17 @@ public class Board implements WorldState {
 
         Board b = (Board) y;
 
-        if ((this.tiles.length != b.tiles.length) || (this.tiles[0].length != b.tiles[0].length)) {
+        if (this.tilesCopy.length != b.tilesCopy.length) {
             return false;
         }
 
-        for (int row = 0; row < tiles.length; row++) {
-            for (int col = 0; col < tiles[0].length; col++) {
-                if (this.tiles[row][col] != b.tiles[row][col]) {
+        if (this.tilesCopy[0].length != b.tilesCopy[0].length) {
+            return false;
+        }
+
+        for (int row = 0; row < tilesCopy.length; row++) {
+            for (int col = 0; col < tilesCopy[0].length; col++) {
+                if (this.tilesCopy[row][col] != b.tilesCopy[row][col]) {
                     return false;
                 }
             }
