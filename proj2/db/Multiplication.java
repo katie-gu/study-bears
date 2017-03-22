@@ -25,20 +25,26 @@ public class Multiplication extends ArithmeticOperators {
     @Override
     public Column combineCols() {
 
-        if (!(a.getMyType().equals(b.getMyType()))) {
+        if (!isSameColType(a, b)) {
             return new Column("NONAME", "string");
         }
 
         if (a.getMyType().equals("int") && b.getMyType().equals("int")) {
             Column newCol = new Column(name, "int");
+            String newVal;
             for (int i = 0; i < a.getValues().size(); i++) {
                 if (a.getValues().get(i).contains("'") || b.getValues().get(i).contains("'")) {
                     return new Column("NONAME", "string");
                 }
-                int a1 = Integer.parseInt(a.getValues().get(i));
-                int b1 = Integer.parseInt(b.getValues().get(i));
-                String newVal = String.valueOf(a1 * b1);
-                newCol.addVal(newVal);
+               // if (a.getValues().get(i).equals("NaN") || b.getValues().equals("NaN"))
+                if (a.getValues().get(i).equals("NaN") || b.getValues().get(i).equals("NaN")) {
+                    newCol.addVal("NaN");
+                } else {
+                    int a1 = Integer.parseInt(a.getValues().get(i));
+                    int b1 = Integer.parseInt(b.getValues().get(i));
+                    newVal = String.valueOf(a1 * b1);
+                    newCol.addVal(newVal);
+                }
             }
             return newCol;
             /*}  else if (a.getMyType().equals("float") && b.getMyType().equals("float")) {
@@ -52,14 +58,19 @@ public class Multiplication extends ArithmeticOperators {
         } else {
             //if ((a.getMyType().equals("int") && b.getMyType().equals("float")) ||
             // (a.getMyType().equals("float") && b.getMyType().equals("int"))) {
+            String newVal;
             Column newCol = new Column(name, "float");
             for (int i = 0; i < a.getValues().size(); i++) {
-                String s1 = a.getValues().get(i) + "f";
-                float f = Float.parseFloat(s1);
-                String s2 = b.getValues().get(i) + "f";
-                float f1 = Float.parseFloat(s2);
-                String newVal = String.valueOf(f * f1);
-                newCol.addVal(newVal);
+                if (a.getValues().get(i).equals("NaN") || b.getValues().get(i).equals("NaN")) {
+                    newCol.addVal("NaN");
+                } else {
+                    String s1 = a.getValues().get(i) + "f";
+                    float f = Float.parseFloat(s1);
+                    String s2 = b.getValues().get(i) + "f";
+                    float f1 = Float.parseFloat(s2);
+                    newVal = String.valueOf(f * f1);
+                    newCol.addVal(newVal);
+                }
             }
             return newCol;
         }

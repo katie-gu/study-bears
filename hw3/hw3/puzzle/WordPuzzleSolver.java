@@ -1,7 +1,10 @@
 package hw3.puzzle;
 import edu.princeton.cs.algs4.StdOut;
+<<<<<<< HEAD
 import edu.princeton.cs.algs4.StdIn;
 import java.io.File;
+=======
+>>>>>>> 716d4b0bee2a9a2bef5357a6312dd80e34b164e3
 
 public class WordPuzzleSolver {
     /***********************************************************************
@@ -9,12 +12,18 @@ public class WordPuzzleSolver {
      * your basic functionality. Make sure to set your current working directory
      * to be the one containing words10000.txt.
      **********************************************************************/
+<<<<<<< HEAD
     public static void main(String[] args) {
         //File f = new File ("words10000.txt");
         //File.setWorkingDir("words10000.txt");
 
         String start = "horse";
         String goal = "nurse";
+=======
+    /*public static void main(String[] args) {
+        String start = "cube";
+        String goal = "tubes";
+>>>>>>> 716d4b0bee2a9a2bef5357a6312dd80e34b164e3
 
         Word startState = new Word(start, goal);
         Solver solver = new Solver(startState);
@@ -23,5 +32,9 @@ public class WordPuzzleSolver {
         for (WorldState ws : solver.solution()) {
             StdOut.println(ws);
         }
+<<<<<<< HEAD
     }
+=======
+    }*/
+>>>>>>> 716d4b0bee2a9a2bef5357a6312dd80e34b164e3
 }

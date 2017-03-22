@@ -23,6 +23,17 @@ public class ArithmeticOperators {
 
     public Column combineUnaryCols() { return new Column("c", "string"); }
 
+    public static boolean isSameColType(Column a, Column b) {
+        if (a.getMyType().equals("string") && (b.getMyType().equals("string"))) {
+            return true;
+        } else if (a.getMyType().equals("float") && ((b.getMyType().equals("float")) || b.getMyType().equals("int"))){
+            return true;
+        } else if (b.getMyType().equals("float") && ((a.getMyType().equals("float")) || a.getMyType().equals("int"))){
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     //do conditional checks in parser?
     public boolean checkValid(Column a, Column b) {

@@ -681,7 +681,11 @@ public class Parser {
     }
 
     public static boolean isSameColType(Table t, String split1, String split2) {
-        if (t.getLinkedMap().get(split1).getMyType().equals(t.getLinkedMap().get(split2).getMyType())) {
+        if (t.getLinkedMap().get(split1).getMyType().equals("string") && (t.getLinkedMap().get(split2).getMyType().equals("string"))) {
+            return true;
+        } else if (t.getLinkedMap().get(split1).getMyType().equals("float") && ((t.getLinkedMap().get(split2).getMyType().equals("float")) || t.getLinkedMap().get(split2).getMyType().equals("int"))){
+            return true;
+        } else if (t.getLinkedMap().get(split2).getMyType().equals("float") && ((t.getLinkedMap().get(split1).getMyType().equals("float")) || t.getLinkedMap().get(split1).getMyType().equals("int"))){
             return true;
         } else {
             return false;

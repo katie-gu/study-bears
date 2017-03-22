@@ -70,11 +70,28 @@ public class LinkedListDequeTest {
 
 		System.out.println("Make sure to uncomment the lines below (and delete this print statement).");
 		//try with String as Generic type!!
-		//LinkedListDeque<Integer> lld1 = new LinkedListDeque<Integer>();
-		ArrayDeque<Integer> lld2 = new ArrayDeque<Integer>();
+	//	LinkedListDeque<Integer> lld1 = new LinkedListDeque<Integer>();
+		ArrayDeque<Integer> lld1 = new ArrayDeque<Integer>();
 		//should be empty
 		//boolean passed = checkEmpty(true, lld1.isEmpty());
+        //lld1.addFirst(0);
+      //  lld1.removeFirst();
+       // System.out.println(lld1.isEmpty());
 
+      //  System.out.println(lld1.isEmpty());
+      //  System.out.println(lld1.isEmpty());
+        lld1.addLast(0);
+        lld1.addLast(1);
+        System.out.println(lld1.removeFirst());
+
+       // System.out.println(lld1.isEmpty());
+      //  lld1.addFirst(5);
+      //  lld1.removeLast();
+      //  lld1.addLast(6);
+      //  lld1.addLast(7);
+      //  System.out.println(lld1.get(1));
+       // System.out.println(lld1.get(1));
+       // System.out.println(lld1.isEmpty());
 
         //Checks if the nextFirst and nextLast are same
 /*
@@ -97,6 +114,7 @@ public class LinkedListDequeTest {
         lld2.removeLast();
 */
 
+/*
         lld2.addFirst(8);
         lld2.addLast(9);
         lld2.addLast(10);
@@ -111,13 +129,15 @@ public class LinkedListDequeTest {
         lld2.removeFirst();
         lld2.addFirst(6);
         lld2.addLast(7);
+*/
+
 
         // lld2.addLast(14);
 
 
 
-        System.out.println(lld2.get(1));
-        lld2.printDeque();
+       // System.out.println(lld2.get(1));
+       // lld2.printDeque();
 
        // lld2.removeLast();
        // lld2.removeLast();

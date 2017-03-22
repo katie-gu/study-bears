@@ -7,6 +7,7 @@ public class EscapeFromTheSodaLabs extends Trial {
      */
     public static void main(String[] args) {
         Traveler cal = new Traveler("General Ackbar", 5, 8);
+        System.out.println("hi");
         treasureChest(cal);
         trap(cal);
         treasureChest(cal);

@@ -24,7 +24,7 @@ public class Division extends ArithmeticOperators {
 
     @Override
     public Column combineCols() {
-        if (!(a.getMyType().equals(b.getMyType()))) {
+        if (!isSameColType(a, b)) {
             return new Column("NONAME", "string");
         }
         if (a.getMyType().equals("int") && b.getMyType().equals("int")) {
@@ -55,19 +55,21 @@ public class Division extends ArithmeticOperators {
             String newVal;
             Column newCol = new Column(name, "float");
             for (int i = 0; i < a.getValues().size(); i++) {
-                if (a.getValues().get(i).contains("'") || b.getValues().get(i).contains("'")) {
-                    return new Column("NONAME", "string");
-                }
-                String s1 = a.getValues().get(i) + "f";
-                float f = Float.parseFloat(s1);
-                String s2 = b.getValues().get(i) + "f";
-                float f1 = Float.parseFloat(s2);
-                if (f1 == 0) {
-                    newVal = "NaN";
+                if (a.getValues().get(i).equals("NaN") || b.getValues().get(i).equals("NaN")) {
+                    newCol.addVal("NaN");
                 } else {
-                    newVal = String.valueOf(f / f1);
+                    String s1 = a.getValues().get(i) + "f";
+                    float f = Float.parseFloat(s1);
+                    String s2 = b.getValues().get(i) + "f";
+                    float f1 = Float.parseFloat(s2);
+                    if (f1 == 0) {
+                        newVal = "NaN";
+                    } else {
+                        newVal = String.valueOf(f / f1);
+                    }
+                    newCol.addVal(newVal);
                 }
-                newCol.addVal(newVal);
+
             }
             return newCol;
         }
@@ -85,14 +87,20 @@ public class Division extends ArithmeticOperators {
         } else {
             if (correctType.equals("int") && (!(s.contains(".")))) {
                 Column newCol = new Column(name, "int");
+                String newVal;
                 for (int i = 0; i < a.getValues().size(); i++) {
-                    int a1 = Integer.parseInt(a.getValues().get(i));
-                    int b1 = Integer.parseInt(s);
-                    if (b1 == 0) {
-                        return new Column("NONAME", "string"); //replace this line
+                    if (a.getValues().get(i).equals("NaN") || b.getValues().get(i).equals("NaN")) {
+                        newCol.addVal("NaN");
+                    } else {
+                        int a1 = Integer.parseInt(a.getValues().get(i));
+                        int b1 = Integer.parseInt(b.getValues().get(i));
+                        if (b1 == 0) {
+                            return new Column("NONAME", "string"); //replace this line
+                        }
+                        newVal = String.valueOf(a1 / b1);
+                        newCol.addVal(newVal);
                     }
-                    String newVal = String.valueOf(a1 / b1);
-                    newCol.addVal(newVal);
+
                 }
                 return newCol;
             /*}  else if (a.getMyType().equals("float") && b.getMyType().equals("float")) {
@@ -107,17 +115,23 @@ public class Division extends ArithmeticOperators {
 
                 //if ((a.getMyType().equals("int") && b.getMyType().equals("float")) ||
                 // (a.getMyType().equals("float") && b.getMyType().equals("int"))) {
+                String newVal;
                 Column newCol = new Column(name, "float");
                 for (int i = 0; i < a.getValues().size(); i++) {
-                    String s1 = a.getValues().get(i) + "f";
-                    float f = Float.parseFloat(s1);
-                    String s2 = s + "f";
-                    float f1 = Float.parseFloat(s2);
-                    if (f1 == 0) {
-                        return new Column("NONAME", "string"); //replace this line
+                    if (a.getValues().get(i).equals("NaN") || b.getValues().get(i).equals("NaN")) {
+                        newCol.addVal("NaN");
+                    } else {
+                        String s1 = a.getValues().get(i) + "f";
+                        float f = Float.parseFloat(s1);
+                        String s2 = b.getValues().get(i) + "f";
+                        float f1 = Float.parseFloat(s2);
+                        if (f1 == 0) {
+                            return new Column("NONAME", "string"); //replace this line
+                        }
+                        newVal = String.valueOf(f / f1);
+                        newCol.addVal(newVal);
                     }
-                    String newVal = String.valueOf(f / f1);
-                    newCol.addVal(newVal);
+
                 }
                 return newCol;
             }

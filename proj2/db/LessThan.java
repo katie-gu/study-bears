@@ -43,6 +43,7 @@ public class LessThan extends ComparisonOperators{
 
                 return t;
             } else {
+
                 float f = Float.parseFloat(split2);
 
                 for (int i = 0; i < c.getValues().size(); i++) {
@@ -58,6 +59,7 @@ public class LessThan extends ComparisonOperators{
             }
         } else {
             Column c2 = t.getLinkedMap().get(split2);
+
             if (c.getMyType().equals("string")) {
                 //means that both column type and split2 are strings.
                 for (int i = 0; i < c.getValues().size(); i++) {
@@ -72,10 +74,14 @@ public class LessThan extends ComparisonOperators{
             } else {
 
                 for (int i = 0; i < c.getValues().size(); i++) {
-                    float f = Float.parseFloat(c2.getValues().get(i));
-                    float colVal = Float.parseFloat(c.getValues().get(i));
-                    if (colVal >= f) {
+                    if ((c2.getValues().get(i).equals("NaN") && c.getValues().get(i).equals("NaN")) || (c.getValues().get(i).equals("NaN"))) {
                         removeRowIndices.add(i);
+                    } else {
+                        float f = Float.parseFloat(c2.getValues().get(i));
+                        float colVal = Float.parseFloat(c.getValues().get(i));
+                        if (colVal >= f) {
+                            removeRowIndices.add(i);
+                        }
                     }
                 }
 

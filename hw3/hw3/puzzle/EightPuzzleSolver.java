@@ -8,7 +8,11 @@ public class EightPuzzleSolver {
      * Test routine for your Solver class. Uncomment and run to test
      * your basic functionality.
     **********************************************************************/
+<<<<<<< HEAD
     public static void main(String[] args) {
+=======
+    /*public static void main(String[] args) {
+>>>>>>> 716d4b0bee2a9a2bef5357a6312dd80e34b164e3
         In in = new In(args[0]);
         int N = in.readInt();
         int[][] tiles = new int[N][N];
@@ -23,5 +27,9 @@ public class EightPuzzleSolver {
         for (WorldState ws : solver.solution()) {
             StdOut.println(ws);
         }
+<<<<<<< HEAD
     }
+=======
+    }*/
+>>>>>>> 716d4b0bee2a9a2bef5357a6312dd80e34b164e3
 }
