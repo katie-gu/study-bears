@@ -23,10 +23,10 @@ public class Solver {
 
         while (!m.isEmpty()) {
             currNode = m.delMin();
-            if (currNode.isGoal()) {
+            if (currNode.w.isGoal()) {
                 break;
             }
-            for (WorldState n : currNode.neighbors()) {
+            for (WorldState n : currNode.w.neighbors()) {
                 if (currNode.prev == null) {
                     SearchNode next = new SearchNode(n, currNode.moves + 1, currNode);
                     m.insert(next);
@@ -51,7 +51,7 @@ public class Solver {
         return arr;
     }
 
-    private class SearchNode implements WorldState, Comparable<SearchNode> {
+    private class SearchNode implements Comparable<SearchNode> {
         private WorldState w;
         private int moves; //moves from initial to current world state
         private SearchNode prev;
@@ -61,18 +61,21 @@ public class Solver {
             this.w = w;
             this.moves = moves;
             this.prev = prev;
-            this.estimatedDistance = this.estimatedDistanceToGoal();
+            this.estimatedDistance = w.estimatedDistanceToGoal();
         }
 
+        /*
         @Override
         public int estimatedDistanceToGoal() {
             return w.estimatedDistanceToGoal();
         }
 
+
         @Override
         public Iterable<WorldState> neighbors() {
             return w.neighbors();
         }
+        */
 
         @Override
         public int compareTo(SearchNode s) {
