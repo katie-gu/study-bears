@@ -149,9 +149,9 @@ public class Board implements WorldState {
         return true;
     }
 
-    //public int hashCode() {
-    //    return 1;
-    //}
+    public int hashCode() {
+        return 1;
+    }
 
     public String toString() {
         StringBuilder s = new StringBuilder();
