@@ -4,7 +4,8 @@ import edu.princeton.cs.algs4.Queue;
 
 public class Board implements WorldState {
     private int[][] tiles; // final int[][] tiles?
-    private int[][] goalBoard;
+    private int[][] goalBoardArr;
+    //private Board goalBoard;
     private int N;
     private int BLANK = 0;
 
@@ -13,20 +14,21 @@ public class Board implements WorldState {
         this.tiles = (int[][]) tiles.clone(); //deep copy the array to make immutable
         //this.tiles = tiles;
         N = tiles.length;
-        goalBoard = new int[N][N];
+        goalBoardArr = new int[N][N];
         int count = 1;
 
         //set the goalBoard
         for (int row = 0; row < N; row++) {
             for (int col = 0; col < N; col++) {
                 if ((row == N - 1) && (col == N - 1)) {
-                    goalBoard[row][col] = 0;
+                    goalBoardArr[row][col] = 0;
                 } else {
-                    goalBoard[row][col] = count;
+                    goalBoardArr[row][col] = count;
                     count += 1;
                 }
             }
         }
+
 
     }
 
@@ -86,7 +88,7 @@ public class Board implements WorldState {
         int incorrectPos = 0;
         for (int row = 0; row < N; row++) {
             for (int col = 0; col < N; col++) {
-                if (tiles[row][col] != goalBoard[row][col]) {
+                if (tiles[row][col] != goalBoardArr[row][col]) {
                     incorrectPos += 1;
                 }
             }
@@ -94,12 +96,12 @@ public class Board implements WorldState {
         return incorrectPos;
     }
 
-    private int column(int num, int N) {
-        return Math.abs((num % N) - 1);
+    private int column(int num, int n) {
+        return Math.abs((num % n) - 1);
     }
 
-    private int row(int num, int N) {
-        return Math.abs(((num - 1) / N));
+    private int row(int num, int n) {
+        return Math.abs(((num - 1) / n));
     }
 
     public int manhattan() {
@@ -111,7 +113,7 @@ public class Board implements WorldState {
         int manhattanEstimate = 0;
         for (int row = 0; row < N; row++) {
             for (int col = 0; col < N; col++) {
-                if ((tiles[row][col] != goalBoard[row][col]) && tiles[row][col] != 0) {
+                if ((tiles[row][col] != goalBoardArr[row][col]) && tiles[row][col] != 0) {
                     num = tiles[row][col];
                     goalCol = column(num, N);
                     goalRow = row(num, N);
@@ -133,6 +135,7 @@ public class Board implements WorldState {
     public boolean isGoal() {
        // System.out.println(this.toString());
         //System.out.println("Manhattan: " + manhattan());
+        //goalBoard = new Board(goalBoardArr);
         return manhattan() == 0;
        // return this.equals(goalBoard);
     }
@@ -141,7 +144,7 @@ public class Board implements WorldState {
         Board b = (Board) y;
         for (int row = 0; row < tiles.length; row++) {
             for (int col = 0; col < tiles.length; col++) {
-                if (tiles[row][col] != b.tiles[row][col]) { //or should i use tilesAt()?
+                if (this.tiles[row][col] != b.tiles[row][col]) { //or should i use tilesAt()?
                     return false;
                 }
             }
@@ -155,10 +158,10 @@ public class Board implements WorldState {
 
     public String toString() {
         StringBuilder s = new StringBuilder();
-        int N = size();
-        s.append(N + "\n");
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < N; j++) {
+        int n = size();
+        s.append(n + "\n");
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
                 s.append(String.format("%2d ", tileAt(i, j)));
             }
             s.append("\n");
