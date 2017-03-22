@@ -17,11 +17,7 @@ public class Word implements WorldState {
     private void readWords() {
         words = new HashSet<String>();
 
-<<<<<<< HEAD
         In in = new In("/Users/jhinukbarman/cs61b/aej/hw3/input/words10000.txt");
-=======
-        In in = new In(WORDFILE);
->>>>>>> 716d4b0bee2a9a2bef5357a6312dd80e34b164e3
         while (!in.isEmpty()) {
             words.add(in.readString());
         }

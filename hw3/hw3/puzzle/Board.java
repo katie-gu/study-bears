@@ -1,6 +1,5 @@
 package hw3.puzzle;
 
-<<<<<<< HEAD
 import edu.princeton.cs.algs4.Queue;
 
 public class Board implements WorldState {
@@ -87,17 +86,17 @@ public class Board implements WorldState {
 
     public int hamming() {
         int incorrectPos = 0;
-        while ()
-        /*
+        //while ()
+
         for (int row = 0; row < N; row++) {
             for (int col = 0; col < N; col++) {
-                if (tiles[row][col] != goalBoardArr[row][col]) {
+                if ((tiles[row][col] != goalBoardArr[row][col]) && (tiles[row][col] != BLANK)) {
                     incorrectPos += 1;
                 }
             }
         }
         return incorrectPos;
-        */
+
     }
 
     private int column(int num, int n) {
@@ -137,11 +136,11 @@ public class Board implements WorldState {
     }
 
     public boolean isGoal() {
-       // System.out.println(this.toString());
+        // System.out.println(this.toString());
         //System.out.println("Manhattan: " + manhattan());
         //goalBoard = new Board(goalBoardArr);
         return manhattan() == 0;
-       // return this.equals(goalBoard);
+        // return this.equals(goalBoard);
     }
 
     public boolean equals(Object y) {
@@ -160,35 +159,20 @@ public class Board implements WorldState {
         return 1;
     }
 
-    public String toString() {
-        StringBuilder s = new StringBuilder();
-        int n = size();
-        s.append(n + "\n");
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                s.append(String.format("%2d ", tileAt(i, j)));
-=======
-public class Board {
 
-    /** Returns the string representation of the board. 
-      * Uncomment this method. */
-    /*public String toString() {
+    public String toString() {
         StringBuilder s = new StringBuilder();
         int N = size();
         s.append(N + "\n");
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
-                s.append(String.format("%2d ", tileAt(i,j)));
->>>>>>> 716d4b0bee2a9a2bef5357a6312dd80e34b164e3
+                s.append(String.format("%2d ", tileAt(i, j)));
             }
             s.append("\n");
         }
         s.append("\n");
         return s.toString();
-<<<<<<< HEAD
     }
-=======
-    }*/
->>>>>>> 716d4b0bee2a9a2bef5357a6312dd80e34b164e3
+
 
 }
