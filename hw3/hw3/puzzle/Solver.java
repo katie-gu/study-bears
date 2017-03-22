@@ -64,10 +64,12 @@ public class Solver {
             this.estimatedDistance = this.estimatedDistanceToGoal();
         }
 
+        @Override
         public int estimatedDistanceToGoal() {
             return w.estimatedDistanceToGoal();
         }
 
+        @Override
         public Iterable<WorldState> neighbors() {
             return w.neighbors();
         }
@@ -78,6 +80,7 @@ public class Solver {
             int nodeB = s.estimatedDistance + s.moves;
             return nodeA - nodeB;
         }
+
     }
 }
 
