@@ -8,7 +8,7 @@ public class Board implements WorldState {
     //private Board goalBoard;
     private int N;
     private int BLANK = 0;
-
+    private int manhattan;
 
     public Board(int[][] tiles) {
         this.tiles = (int[][]) tiles.clone(); //deep copy the array to make immutable
@@ -86,8 +86,6 @@ public class Board implements WorldState {
 
     public int hamming() {
         int incorrectPos = 0;
-        //while ()
-
         for (int row = 0; row < N; row++) {
             for (int col = 0; col < N; col++) {
                 if ((tiles[row][col] != goalBoardArr[row][col]) && (tiles[row][col] != BLANK)) {
@@ -116,16 +114,18 @@ public class Board implements WorldState {
         int manhattanEstimate = 0;
         for (int row = 0; row < N; row++) {
             for (int col = 0; col < N; col++) {
-                if ((tiles[row][col] != goalBoardArr[row][col]) && tiles[row][col] != 0) {
+                if ((tiles[row][col] != goalBoardArr[row][col]) && tiles[row][col] != BLANK) {
                     num = tiles[row][col];
                     goalCol = column(num, N);
                     goalRow = row(num, N);
-                    manhattanCol = Math.abs(row - goalRow);
-                    manhattanRow = Math.abs(col - goalCol);
+                    manhattanRow = Math.abs(row - goalRow);
+                    manhattanCol = Math.abs(col - goalCol);
                     manhattanEstimate += manhattanCol + manhattanRow;
                 }
             }
         }
+
+        manhattan = manhattanEstimate;
 
         return manhattanEstimate;
 
@@ -136,18 +136,18 @@ public class Board implements WorldState {
     }
 
     public boolean isGoal() {
-        // System.out.println(this.toString());
-        //System.out.println("Manhattan: " + manhattan());
-        //goalBoard = new Board(goalBoardArr);
         return manhattan() == 0;
         // return this.equals(goalBoard);
     }
 
     public boolean equals(Object y) {
         Board b = (Board) y;
+        if (y.getClass() != b.getClass()) {
+            return false;
+        }
         for (int row = 0; row < tiles.length; row++) {
-            for (int col = 0; col < tiles.length; col++) {
-                if (this.tiles[row][col] != b.tiles[row][col]) { //or should i use tilesAt()?
+            for (int col = 0; col < tiles[0].length; col++) {
+                if (this.tiles[row][col] != b.tiles[row][col]) {
                     return false;
                 }
             }
@@ -156,16 +156,16 @@ public class Board implements WorldState {
     }
 
     public int hashCode() {
-        return 1;
+        return 1; //change?
     }
 
 
     public String toString() {
         StringBuilder s = new StringBuilder();
-        int N = size();
-        s.append(N + "\n");
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < N; j++) {
+        int n = size();
+        s.append(n + "\n");
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
                 s.append(String.format("%2d ", tileAt(i, j)));
             }
             s.append("\n");
