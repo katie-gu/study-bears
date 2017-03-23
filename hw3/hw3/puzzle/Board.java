@@ -136,8 +136,8 @@ public class Board implements WorldState {
                 }
             }
         }
-        //System.out.println(manhattanEstimate - 1);
-        return manhattanEstimate - 1;
+        //System.out.println(manhattanEstimate);
+        return manhattanEstimate;
 
     }
 
@@ -146,7 +146,7 @@ public class Board implements WorldState {
     }
 
     public boolean isGoal() {
-        return manhattan() == -1; //or manhattan()?
+        return manhattan() == 0; //or manhattan()?
         // return this.equals(goalBoard);
     }
 
