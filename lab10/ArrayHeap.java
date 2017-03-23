@@ -115,11 +115,14 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
         if (index == 1) {
             return; //break out of method
         }
-
+        //while parentindex > 0
         if (contents[parentIndex(index)].myPriority > contents[index].myPriority) {
             swap(index, parentIndex(index));
             swim(parentIndex(index));
         }
+
+        //solution
+
 
     }
 
@@ -131,8 +134,26 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
         validateSinkSwimArg(index);
 
         /** TODO: Your code here. */
+        int leftIndex = leftIndex(index);
+        int rightIndex = rightIndex(index);
+
+        if ((leftIndex > size) && (rightIndex > size)) {
+            return;
+        }
+
+        int smallerChildIndex = min(leftIndex, rightIndex);
+        swap(index, smallerChildIndex);
+        sink(smallerChildIndex);
+
+        //if leftindex and right index are > 0 then return;/break out of method
+        //smaller child = min (leftindex, right index)
+
+        //
+        /*
         if ((contents[leftIndex(index)] == null) && (contents[rightIndex(index)] == null)) {
             return;
+
+
         }
 
         if (contents[leftIndex(index)] != null) {
@@ -168,6 +189,7 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
                 }
             }
         }
+        */
     }
 
     /**
@@ -246,9 +268,16 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
                 break;
             }
         }
-
+        double oldPriority = contents[indexSame].myPriority;
         contents[indexSame] = new Node(item, priority);
 
+        if (priority < oldPriority) {
+            swim(indexSame);
+        } else {
+            sink(indexSame);
+        }
+
+        /*
         if (priority > contents[parentIndex(indexSame)].myPriority) {
             swim(indexSame);
         } else if (priority < contents[leftIndex(indexSame)].myPriority) {
@@ -256,6 +285,7 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
         } else if (priority < contents[rightIndex(indexSame)].myPriority) {
             sink(indexSame);
         }
+        */
 
     }
 
