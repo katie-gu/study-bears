@@ -39,6 +39,7 @@ public class Solver {
         parent = currNode;
         while (parent != null) {
             arr.addFirst(parent.w);
+            //System.out.println("Goal dist: " + parent.w.estimatedDistanceToGoal());
             parent = parent.prev;
         }
     }

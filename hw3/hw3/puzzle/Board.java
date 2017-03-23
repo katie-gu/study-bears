@@ -108,7 +108,7 @@ public class Board implements WorldState {
     }
 
     private int column(int num, int n) {
-        return Math.abs((num % n) - 1);
+        return Math.abs((num - 1) % n);
     }
 
     private int row(int num, int n) {
@@ -117,11 +117,15 @@ public class Board implements WorldState {
 
     public int manhattan() {
         int num = 0;
+        //int count = 1;
         int goalCol = 0;
         int goalRow = 0;
         int manhattanCol = 0;
         int manhattanRow = 0;
         int manhattanEstimate = 0;
+
+
+
         for (int row = 0; row < N; row++) {
             for (int col = 0; col < N; col++) {
                 if (tilesCopy[row][col] != BLANK) {
@@ -136,7 +140,11 @@ public class Board implements WorldState {
                 }
             }
         }
-        //System.out.println(manhattanEstimate);
+
+
+
+
+       // System.out.println(manhattanEstimate);
         return manhattanEstimate;
 
     }
