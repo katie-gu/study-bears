@@ -136,60 +136,14 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
         /** TODO: Your code here. */
         int leftIndex = leftIndex(index);
         int rightIndex = rightIndex(index);
-
-        if ((leftIndex > size) && (rightIndex > size)) {
+        if ((leftIndex > size) || (rightIndex > size)) {
             return;
         }
-
         int smallerChildIndex = min(leftIndex, rightIndex);
         swap(index, smallerChildIndex);
         sink(smallerChildIndex);
-
         //if leftindex and right index are > 0 then return;/break out of method
         //smaller child = min (leftindex, right index)
-
-        //
-        /*
-        if ((contents[leftIndex(index)] == null) && (contents[rightIndex(index)] == null)) {
-            return;
-
-
-        }
-
-        if (contents[leftIndex(index)] != null) {
-            if (contents[leftIndex(index)].myPriority < contents[index].myPriority) {
-                if (contents[rightIndex(index)] == null) {
-                    swap(index, leftIndex(index));
-                    sink(leftIndex(index));
-                } else {
-                    if (contents[leftIndex(index)].myPriority < contents[rightIndex(index)].myPriority) {
-                        swap(index, leftIndex(index));
-                        sink(leftIndex(index));
-                    } else {
-                        swap(index, rightIndex(index));
-                        sink(rightIndex(index));
-                    }
-                }
-            }
-        }
-
-        if (contents[rightIndex(index)] != null) {
-            if (contents[rightIndex(index)].myPriority < contents[index].myPriority) {
-                if (contents[leftIndex(index)] == null) {
-                    swap(index, rightIndex(index));
-                    sink(rightIndex(index));
-                } else {
-                    if (contents[rightIndex(index)].myPriority < contents[leftIndex(index)].myPriority) {
-                        swap(index, rightIndex(index));
-                        sink(rightIndex(index));
-                    } else {
-                        swap(index, leftIndex(index));
-                        sink(leftIndex(index));
-                    }
-                }
-            }
-        }
-        */
     }
 
     /**
@@ -373,7 +327,6 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
         assertEquals(10, leftIndex(5));
         assertEquals(7, rightIndex(3));
         assertEquals(11, rightIndex(5));
-
         assertEquals(3, parentIndex(6));
         assertEquals(5, parentIndex(10));
         assertEquals(3, parentIndex(7));
