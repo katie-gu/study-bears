@@ -131,7 +131,7 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
      */
     private void sink(int index) {
         // Throws an exception if index is invalid. DON'T CHANGE THIS LINE.
-        validateSinkSwimArg(index);
+        validateSinkSwimArg(index); //here lies the error
 
         /** TODO: Your code here. */
         int leftIndex = leftIndex(index);
@@ -142,6 +142,10 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
         int smallerChildIndex = min(leftIndex, rightIndex);
         swap(index, smallerChildIndex);
         sink(smallerChildIndex);
+
+        if (smallerChildIndex > size) { //necessary?
+            return;
+        }
         //if leftindex and right index are > 0 then return;/break out of method
         //smaller child = min (leftindex, right index)
     }
@@ -230,16 +234,6 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
         } else {
             sink(indexSame);
         }
-
-        /*
-        if (priority > contents[parentIndex(indexSame)].myPriority) {
-            swim(indexSame);
-        } else if (priority < contents[leftIndex(indexSame)].myPriority) {
-            sink(indexSame);
-        } else if (priority < contents[rightIndex(indexSame)].myPriority) {
-            sink(indexSame);
-        }
-        */
 
     }
 
