@@ -136,16 +136,16 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
         /** TODO: Your code here. */
         int leftIndex = leftIndex(index);
         int rightIndex = rightIndex(index);
-        if ((leftIndex > size) || (rightIndex > size)) {
+        if ((leftIndex > size) && (rightIndex > size)) {
             return;
         }
         int smallerChildIndex = min(leftIndex, rightIndex);
-        swap(index, smallerChildIndex);
+        if (contents[index].myPriority > contents[smallerChildIndex].myPriority) {
+            swap(index, smallerChildIndex);
+        }
         sink(smallerChildIndex);
 
-        if (smallerChildIndex > size) { //necessary?
-            return;
-        }
+
         //if leftindex and right index are > 0 then return;/break out of method
         //smaller child = min (leftindex, right index)
     }
@@ -192,6 +192,9 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
     public T removeMin() {
         /* TODO: Your code here! */
         T min = contents[1].myItem;
+        if (size == 3) {
+
+        }
         swap(1, size);
         contents[size] = null;
         size -= 1;
