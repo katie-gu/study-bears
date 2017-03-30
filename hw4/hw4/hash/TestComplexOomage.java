@@ -41,10 +41,18 @@ public class TestComplexOomage {
         List<Oomage> deadlyList = new ArrayList<>();
 
         // Your code here.
-        int N = 10000;
+        List<Integer> param = new ArrayList<>();
+        //adds all 255 to list in ComplexOomage so the numbers are too large to compute
+        //and most often are assigned to 0 bucket
+        for (int i = 0; i < 100; i++) {
+            param.add(255);
+        }
 
-        for (int i = 0; i < N; i *= 2) {
-            deadlyList.add(ComplexOomage.randomComplexOomage());
+        int N = 10000;
+        ComplexOomage c = new ComplexOomage(param);
+
+        for (int i = 0; i < N; i += 1) {
+            deadlyList.add(c);
         }
 
         assertTrue(OomageTestUtility.haveNiceHashCodeSpread(deadlyList, 10));
