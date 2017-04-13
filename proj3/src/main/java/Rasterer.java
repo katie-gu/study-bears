@@ -12,6 +12,7 @@ public class Rasterer {
     //              your own QuadTree since there is no built-in quadtree in Java.
     String imgRoot;
     QuadTree q = new QuadTree();
+
     /** imgRoot is the name of the directory containing the images.
      *  You may not actually need this for your class. */
     public Rasterer(String imgRoot) {
@@ -113,8 +114,16 @@ public class Rasterer {
     }
 
     private int getlonDDP(Map<String, Double> params) {
-        double lonDPP = (params.get("lrlon") - params.get("ullon")) / params.get("w") ;
+        double lonDPP = (params.get("lrlon") - params.get("ullon")) / params.get("w");
         return lonDPP;
+    }
+
+    public Map<String, Object> getMapRaster(Map<String, Double> params) {
+        // System.out.println(params);
+        Map<String, Object> results = new HashMap<>();
+        System.out.println("Since you haven't implemented getMapRaster, nothing is displayed in "
+                           + "your browser.");
+        return results;
     }
 
 }
