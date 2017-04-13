@@ -1,4 +1,4 @@
-import edu.princeton.cs.algs4.Merge;
+//import edu.princeton.cs.algs4.Merge;
 import edu.princeton.cs.algs4.Queue;
 
 public class MergeSort {
@@ -81,7 +81,8 @@ public class MergeSort {
                     q2Pointer = null;
                 } else {
                     q2Pointer = q2.peek();
-                }            }
+                }
+            }
 
             finalQueue.enqueue(min);
 
@@ -119,7 +120,7 @@ public class MergeSort {
 
 
 
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         Queue<String> students = new Queue<String>();
         students.enqueue("Alice");
         students.enqueue("Vanessa");
