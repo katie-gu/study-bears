@@ -199,7 +199,7 @@ public class Rasterer {
                 arr.add(n);
                 x.add(n.topLeftXPos);
                 y.add(n.topLeftYPos);
-               // System.out.println("Added: " + n.imgName);
+                //System.out.println("Added: " + n.imgName);
             }
         }
         //}
@@ -224,24 +224,29 @@ public class Rasterer {
        // System.out.println(q.toString());
 
         ArrayList<Double> xPos = new ArrayList<Double>(x);
-        //System.out.println("xPosList : " + xPos);
+        System.out.println("xPosList : " + xPos);
 
         ArrayList<Double> yPos = new ArrayList<Double>(y);
         Collections.reverse(yPos);
-        //System.out.println("yPosList : " + yPos);
+        System.out.println("yPosList : " + yPos);
+
         if (xPos.size() == 0) {
             query_success = false;
         }
 
-        String[][] img = new String[xPos.size()][yPos.size()];
-        QuadTree.Node[][] imgNodes = new QuadTree.Node[xPos.size()][yPos.size()];
+        String[][] img = new String[yPos.size()][xPos.size()];
+        QuadTree.Node[][] imgNodes = new QuadTree.Node[yPos.size()][xPos.size()];
+
+        System.out.println(Arrays.deepToString(img));
 
 
-       // System.out.println("ArrayList size: " + a);
+        // System.out.println("ArrayList size: " + a);
         for (QuadTree.Node n : a) {
             //System.out.println(n.imgName);
             int col = xPos.indexOf(n.topLeftXPos);
             int row = yPos.indexOf(n.topLeftYPos);
+            System.out.println("row: " + row);
+            System.out.println("col: " + col);
             img[row][col] = "img/" + n.imgName + ".png";
             imgNodes[row][col] = n;
 
@@ -261,7 +266,7 @@ public class Rasterer {
         results.put("raster_height", img[0].length * 256);
         results.put("raster_width", img.length * 256);
 
-        //System.out.println(results);
+        System.out.println(results);
 
         /*
         for (int i = 0; i < img.length; i++) {
