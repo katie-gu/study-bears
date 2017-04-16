@@ -1,5 +1,6 @@
 import java.util.HashMap;
 import java.util.Map;
+import java.util.ArrayList;
 
 /**
  * This class provides all code necessary to take a query box and produce
@@ -12,12 +13,13 @@ public class Rasterer {
     //              your own QuadTree since there is no built-in quadtree in Java.
     String imgRoot;
     QuadTree q = new QuadTree();
+    ArrayList<QuadTree.Node> arr = new ArrayList<QuadTree.Node>();
 
     /** imgRoot is the name of the directory containing the images.
      *  You may not actually need this for your class. */
     public Rasterer(String imgRoot) {
         // YOUR CODE HERE
-        this.imgRoot = "/Users/jhinukbarman/cs61b/aej/proj3/img";
+        this.imgRoot = imgRoot + "root.png";
     }
 
     /**
@@ -55,45 +57,158 @@ public class Rasterer {
      */
 
 
-    private class QuadTree{
-        private Node root;
+    public class QuadTree{
 
-        private class Node {
+        private static final double ROOT_ULLAT = 37.892195547244356, ROOT_ULLON = -122.2998046875,
+                ROOT_LRLAT = 37.82280243352756, ROOT_LRLON = -122.2119140625;
+
+        private Node root = new Node("", 0, ROOT_ULLAT, ROOT_ULLON, ROOT_LRLAT, ROOT_LRLON);
+
+        private String prevImgName = "";
+
+        public QuadTree() {
+            buildQuadTree(root);
+
+        }
+
+        //recursion?
+        private Node buildQuadTree(Node root) {
+            String prevImgName = "";
+
+            //root.imgName = "";
+
+            if (root.depth == 8) {
+                //return new Node("", 0, 0,0,0,0); //break recursion
+                return null;
+            }
+
+            root.topLeft = buildQuadTree(new Node((root.imgName + 1), root.depth + 1,
+                    root.topLeftXPos, root.topLeftYPos, (root.topLeftXPos + root.bottomRightXPos)/2,
+                    (root.topLeftYPos + root.bottomRightYPos)/2));
+
+            root.topRight = buildQuadTree(new Node((root.imgName + 2),
+                    root.depth + 1, (root.topLeftXPos + root.bottomRightXPos)/2,
+                    root.topLeftYPos, root.bottomRightXPos,
+                    (root.topLeftYPos + root.bottomRightYPos)/2));
+
+            root.bottomLeft = buildQuadTree(new Node((root.imgName + 3), root.depth + 1,
+                    root.topLeftXPos, (root.topLeftYPos + root.bottomRightYPos)/2, (root.topLeftXPos + root.bottomRightXPos)/2,
+                    root.bottomRightYPos));
+
+            root.bottomRight = buildQuadTree(new Node((root.imgName + 4), root.depth + 1,
+                    (root.topLeftXPos + root.bottomRightXPos)/2, (root.topLeftYPos + root.bottomRightYPos)/2, root.bottomRightXPos,
+                    root.bottomRightYPos));
+
+            return root;
+
+        }
+
+        public String toString() {
+            return root.bottomRight.bottomRight.bottomRight.bottomLeft.bottomRight.bottomRight.bottomRight.imgName;
+        }
+
+        public class Node {
             double topLeftXPos,topLeftYPos, bottomRightXPos, bottomRightYPos;
             Node topLeft,  topRight,  bottomLeft,  bottomRight;
             String imgName;
-            //int depth;
+            int depth;
             //store subtrees as instance variables?
-            public Node(double topLeftXPos, double topLeftYPos, double bottomRightXPos, double bottomRightYPos, String imgName) {
+            public Node(String imgName, int depth, double topLeftXPos, double topLeftYPos, double bottomRightXPos, double bottomRightYPos) {
+                this.imgName = imgName;
+                this.depth = depth;
                 this.topLeftXPos = topLeftXPos;
                 this.topLeftYPos = topLeftYPos;
                 this.bottomRightXPos = bottomRightXPos;
                 this.bottomRightYPos = bottomRightYPos;
-                this.imgName = imgName;
-                //topLeft = new Node(topLeftPos, );
             }
 
+            public boolean lonDPPsmallerThanOrIsLeaf(double queriesLonDPP) {
+                double currLonDPP = (this.bottomRightYPos - this.topLeftYPos) / 256;
+                return (queriesLonDPP < currLonDPP) || (depth >= 7);
+            }
+
+            public boolean intersectsTile(double query_ulX, double query_ulY, double query_lrX, double query_lrY) {
+                boolean topLeftCheck = false;
+                boolean bottomRightCheck = false;
+
+                if ((this.topLeftXPos < query_lrX) && (this.topLeftXPos > query_ulX)) {
+                    if ((this.topLeftYPos < query_lrY) && (this.topLeftYPos > query_ulY)) {
+                        topLeftCheck = true;
+                    }
+                }
+
+                if ((this.bottomRightXPos < query_lrX) && (this.bottomRightXPos > query_ulX)) {
+                    if ((this.bottomRightYPos < query_lrY) && (this.bottomRightYPos > query_ulY)) {
+                        bottomRightCheck = true;
+                    }
+                }
+
+               // double centerXPos = this.bottomRightXPos - this.topLeftXPos;
+               // double centerYPos = this.bottomRightYPos - this.topLeftYPos;
+               // if ((((this.bottomRightXPos - this.topLeftXPos) / 2) < this.bottomRightXPos) && ((this.bottomRightYPos - this.topLeftYPos) / 2) > this.top )
+                return topLeftCheck || bottomRightCheck;
+            }
         }
 
-        public boolean intersectsTile(double query_ul, double query_lr) {
-
-        }
-
-        public boolean lonDPPsmallerThanOrIsLeaf(int queriesLonDPP) {
-
-        }
     }
 
+    /*
+    private double getlonDDP(Map<String, Double> params) {
+        double lonDPP = (params.get("lrlon") - params.get("ullon")) / params.get("w");
+        return lonDPP;
+    }
+    */
+
+    //public ArrayList<QuadTree.Node> listOfNodes(Map<String, Double> params) {
+       // QuadTree.Node correctN = pruneTree(params, q.root);
+      //  int desiredDepth = correctN.depth;
+
+   // }
+
+    public ArrayList<QuadTree.Node> pruneTree(Map<String, Double> params, QuadTree.Node n) {
+        //QuadTree temp = q;
+        //ArrayList<QuadTree.Node> arr = new ArrayList<QuadTree.Node>(); //does this work?
+        double lonDDP = (params.get("lrlon") - params.get("ullon")) / (params.get("w"));
+
+        //while (temp.root != null) {
+        if (!(n.intersectsTile(params.get("ullat"), params.get("ullon"), params.get("lrlat"), params.get("lrlon")))) {
+            System.out.println("Inside this now");
+            return null;
+            // return new QuadTree.Node("", 0, 0 ,0 ,0, 0);
+        } else if (!(n.lonDPPsmallerThanOrIsLeaf(lonDDP))) {
+            System.out.println("Inside hereeee");
+            pruneTree(params, n.topLeft);
+            pruneTree(params, n.topRight);
+            pruneTree(params, n.bottomLeft);
+            pruneTree(params, n.bottomRight);
+        } else {
+            arr.add(n);
+            System.out.println("Added: " + n.imgName);
+        }
+        //}
+        return arr;
+
+
+    }
 
     public Map<String, Object> getMapRaster(Map<String, Double> params) {
         System.out.println(params);
         Map<String, Object> results = new HashMap<>();
         System.out.println("Since you haven't implemented getMapRaster, nothing is displayed in "
                            + "your browser.");
+        //QuadTree temp = q;
+
+        double lonDDP = (params.get("lrlon") - params.get("ullon")) / (params.get("w"));
+        ArrayList<QuadTree.Node> a = pruneTree(params, q.root);
+        System.out.println(q.toString());
+        System.out.println("ArrayList size: " + a);
+        for (QuadTree.Node n : a) {
+            System.out.println(n.imgName);
+        }
 
 
-
-
+       // q.root = new Node("root.png", );
+        //stop quadtree at certain depth. and then check if intersects the query
         /*
         String[][] img = {{"img/2143411.png", "img/2143412.png", "img/2143421.png"}, {"img/2143413.png", "img/2143414.png", "img/2143423.png"}, {"img/2143431.png", "img/2143432.png", "img/2143441.png"}};
 
@@ -113,17 +228,8 @@ public class Rasterer {
 
     }
 
-    private int getlonDDP(Map<String, Double> params) {
-        double lonDPP = (params.get("lrlon") - params.get("ullon")) / params.get("w");
-        return lonDPP;
-    }
 
-    public Map<String, Object> getMapRaster(Map<String, Double> params) {
-        // System.out.println(params);
-        Map<String, Object> results = new HashMap<>();
-        System.out.println("Since you haven't implemented getMapRaster, nothing is displayed in "
-                           + "your browser.");
-        return results;
-    }
+
+
 
 }
