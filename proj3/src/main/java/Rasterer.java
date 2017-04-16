@@ -15,6 +15,7 @@ public class Rasterer {
     ArrayList<QuadTree.Node> arr = new ArrayList<QuadTree.Node>();
     TreeSet<Double> x = new TreeSet<>();
     TreeSet<Double> y = new TreeSet<>();
+    boolean query_success = true;
     /** imgRoot is the name of the directory containing the images.
      *  You may not actually need this for your class. */
     public Rasterer(String imgRoot) {
@@ -208,8 +209,12 @@ public class Rasterer {
     }
 
     public Map<String, Object> getMapRaster(Map<String, Double> params) {
-       // System.out.println(params);
+        //System.out.println(params);
         Map<String, Object> results = new HashMap<>();
+
+
+
+
        // System.out.println("Since you haven't implemented getMapRaster, nothing is displayed in "
          //                  + "your browser.");
         //QuadTree temp = q;
@@ -224,6 +229,9 @@ public class Rasterer {
         ArrayList<Double> yPos = new ArrayList<Double>(y);
         Collections.reverse(yPos);
         //System.out.println("yPosList : " + yPos);
+        if (xPos.size() == 0) {
+            query_success = false;
+        }
 
         String[][] img = new String[xPos.size()][yPos.size()];
         QuadTree.Node[][] imgNodes = new QuadTree.Node[xPos.size()][yPos.size()];
@@ -239,6 +247,8 @@ public class Rasterer {
 
         }
 
+
+
         //System.out.println(Arrays.deepToString(img));
 
         results.put("render_grid", img);
@@ -247,9 +257,11 @@ public class Rasterer {
         results.put("raster_lr_lon", imgNodes[imgNodes.length-1][imgNodes[0].length-1].bottomRightXPos);
         results.put("raster_lr_lat", imgNodes[imgNodes.length-1][imgNodes[0].length-1].bottomRightYPos);
         results.put("depth", imgNodes[0][0].depth);
-        results.put("query_success", true);
+        results.put("query_success", query_success);
+        results.put("raster_height", img[0].length * 256);
+        results.put("raster_width", img.length * 256);
 
-
+        //System.out.println(results);
 
         /*
         for (int i = 0; i < img.length; i++) {
@@ -273,7 +285,11 @@ public class Rasterer {
 
         // q.root = new Node("root.png", );
         //stop quadtree at certain depth. and then check if intersects the query
+
+
+
         /*
+
         String[][] img = {{"img/2143411.png", "img/2143412.png", "img/2143421.png"}, {"img/2143413.png", "img/2143414.png", "img/2143423.png"}, {"img/2143431.png", "img/2143432.png", "img/2143441.png"}};
 
         results.put("render_grid", img);
@@ -286,8 +302,8 @@ public class Rasterer {
         results.put("query_success", true);
         results.put("raster_width", 768);
         System.out.println(results);
-        */
 
+        */
         return results;
 
     }
