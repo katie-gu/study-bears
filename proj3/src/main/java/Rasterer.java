@@ -199,7 +199,7 @@ public class Rasterer {
                 arr.add(n);
                 x.add(n.topLeftXPos);
                 y.add(n.topLeftYPos);
-                //System.out.println("Added: " + n.imgName);
+                System.out.println("Added: " + n.imgName);
             }
         }
         //}
@@ -209,7 +209,7 @@ public class Rasterer {
     }
 
     public Map<String, Object> getMapRaster(Map<String, Double> params) {
-        //System.out.println(params);
+        System.out.println(params);
         Map<String, Object> results = new HashMap<>();
 
 
