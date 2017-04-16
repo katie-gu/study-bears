@@ -62,10 +62,9 @@ public class Rasterer {
         private static final double ROOT_ULLAT = 37.892195547244356, ROOT_ULLON = -122.2998046875,
                 ROOT_LRLAT = 37.82280243352756, ROOT_LRLON = -122.2119140625;
 
-        private Node root = new Node("", 0, ROOT_ULLAT, ROOT_ULLON, ROOT_LRLAT, ROOT_LRLON);
+        private Node root = new Node("", 0, ROOT_ULLON, ROOT_ULLAT, ROOT_LRLON, ROOT_LRLAT);
 
         private String prevImgName = "";
-
         public QuadTree() {
             buildQuadTree(root);
 
@@ -124,10 +123,48 @@ public class Rasterer {
 
             public boolean lonDPPsmallerThanOrIsLeaf(double queriesLonDPP) {
                 double currLonDPP = (this.bottomRightYPos - this.topLeftYPos) / 256;
-                return (queriesLonDPP < currLonDPP) || (depth >= 7);
+                return (currLonDPP < queriesLonDPP) || (depth >= 7);
             }
 
             public boolean intersectsTile(double query_ulX, double query_ulY, double query_lrX, double query_lrY) {
+                //System.out.println("query_ulX: " + query_ulX + " query_ulY: " + query_ulY
+               //     + " query_lrX: " + query_lrX + " query_lrY: " + query_lrY);
+               // System.out.println("topLeftXPos: " + this.topLeftXPos + " topLeftYPos: " + this.topLeftYPos
+               //     + " bottomRightXPos: " + this.bottomRightXPos + " bottomRightYPos " + this.bottomRightYPos);
+                if ((this.topLeftXPos > query_lrX) && (this.bottomRightXPos < query_ulX) &&
+                        (this.topLeftYPos < query_lrY) && (this.bottomRightYPos > query_ulY)) {
+                    return false;
+                } else {
+                    return true;
+                }
+                /*
+                } else {
+                    if ((this.topLeftXPos >= query_ulX) && (this.topLeftXPos <= query_lrX) &&
+                            (this.topLeftYPos <= query_ulY) && (this.topLeftYPos >= query_lrY)) {
+                        return true;
+                    } else if ((this.bottomRightXPos >= query_ulX) && (this.bottomRightXPos <= query_lrX)
+                            && (this.bottomRightYPos <= query_ulY) && (this.bottomRightYPos >= query_lrY)) {
+                        return true;
+                    } else if ((query_ulX <= this.bottomRightXPos) && (query_ulX >= this.topLeftXPos)
+                            && (query_ulY >= this.bottomRightYPos) && (query_ulY <= this.topLeftYPos)) {
+                        return true;
+                    } else if ((query_lrX <= this.bottomRightXPos) && (query_lrX >= this.topLeftXPos)
+                            && (query_lrY >= this.bottomRightYPos) && (query_lrY <= this.topLeftYPos)) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+
+                }
+                */
+                /*
+                if ((this.topLeftXPos < query_lrX) && (this.bottomRightXPos > query_ulX) &&
+                        (this.topLeftYPos > query_lrY) && (this.bottomRightYPos < query_ulY)) {
+                    return false;
+                }
+                 */
+
+                /*
                 boolean topLeftCheck = false;
                 boolean bottomRightCheck = false;
 
@@ -142,48 +179,43 @@ public class Rasterer {
                         bottomRightCheck = true;
                     }
                 }
+                */
 
                // double centerXPos = this.bottomRightXPos - this.topLeftXPos;
                // double centerYPos = this.bottomRightYPos - this.topLeftYPos;
                // if ((((this.bottomRightXPos - this.topLeftXPos) / 2) < this.bottomRightXPos) && ((this.bottomRightYPos - this.topLeftYPos) / 2) > this.top )
-                return topLeftCheck || bottomRightCheck;
+                //return topLeftCheck || bottomRightCheck;
             }
         }
 
     }
 
-    /*
-    private double getlonDDP(Map<String, Double> params) {
-        double lonDPP = (params.get("lrlon") - params.get("ullon")) / params.get("w");
-        return lonDPP;
-    }
-    */
-
-    //public ArrayList<QuadTree.Node> listOfNodes(Map<String, Double> params) {
-       // QuadTree.Node correctN = pruneTree(params, q.root);
-      //  int desiredDepth = correctN.depth;
-
-   // }
 
     public ArrayList<QuadTree.Node> pruneTree(Map<String, Double> params, QuadTree.Node n) {
         //QuadTree temp = q;
         //ArrayList<QuadTree.Node> arr = new ArrayList<QuadTree.Node>(); //does this work?
         double lonDDP = (params.get("lrlon") - params.get("ullon")) / (params.get("w"));
 
-        //while (temp.root != null) {
-        if (!(n.intersectsTile(params.get("ullat"), params.get("ullon"), params.get("lrlat"), params.get("lrlon")))) {
-            System.out.println("Inside this now");
-            return null;
-            // return new QuadTree.Node("", 0, 0 ,0 ,0, 0);
-        } else if (!(n.lonDPPsmallerThanOrIsLeaf(lonDDP))) {
-            System.out.println("Inside hereeee");
+        if (n.imgName.equals("")) {
             pruneTree(params, n.topLeft);
             pruneTree(params, n.topRight);
             pruneTree(params, n.bottomLeft);
             pruneTree(params, n.bottomRight);
         } else {
-            arr.add(n);
-            System.out.println("Added: " + n.imgName);
+            if (!(n.intersectsTile(params.get("ullon"), params.get("ullat"), params.get("lrlon"), params.get("lrlat")))) {
+                System.out.println("Inside this now");
+                return null;
+                // return new QuadTree.Node("", 0, 0 ,0 ,0, 0);
+            } else if (!(n.lonDPPsmallerThanOrIsLeaf(lonDDP))) {
+                System.out.println("Inside hereeee");
+                pruneTree(params, n.topLeft);
+                pruneTree(params, n.topRight);
+                pruneTree(params, n.bottomLeft);
+                pruneTree(params, n.bottomRight);
+            } else {
+                arr.add(n);
+                System.out.println("Added: " + n.imgName);
+            }
         }
         //}
         return arr;
