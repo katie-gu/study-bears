@@ -13,8 +13,8 @@ public class Rasterer {
     String imgRoot;
     QuadTree q = new QuadTree();
     ArrayList<QuadTree.Node> arr = new ArrayList<QuadTree.Node>();
-    TreeSet<Double> x = new TreeSet<>();
-    TreeSet<Double> y = new TreeSet<>();
+    //TreeSet<Double> x = new TreeSet<>();
+    //TreeSet<Double> y = new TreeSet<>();
     boolean query_success = true;
     /** imgRoot is the name of the directory containing the images.
      *  You may not actually need this for your class. */
@@ -157,16 +157,16 @@ public class Rasterer {
     }
 
 
-    public ArrayList<QuadTree.Node> pruneTree(Map<String, Double> params, QuadTree.Node n) {
+    public ArrayList<QuadTree.Node> pruneTree(Map<String, Double> params, QuadTree.Node n, TreeSet<Double> x, TreeSet<Double> y) {
         //QuadTree temp = q;
         //ArrayList<QuadTree.Node> arr = new ArrayList<QuadTree.Node>(); //does this work?
         double lonDDP = (params.get("lrlon") - params.get("ullon")) / (params.get("w"));
 
         if (n.imgName.equals("")) {
-            pruneTree(params, n.topLeft);
-            pruneTree(params, n.topRight);
-            pruneTree(params, n.bottomLeft);
-            pruneTree(params, n.bottomRight);
+            pruneTree(params, n.topLeft, x, y);
+            pruneTree(params, n.topRight, x, y);
+            pruneTree(params, n.bottomLeft, x, y);
+            pruneTree(params, n.bottomRight, x, y);
         } else {
             if (!(n.intersectsTile(params.get("ullon"), params.get("ullat"), params.get("lrlon"), params.get("lrlat")))) {
                // System.out.println("Inside this now");
@@ -174,10 +174,10 @@ public class Rasterer {
                 // return new QuadTree.Node("", 0, 0 ,0 ,0, 0);
             } else if (!(n.lonDPPsmallerThanOrIsLeaf(lonDDP))) {
               //  System.out.println("Inside hereeee");
-                pruneTree(params, n.topLeft);
-                pruneTree(params, n.topRight);
-                pruneTree(params, n.bottomLeft);
-                pruneTree(params, n.bottomRight);
+                pruneTree(params, n.topLeft, x, y);
+                pruneTree(params, n.topRight, x, y);
+                pruneTree(params, n.bottomLeft, x, y);
+                pruneTree(params, n.bottomRight, x, y);
             } else {
                 arr.add(n);
                 x.add(n.topLeftXPos);
@@ -209,12 +209,15 @@ public class Rasterer {
         params.put("h", 944.0);
         params.put("ullat", 37.88746545843562);
         params.put("lrlat", 37.83495035769344);
+
         */
 
 
-
         double lonDDP = (params.get("lrlon") - params.get("ullon")) / (params.get("w"));
-        ArrayList<QuadTree.Node> a = pruneTree(params, q.root);
+        TreeSet<Double> x = new TreeSet<>();
+        TreeSet<Double> y = new TreeSet<>();
+
+        ArrayList<QuadTree.Node> a = pruneTree(params, q.root, x, y);
        // System.out.println(q.toString());
 
         ArrayList<Double> xPos = new ArrayList<Double>(x);
