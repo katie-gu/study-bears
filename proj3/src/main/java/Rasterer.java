@@ -192,7 +192,7 @@ public class Rasterer {
     }
 
     public Map<String, Object> getMapRaster(Map<String, Double> params) {
-        System.out.println("Parameters: " + params);
+        //System.out.println("Parameters: " + params);
         Map<String, Object> results = new HashMap<>();
 
        // System.out.println("Since you haven't implemented getMapRaster, nothing is displayed in "
@@ -235,7 +235,7 @@ public class Rasterer {
         String[][] img = new String[yPos.size()][xPos.size()];
         QuadTree.Node[][] imgNodes = new QuadTree.Node[yPos.size()][xPos.size()];
 
-        System.out.println(Arrays.deepToString(img));
+        //System.out.println(Arrays.deepToString(img));
 
 
         // System.out.println("ArrayList size: " + a);
@@ -243,14 +243,14 @@ public class Rasterer {
             //System.out.println(n.imgName);
             int col = xPos.indexOf(n.topLeftXPos);
             int row = yPos.indexOf(n.topLeftYPos);
-            System.out.println("row: " + row);
-            System.out.println("col: " + col);
+            //System.out.println("row: " + row);
+            //System.out.println("col: " + col);
             img[row][col] = "img/" + n.imgName + ".png";
             imgNodes[row][col] = n;
 
         }
 
-        System.out.println("Rastered images: " + Arrays.deepToString(img));
+        //System.out.println("Rastered images: " + Arrays.deepToString(img));
 
         results.put("render_grid", img);
         results.put("raster_ul_lon", imgNodes[0][0].topLeftXPos);
@@ -262,8 +262,8 @@ public class Rasterer {
         results.put("raster_height", img[0].length * 256);
         results.put("raster_width", img.length * 256);
 
-        System.out.println("Results: " + results);
-        System.out.println();
+        //System.out.println("Results: " + results);
+       // System.out.println();
 
         x.clear();
         y.clear();
