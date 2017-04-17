@@ -26,7 +26,7 @@ public class Rasterer {
     */
 
     TreeSet<Double> x = new TreeSet<>();
-    TreeSet<Double> y = new TreeSet<>();
+    TreeSet<Double> y = new TreeSet<>(Collections.reverseOrder());
     boolean query_success = true;
     /** imgRoot is the name of the directory containing the images.
      *  You may not actually need this for your class. */
@@ -238,7 +238,7 @@ public class Rasterer {
         //System.out.println("xPosList : " + xPos);
 
        ArrayList<Double> yPos = new ArrayList<Double>(y);
-        Collections.reverse(yPos);
+       // Collections.reverse(yPos);
 
         //System.out.println("yPosList : " + yPos);
 
@@ -280,9 +280,9 @@ public class Rasterer {
         //System.out.println("Results: " + results);
        // System.out.println();
 
-     //   x.clear();
-    //    y.clear();
-     //   arr.clear();
+        x.clear();
+        y.clear();
+        arr.clear();
 
         /*
         for (int i = 0; i < img.length; i++) {
