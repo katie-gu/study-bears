@@ -107,7 +107,7 @@ public class Rasterer {
             return root.bottomRight.bottomRight.bottomRight.bottomLeft.bottomRight.bottomRight.bottomRight.imgName;
         }
 
-        public class Node {
+        public class Node implements Comparator<Node>{
             double topLeftXPos,topLeftYPos, bottomRightXPos, bottomRightYPos;
             Node topLeft,  topRight,  bottomLeft,  bottomRight;
             String imgName;
@@ -136,68 +136,21 @@ public class Rasterer {
             }
 
             public boolean intersectsTile(double query_ulX, double query_ulY, double query_lrX, double query_lrY) {
-               // System.out.println("query_ulX: " + query_ulX + " query_ulY: " + query_ulY
-                //    + " query_lrX: " + query_lrX + " query_lrY: " + query_lrY);
-              //  System.out.println("topLeftXPos: " + this.topLeftXPos + " topLeftYPos: " + this.topLeftYPos
-               //     + " bottomRightXPos: " + this.bottomRightXPos + " bottomRightYPos " + this.bottomRightYPos);
-                //System.out.println(this.toString());
-
-                double midpointXPos = (this.topLeftXPos + this.bottomRightXPos) / 2;
-                double midpointYPos = (this.topLeftYPos + this.bottomRightYPos) / 2;
-
-                //System.out.println("midpointXPos:" + midpointXPos);
-                //System.out.println("midpointYPos:" + midpointYPos);
-
                 if ((this.topLeftXPos > query_lrX) || (this.bottomRightXPos < query_ulX) ||
                         (this.topLeftYPos < query_lrY) || (this.bottomRightYPos > query_ulY)) {
-                    //System.out.println("A");
                     return false;
                 } else {
-
                     return true;
-                    //top left corner
-                    /*
-                    if ((this.topLeftXPos >= query_ulX) && (this.topLeftXPos <= query_lrX) &&
-                            (this.topLeftYPos <= query_ulY) && (this.topLeftYPos >= query_lrY)) {
-                        //System.out.println("B");
-                        return true;
-
-                    }
-                    //bottom right corner
-                    else if ((this.bottomRightXPos >= query_ulX) && (this.bottomRightXPos <= query_lrX)
-                            && (this.bottomRightYPos <= query_ulY) && (this.bottomRightYPos >= query_lrY)) {
-                        return true;
-
-                    } else if ((query_ulX <= this.bottomRightXPos) && (query_ulX >= this.topLeftXPos)
-                            && (query_ulY >= this.bottomRightYPos) && (query_ulY <= this.topLeftYPos)) {
-                        return true;
-
-                    } else if ((query_lrX <= this.bottomRightXPos) && (query_lrX >= this.topLeftXPos)
-                            && (query_lrY >= this.bottomRightYPos) && (query_lrY <= this.topLeftYPos)) {
-                        return true;
-                    //midpoint check
-                    } else if ((midpointXPos > query_ulX) && (midpointXPos < query_lrX)
-                            && (midpointYPos < query_ulY) && (midpointYPos > query_lrY)) {
-                        return true;
-                    //bottom left corner
-                    } else if ((this.topLeftXPos >= query_ulX) && (this.topLeftXPos <= query_lrX)
-                            && (this.bottomRightYPos <= query_ulY) && (this.bottomRightYPos >= query_lrY)) {
-                        return true;
-                    //top right corner
-                    } else if ((this.bottomRightXPos >= query_ulX) && (this.bottomRightXPos <= query_lrX)
-                            && (this.topLeftYPos <= query_ulY) && (this.topLeftYPos >= query_lrY)) {
-                        return true;
-                    }
-                    else {
-                        //System.out.println("B");
-                        return false;
-                    }
-                    */
-
-
                 }
 
+            }
 
+            @Override
+            public int compare(Node o1, Node o2) {
+                if (o1.topLeftXPos < o2.topLeftXPos) {
+                    return 1;
+                }
+                return 0;
             }
         }
 
@@ -239,23 +192,25 @@ public class Rasterer {
     }
 
     public Map<String, Object> getMapRaster(Map<String, Double> params) {
-        System.out.println(params);
+        System.out.println("Parameters: " + params);
         Map<String, Object> results = new HashMap<>();
 
        // System.out.println("Since you haven't implemented getMapRaster, nothing is displayed in "
          //                  + "your browser.");
         //QuadTree temp = q;
 
-        //{lrlon=-122.2709603651743, ullon=-122.27292105996419, w=731.0, h=348.0, ullat=37.85183456121798, lrlat=37.8510975982183}
+        //{lrlon=-122.2119140625, w=929.0, ullon=-122.2591326176749, h=944.0, ullat=37.88746545843562, lrlat=37.83495035769344}
+        //[[img/122.png, img/211.png, img/212.png, img/221.png, img/222.png], [img/124.png, img/213.png, img/214.png, img/223.png, img/224.png], [img/142.png, img/231.png, img/232.png, img/241.png, img/242.png], [img/144.png, img/233.png, img/234.png, img/243.png, img/244.png], [img/322.png, img/411.png, img/412.png, img/421.png, img/422.png], [img/324.png, img/413.png, img/414.png, img/423.png, img/424.png], [img/342.png, img/431.png, img/432.png, img/441.png, img/442.png]]
 
         /*
-        params.put("lrlon", -122.2709603651743);
-        params.put("ullon", -122.27292105996419);
-        params.put("w", 731.0);
-        params.put("h", 348.0);
-        params.put("ullat", 37.85183456121798);
-        params.put("lrlat", 37.8510975982183);
+        params.put("lrlon", -122.2119140625);
+        params.put("ullon", -122.2591326176749);
+        params.put("w", 929.0);
+        params.put("h", 944.0);
+        params.put("ullat", 37.88746545843562);
+        params.put("lrlat", 37.83495035769344);
         */
+
 
 
         double lonDDP = (params.get("lrlon") - params.get("ullon")) / (params.get("w"));
@@ -291,9 +246,7 @@ public class Rasterer {
 
         }
 
-
-
-        //System.out.println(Arrays.deepToString(img));
+        System.out.println("Rastered images: " + Arrays.deepToString(img));
 
         results.put("render_grid", img);
         results.put("raster_ul_lon", imgNodes[0][0].topLeftXPos);
@@ -305,7 +258,8 @@ public class Rasterer {
         results.put("raster_height", img[0].length * 256);
         results.put("raster_width", img.length * 256);
 
-        System.out.println(results);
+        System.out.println("Results: " + results);
+        System.out.println();
 
         /*
         for (int i = 0; i < img.length; i++) {
