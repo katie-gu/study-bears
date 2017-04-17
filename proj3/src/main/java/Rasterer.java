@@ -162,6 +162,10 @@ public class Rasterer {
                 }
                 return 1;
             }
+
+            public String getImgName() {
+                return "img/" + this.imgName + ".png";
+            }
         }
 
     }
@@ -262,7 +266,7 @@ public class Rasterer {
             int row = yPos.indexOf(n.topLeftYPos);
             //System.out.println("row: " + row);
             //System.out.println("col: " + col);
-            img[row][col] = "img/" + n.imgName + ".png";
+            img[row][col] = n.getImgName();//"img/" + n.imgName + ".png";
             imgNodes[row][col] = n;
 
         }
