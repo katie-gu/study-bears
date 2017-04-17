@@ -13,6 +13,18 @@ public class Rasterer {
     String imgRoot;
     QuadTree q = new QuadTree();
     ArrayList<QuadTree.Node> arr = new ArrayList<QuadTree.Node>();
+
+    /*
+    PriorityQueue<QuadTree.Node> p = new PriorityQueue<>(1, new Comparator<QuadTree.Node>() {
+        @Override
+        public int compare(QuadTree.Node o1, QuadTree.Node o2) {
+            if ((o1.topLeftXPos < o2.topLeftXPos) && (o1.topLeftYPos < o2.topLeftYPos)) {
+                return -1;
+            }
+            return 1;        }
+    });
+    */
+
     TreeSet<Double> x = new TreeSet<>();
     TreeSet<Double> y = new TreeSet<>();
     boolean query_success = true;
@@ -78,7 +90,6 @@ public class Rasterer {
             //root.imgName = "";
 
             if (root.depth == 8) {
-                //return new Node("", 0, 0,0,0,0); //break recursion
                 return null;
             }
 
@@ -103,9 +114,9 @@ public class Rasterer {
 
         }
 
-        public String toString() {
-            return root.bottomRight.bottomRight.bottomRight.bottomLeft.bottomRight.bottomRight.bottomRight.imgName;
-        }
+       // public String toString() {
+        //    return root.bottomRight.bottomRight.bottomRight.bottomLeft.bottomRight.bottomRight.bottomRight.imgName;
+      //  }
 
         public class Node implements Comparator<Node>{
             double topLeftXPos,topLeftYPos, bottomRightXPos, bottomRightYPos;
@@ -127,13 +138,12 @@ public class Rasterer {
                 return (currLonDPP < queriesLonDPP) || (depth >= 7);
             }
 
+
             public String toString() {
-                return new StringBuilder().append("img ").append(imgName)
-                        .append(",topLeftXPos:").append(topLeftXPos)
-                        .append(", topLeftYPos").append(topLeftYPos)
-                        .append(", bottomRightXPos").append(bottomRightXPos)
-                        .append(", bottomRightYPos").append(bottomRightYPos).toString();
+                return new StringBuilder().append("img/").append(imgName)
+                        .append(".png").toString();
             }
+
 
             public boolean intersectsTile(double query_ulX, double query_ulY, double query_lrX, double query_lrY) {
                 if ((this.topLeftXPos > query_lrX) || (this.bottomRightXPos < query_ulX) ||
@@ -147,10 +157,10 @@ public class Rasterer {
 
             @Override
             public int compare(Node o1, Node o2) {
-                if (o1.topLeftXPos < o2.topLeftXPos) {
-                    return 1;
+                if ((o1.topLeftXPos < o2.topLeftXPos) && (o1.topLeftYPos < o2.topLeftYPos)) {
+                    return -1;
                 }
-                return 0;
+                return 1;
             }
         }
 
@@ -180,6 +190,7 @@ public class Rasterer {
                 pruneTree(params, n.bottomRight);
             } else {
                 arr.add(n);
+                //p.add(n);
                 x.add(n.topLeftXPos);
                 y.add(n.topLeftYPos);
                 //System.out.println("Added: " + n.imgName);
@@ -221,16 +232,20 @@ public class Rasterer {
         ArrayList<QuadTree.Node> a = pruneTree(params, q.root);
        // System.out.println(q.toString());
 
+        //System.out.println("Priority Queue: " + p);
+
         ArrayList<Double> xPos = new ArrayList<Double>(x);
         //System.out.println("xPosList : " + xPos);
 
-        ArrayList<Double> yPos = new ArrayList<Double>(y);
+       ArrayList<Double> yPos = new ArrayList<Double>(y);
         Collections.reverse(yPos);
+
         //System.out.println("yPosList : " + yPos);
 
         if (xPos.size() == 0) {
             query_success = false;
         }
+
 
         String[][] img = new String[yPos.size()][xPos.size()];
         QuadTree.Node[][] imgNodes = new QuadTree.Node[yPos.size()][xPos.size()];
@@ -265,9 +280,9 @@ public class Rasterer {
         //System.out.println("Results: " + results);
        // System.out.println();
 
-        x.clear();
-        y.clear();
-        arr.clear();
+     //   x.clear();
+    //    y.clear();
+     //   arr.clear();
 
         /*
         for (int i = 0; i < img.length; i++) {
