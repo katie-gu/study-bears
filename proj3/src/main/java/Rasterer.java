@@ -127,43 +127,69 @@ public class Rasterer {
                 return (currLonDPP < queriesLonDPP) || (depth >= 7);
             }
 
+            public String toString() {
+                return new StringBuilder().append("img ").append(imgName)
+                        .append(",topLeftXPos:").append(topLeftXPos)
+                        .append(", topLeftYPos").append(topLeftYPos)
+                        .append(", bottomRightXPos").append(bottomRightXPos)
+                        .append(", bottomRightYPos").append(bottomRightYPos).toString();
+            }
+
             public boolean intersectsTile(double query_ulX, double query_ulY, double query_lrX, double query_lrY) {
                // System.out.println("query_ulX: " + query_ulX + " query_ulY: " + query_ulY
                 //    + " query_lrX: " + query_lrX + " query_lrY: " + query_lrY);
               //  System.out.println("topLeftXPos: " + this.topLeftXPos + " topLeftYPos: " + this.topLeftYPos
                //     + " bottomRightXPos: " + this.bottomRightXPos + " bottomRightYPos " + this.bottomRightYPos);
+                //System.out.println(this.toString());
+
                 double midpointXPos = (this.topLeftXPos + this.bottomRightXPos) / 2;
                 double midpointYPos = (this.topLeftYPos + this.bottomRightYPos) / 2;
 
+                //System.out.println("midpointXPos:" + midpointXPos);
+                //System.out.println("midpointYPos:" + midpointYPos);
+
                 if ((this.topLeftXPos > query_lrX) && (this.bottomRightXPos < query_ulX) &&
                         (this.topLeftYPos < query_lrY) && (this.bottomRightYPos > query_ulY)) {
-                        return false;
+                    //System.out.println("A");
+                    return false;
                 } else {
+                    //top left corner
                     if ((this.topLeftXPos >= query_ulX) && (this.topLeftXPos <= query_lrX) &&
                             (this.topLeftYPos <= query_ulY) && (this.topLeftYPos >= query_lrY)) {
+                        //System.out.println("B");
                         return true;
-                    } else if ((this.bottomRightXPos >= query_ulX) && (this.bottomRightXPos <= query_lrX)
+
+                    }
+                    //bottom right corner
+                    else if ((this.bottomRightXPos >= query_ulX) && (this.bottomRightXPos <= query_lrX)
                             && (this.bottomRightYPos <= query_ulY) && (this.bottomRightYPos >= query_lrY)) {
                         return true;
+
                     } else if ((query_ulX <= this.bottomRightXPos) && (query_ulX >= this.topLeftXPos)
                             && (query_ulY >= this.bottomRightYPos) && (query_ulY <= this.topLeftYPos)) {
                         return true;
+
                     } else if ((query_lrX <= this.bottomRightXPos) && (query_lrX >= this.topLeftXPos)
                             && (query_lrY >= this.bottomRightYPos) && (query_lrY <= this.topLeftYPos)) {
                         return true;
-                    } else if ((midpointXPos >= query_ulX) && (midpointXPos <= query_lrX)
-                            && (midpointYPos <= query_ulY) && (midpointYPos >= query_ulY)) {
+                    //midpoint check
+                    } else if ((midpointXPos > query_ulX) && (midpointXPos < query_lrX)
+                            && (midpointYPos < query_ulY) && (midpointYPos > query_lrY)) {
                         return true;
+                    //bottom left corner
                     } else if ((this.topLeftXPos >= query_ulX) && (this.topLeftXPos <= query_lrX)
                             && (this.bottomRightYPos <= query_ulY) && (this.bottomRightYPos >= query_lrY)) {
                         return true;
+                    //top right corner
                     } else if ((this.bottomRightXPos >= query_ulX) && (this.bottomRightXPos <= query_lrX)
                             && (this.topLeftYPos <= query_ulY) && (this.topLeftYPos >= query_lrY)) {
                         return true;
                     }
                     else {
+                        //System.out.println("B");
                         return false;
                     }
+
 
                 }
 
@@ -199,7 +225,7 @@ public class Rasterer {
                 arr.add(n);
                 x.add(n.topLeftXPos);
                 y.add(n.topLeftYPos);
-                System.out.println("Added: " + n.imgName);
+                //System.out.println("Added: " + n.imgName);
             }
         }
         //}
@@ -219,16 +245,26 @@ public class Rasterer {
          //                  + "your browser.");
         //QuadTree temp = q;
 
+        //{lrlon=-122.2709603651743, ullon=-122.27292105996419, w=731.0, h=348.0, ullat=37.85183456121798, lrlat=37.8510975982183}
+
+        params.put("lrlon", -122.2709603651743);
+        params.put("ullon", -122.27292105996419);
+        params.put("w", 731.0);
+        params.put("h", 348.0);
+        params.put("ullat", 37.85183456121798);
+        params.put("lrlat", 37.8510975982183);
+
+
         double lonDDP = (params.get("lrlon") - params.get("ullon")) / (params.get("w"));
         ArrayList<QuadTree.Node> a = pruneTree(params, q.root);
        // System.out.println(q.toString());
 
         ArrayList<Double> xPos = new ArrayList<Double>(x);
-        System.out.println("xPosList : " + xPos);
+        //System.out.println("xPosList : " + xPos);
 
         ArrayList<Double> yPos = new ArrayList<Double>(y);
         Collections.reverse(yPos);
-        System.out.println("yPosList : " + yPos);
+        //System.out.println("yPosList : " + yPos);
 
         if (xPos.size() == 0) {
             query_success = false;
@@ -245,8 +281,8 @@ public class Rasterer {
             //System.out.println(n.imgName);
             int col = xPos.indexOf(n.topLeftXPos);
             int row = yPos.indexOf(n.topLeftYPos);
-            System.out.println("row: " + row);
-            System.out.println("col: " + col);
+            //System.out.println("row: " + row);
+            //System.out.println("col: " + col);
             img[row][col] = "img/" + n.imgName + ".png";
             imgNodes[row][col] = n;
 
