@@ -247,12 +247,14 @@ public class Rasterer {
 
         //{lrlon=-122.2709603651743, ullon=-122.27292105996419, w=731.0, h=348.0, ullat=37.85183456121798, lrlat=37.8510975982183}
 
+        /*
         params.put("lrlon", -122.2709603651743);
         params.put("ullon", -122.27292105996419);
         params.put("w", 731.0);
         params.put("h", 348.0);
         params.put("ullat", 37.85183456121798);
         params.put("lrlat", 37.8510975982183);
+        */
 
 
         double lonDDP = (params.get("lrlon") - params.get("ullon")) / (params.get("w"));
