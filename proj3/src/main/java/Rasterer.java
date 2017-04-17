@@ -148,12 +148,15 @@ public class Rasterer {
                 //System.out.println("midpointXPos:" + midpointXPos);
                 //System.out.println("midpointYPos:" + midpointYPos);
 
-                if ((this.topLeftXPos > query_lrX) && (this.bottomRightXPos < query_ulX) &&
-                        (this.topLeftYPos < query_lrY) && (this.bottomRightYPos > query_ulY)) {
+                if ((this.topLeftXPos > query_lrX) || (this.bottomRightXPos < query_ulX) ||
+                        (this.topLeftYPos < query_lrY) || (this.bottomRightYPos > query_ulY)) {
                     //System.out.println("A");
                     return false;
                 } else {
+
+                    return true;
                     //top left corner
+                    /*
                     if ((this.topLeftXPos >= query_ulX) && (this.topLeftXPos <= query_lrX) &&
                             (this.topLeftYPos <= query_ulY) && (this.topLeftYPos >= query_lrY)) {
                         //System.out.println("B");
@@ -189,6 +192,7 @@ public class Rasterer {
                         //System.out.println("B");
                         return false;
                     }
+                    */
 
 
                 }
@@ -237,9 +241,6 @@ public class Rasterer {
     public Map<String, Object> getMapRaster(Map<String, Double> params) {
         System.out.println(params);
         Map<String, Object> results = new HashMap<>();
-
-
-
 
        // System.out.println("Since you haven't implemented getMapRaster, nothing is displayed in "
          //                  + "your browser.");
