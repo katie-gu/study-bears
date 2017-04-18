@@ -15,7 +15,7 @@ public class Rasterer {
     NodeComparator nc = new NodeComparator();
     ArrayList<QuadTree.Node> arr = new ArrayList<>();
  //   LinkedList<QuadTree.Node> nodeList = new LinkedList<>();
-  //  PriorityQueue<QuadTree.Node> p = new PriorityQueue<>(3, nc);
+  //  PriorityQueue<QuadTree.Node> p = new PriorityQueue<>(1, nc);
     /*
     PriorityQueue<QuadTree.Node> p = new PriorityQueue<>(1, new Comparator<QuadTree.Node>() {
         @Override
@@ -249,7 +249,7 @@ public class Rasterer {
                 pruneTree(params, n.bottomLeft);
                 pruneTree(params, n.bottomRight);
             } else {
-                arr.add(n);
+                 arr.add(n);
               //  p.add(n);
                 //nodeList.add(n);
                 x.add(n.topLeftXPos);
@@ -305,14 +305,14 @@ public class Rasterer {
 
 
         String[][] img = new String[row][col];
-        QuadTree.Node[][] imgNodes = new QuadTree.Node[row][col];
-
+      //  QuadTree.Node[][] imgNodes = new QuadTree.Node[row][col];
+      //  QuadTree.Node last = new QuadTree.Node();
 
         int rowVal = 0;
         int colVal = 0;
         for (QuadTree.Node n : pq) {
             img[rowVal][colVal] = n.getImgName();
-            imgNodes[rowVal][colVal] = n;
+          //  imgNodes[rowVal][colVal] = n;
 
             if (colVal >= img[0].length - 1) {
                 colVal = 0;
@@ -320,18 +320,20 @@ public class Rasterer {
             } else {
                 colVal += 1;
             }
+
            // pq.remove(n);
         }
+
 
 
         //System.out.println("Rastered images: " + Arrays.deepToString(img));
 
         results.put("render_grid", img);
-        results.put("raster_ul_lon", imgNodes[0][0].topLeftXPos);
-        results.put("raster_ul_lat", imgNodes[0][0].topLeftYPos);
-        results.put("raster_lr_lon", imgNodes[imgNodes.length - 1][imgNodes[0].length-1].bottomRightXPos);
-        results.put("raster_lr_lat", imgNodes[imgNodes.length - 1][imgNodes[0].length-1].bottomRightYPos);
-        results.put("depth", imgNodes[0][0].depth);
+        results.put("raster_ul_lon", pq.get(0).topLeftXPos);
+        results.put("raster_ul_lat", pq.get(0).topLeftYPos);
+        results.put("raster_lr_lon", pq.get(pq.size() - 1).bottomRightXPos);
+        results.put("raster_lr_lat", pq.get(pq.size() - 1).bottomRightYPos);
+        results.put("depth", pq.get(0).depth);
         results.put("query_success", query_success);
         results.put("raster_height", img[0].length * 256);
         results.put("raster_width", img.length * 256);
