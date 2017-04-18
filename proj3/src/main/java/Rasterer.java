@@ -12,8 +12,10 @@ public class Rasterer {
     //              your own QuadTree since there is no built-in quadtree in Java.
     String imgRoot;
     QuadTree q = new QuadTree();
-   // ArrayList<QuadTree.Node> arr = new ArrayList<QuadTree.Node>();
-    LinkedList<QuadTree.Node> nodeList = new LinkedList<>();
+    NodeComparator nc = new NodeComparator();
+    ArrayList<QuadTree.Node> arr = new ArrayList<>();
+ //   LinkedList<QuadTree.Node> nodeList = new LinkedList<>();
+   // PriorityQueue<QuadTree.Node> p = new PriorityQueue<>(3, nc);
     /*
     PriorityQueue<QuadTree.Node> p = new PriorityQueue<>(1, new Comparator<QuadTree.Node>() {
         @Override
@@ -134,7 +136,7 @@ public class Rasterer {
       //  }
 
 
-        public class Node implements Comparator<Node>{
+        public class Node {
             Double topLeftXPos,topLeftYPos, bottomRightXPos, bottomRightYPos;
             Node topLeft,  topRight,  bottomLeft,  bottomRight;
             String imgName;
@@ -171,13 +173,40 @@ public class Rasterer {
 
             }
 
+            /*
+
             @Override
-            public int compare(QuadTree.Node o1, QuadTree.Node o2) {
+            public int compareTo(QuadTree.Node o2) {
               //  System.out.println(o1.topLeftXPos);
               //  System.out.println(o1.topLeftYPos);
              //   System.out.println(o2.topLeftXPos);
              //   System.out.println(o2.topLeftYPos);
 
+                if ((this.topLeftXPos.equals(o2.topLeftXPos)) && (this.topLeftYPos > o2.topLeftYPos)) {
+                    return -1;
+                } else if ((this.topLeftYPos.equals(o2.topLeftYPos)) && (this.topLeftXPos < o2.topLeftXPos)) {
+                    return -1;
+                } else if ((this.topLeftXPos < o2.topLeftXPos) && (this.topLeftYPos > o2.topLeftYPos)) {
+                    return -1;
+                } else if ((this.topLeftXPos > o2.topLeftXPos) && (this.topLeftYPos > o2.topLeftYPos)) {
+                    return -1;
+                } else if (this.topLeftXPos.equals(o2.topLeftXPos) && (this.topLeftYPos.equals(o2.topLeftYPos))) {
+                    return 0;
+                }
+                return 1;
+            }
+            */
+
+            public String getImgName() {
+                return "img/" + this.imgName + ".png";
+            }
+        }
+
+    }
+
+    public class NodeComparator implements Comparator<QuadTree.Node> {
+        @Override
+        public int compare(QuadTree.Node o1, QuadTree.Node o2) {
                 if ((o1.topLeftXPos.equals(o2.topLeftXPos)) && (o1.topLeftYPos > o2.topLeftYPos)) {
                     return -1;
                 } else if ((o1.topLeftYPos.equals(o2.topLeftYPos)) && (o1.topLeftXPos < o2.topLeftXPos)) {
@@ -189,21 +218,16 @@ public class Rasterer {
                 } else if (o1.topLeftXPos.equals(o2.topLeftXPos) && (o1.topLeftYPos.equals(o2.topLeftYPos))) {
                     return 0;
                 }
-                return 1;
-            }
+                return 1;        }
 
-            public String getImgName() {
-                return "img/" + this.imgName + ".png";
-            }
-        }
 
     }
 
-    //public class NodeComparator<Quadtree.Node>
 
 
 
-    public LinkedList<QuadTree.Node> pruneTree(Map<String, Double> params, QuadTree.Node n, TreeSet<Double> x) {
+
+    public ArrayList<QuadTree.Node> pruneTree(Map<String, Double> params, QuadTree.Node n, TreeSet<Double> x) {
         //QuadTree temp = q;
         //ArrayList<QuadTree.Node> arr = new ArrayList<QuadTree.Node>(); //does this work?
         double lonDDP = (params.get("lrlon") - params.get("ullon")) / (params.get("w"));
@@ -226,15 +250,15 @@ public class Rasterer {
                 pruneTree(params, n.bottomRight, x);
             } else {
                 //arr.add(n);
-                //p.add(n);
-                nodeList.add(n);
+                arr.add(n);
+                //nodeList.add(n);
                 x.add(n.topLeftXPos);
                 //y.add(n.topLeftYPos);
                 //System.out.println("Added: " + n.imgName);
             }
         }
         //}
-        return nodeList;
+        return arr;
 
 
     }
@@ -266,7 +290,11 @@ public class Rasterer {
         TreeSet<Double> x = new TreeSet<>();
         //TreeSet<Double> y = new TreeSet<>();
 
-        LinkedList<QuadTree.Node> pq = pruneTree(params, q.root, x);
+        ArrayList<QuadTree.Node> pq = pruneTree(params, q.root, x);
+        Collections.sort(pq, nc);
+        System.out.println("ArrayList : " + pq);
+
+        /*
 
         Collections.sort(pq, new Comparator<QuadTree.Node>() {
             @Override
@@ -285,6 +313,7 @@ public class Rasterer {
                 }
                 return 1;        }
         });
+        */
 
 
        // Arrays.sort(pq);
@@ -312,7 +341,7 @@ public class Rasterer {
 
 
         String[][] img = new String[row][col];
-        //QuadTree.Node[][] imgNodes = new QuadTree.Node[row][col];
+        QuadTree.Node[][] imgNodes = new QuadTree.Node[row][col];
 
 
 
@@ -326,6 +355,7 @@ public class Rasterer {
          //   System.out.println("col: " + colVal);
 
             img[rowVal][colVal] = n.getImgName();
+            imgNodes[rowVal][colVal] = n;
 
             if (colVal >= img[0].length - 1) {
                 colVal = 0;
@@ -340,11 +370,11 @@ public class Rasterer {
         //System.out.println("Rastered images: " + Arrays.deepToString(img));
 
         results.put("render_grid", img);
-        results.put("raster_ul_lon", pq.getFirst().topLeftXPos);
-        results.put("raster_ul_lat", pq.getFirst().topLeftYPos);
-        results.put("raster_lr_lon", pq.getLast().bottomRightXPos);
-        results.put("raster_lr_lat", pq.getLast().bottomRightYPos);
-        results.put("depth", pq.getFirst().depth);
+        results.put("raster_ul_lon", imgNodes[0][0].topLeftXPos);
+        results.put("raster_ul_lat", imgNodes[0][0].topLeftYPos);
+        results.put("raster_lr_lon", imgNodes[imgNodes.length - 1][imgNodes[0].length-1].bottomRightXPos);
+        results.put("raster_lr_lat", imgNodes[imgNodes.length - 1][imgNodes[0].length-1].bottomRightYPos);
+        results.put("depth", imgNodes[0][0].depth);
         results.put("query_success", query_success);
         results.put("raster_height", img[0].length * 256);
         results.put("raster_width", img.length * 256);
