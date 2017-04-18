@@ -15,7 +15,7 @@ public class Rasterer {
     NodeComparator nc = new NodeComparator();
     ArrayList<QuadTree.Node> arr = new ArrayList<>();
  //   LinkedList<QuadTree.Node> nodeList = new LinkedList<>();
-   // PriorityQueue<QuadTree.Node> p = new PriorityQueue<>(3, nc);
+  //  PriorityQueue<QuadTree.Node> p = new PriorityQueue<>(3, nc);
     /*
     PriorityQueue<QuadTree.Node> p = new PriorityQueue<>(1, new Comparator<QuadTree.Node>() {
         @Override
@@ -41,7 +41,7 @@ public class Rasterer {
     */
 
 
-   // TreeSet<Double> x = new TreeSet<>();
+    TreeSet<Double> x = new TreeSet<>();
   //  TreeSet<Double> y = new TreeSet<>();
     boolean query_success = true;
     /** imgRoot is the name of the directory containing the images.
@@ -227,16 +227,16 @@ public class Rasterer {
 
 
 
-    public ArrayList<QuadTree.Node> pruneTree(Map<String, Double> params, QuadTree.Node n, TreeSet<Double> x) {
+    public ArrayList<QuadTree.Node> pruneTree(Map<String, Double> params, QuadTree.Node n) {
         //QuadTree temp = q;
         //ArrayList<QuadTree.Node> arr = new ArrayList<QuadTree.Node>(); //does this work?
         double lonDDP = (params.get("lrlon") - params.get("ullon")) / (params.get("w"));
 
         if (n.imgName.equals("")) {
-            pruneTree(params, n.topLeft, x);
-            pruneTree(params, n.topRight, x);
-            pruneTree(params, n.bottomLeft, x);
-            pruneTree(params, n.bottomRight, x);
+            pruneTree(params, n.topLeft);
+            pruneTree(params, n.topRight);
+            pruneTree(params, n.bottomLeft);
+            pruneTree(params, n.bottomRight);
         } else {
             if (!(n.intersectsTile(params.get("ullon"), params.get("ullat"), params.get("lrlon"), params.get("lrlat")))) {
                // System.out.println("Inside this now");
@@ -244,13 +244,13 @@ public class Rasterer {
                 // return new QuadTree.Node("", 0, 0 ,0 ,0, 0);
             } else if (!(n.lonDPPsmallerThanOrIsLeaf(lonDDP))) {
               //  System.out.println("Inside hereeee");
-                pruneTree(params, n.topLeft, x);
-                pruneTree(params, n.topRight, x);
-                pruneTree(params, n.bottomLeft, x);
-                pruneTree(params, n.bottomRight, x);
+                pruneTree(params, n.topLeft);
+                pruneTree(params, n.topRight);
+                pruneTree(params, n.bottomLeft);
+                pruneTree(params, n.bottomRight);
             } else {
-                //arr.add(n);
                 arr.add(n);
+              //  p.add(n);
                 //nodeList.add(n);
                 x.add(n.topLeftXPos);
                 //y.add(n.topLeftYPos);
@@ -269,64 +269,28 @@ public class Rasterer {
 
        // System.out.println("Since you haven't implemented getMapRaster, nothing is displayed in "
          //                  + "your browser.");
-        //QuadTree temp = q;
 
-        //{lrlon=-122.2119140625, w=929.0, ullon=-122.2591326176749, h=944.0, ullat=37.88746545843562, lrlat=37.83495035769344}
-        //[[img/122.png, img/211.png, img/212.png, img/221.png, img/222.png], [img/124.png, img/213.png, img/214.png, img/223.png, img/224.png], [img/142.png, img/231.png, img/232.png, img/241.png, img/242.png], [img/144.png, img/233.png, img/234.png, img/243.png, img/244.png], [img/322.png, img/411.png, img/412.png, img/421.png, img/422.png], [img/324.png, img/413.png, img/414.png, img/423.png, img/424.png], [img/342.png, img/431.png, img/432.png, img/441.png, img/442.png]]
-
-
-        //{lrlon=-122.22275132672245, w=613.0, ullon=-122.23995662778569, h=676.0, ullat=37.877266154010954, lrlat=37.85829260830337}
-        /*
-        params.put("lrlon", -122.2119140625);
-        params.put("ullon", -122.2591326176749);
-        params.put("w", 929.0);
-        params.put("h", 944.0);
-        params.put("ullat", 37.88746545843562);
-        params.put("lrlat", 37.83495035769344);
-        */
 
 
         double lonDDP = (params.get("lrlon") - params.get("ullon")) / (params.get("w"));
-        TreeSet<Double> x = new TreeSet<>();
+       // TreeSet<Double> x = new TreeSet<>();
         //TreeSet<Double> y = new TreeSet<>();
 
-        ArrayList<QuadTree.Node> pq = pruneTree(params, q.root, x);
-        Collections.sort(pq, nc);
-        System.out.println("ArrayList : " + pq);
-
-        /*
-
-        Collections.sort(pq, new Comparator<QuadTree.Node>() {
-            @Override
-            public int compare(QuadTree.Node o1, QuadTree.Node o2) {
-
-                if ((o1.topLeftXPos.equals(o2.topLeftXPos)) && (o1.topLeftYPos > o2.topLeftYPos)) {
-                    return -1;
-                } else if ((o1.topLeftYPos.equals(o2.topLeftYPos)) && (o1.topLeftXPos < o2.topLeftXPos)) {
-                    return -1;
-                } else if ((o1.topLeftXPos < o2.topLeftXPos) && (o1.topLeftYPos > o2.topLeftYPos)) {
-                    return -1;
-                } else if ((o1.topLeftXPos > o2.topLeftXPos) && (o1.topLeftYPos > o2.topLeftYPos)) {
-                    return -1;
-                } else if (o1.topLeftXPos.equals(o2.topLeftXPos) && (o1.topLeftYPos.equals(o2.topLeftYPos))) {
-                    return 0;
-                }
-                return 1;        }
-        });
-        */
-
-
-       // Arrays.sort(pq);
-
-       // System.out.println(q.toString());
-
-        if (x == null) {
+        ArrayList<QuadTree.Node> pq = pruneTree(params, q.root);
+        if (pq == null) {
             query_success = false;
         }
+        Collections.sort(pq, nc);
+     //   System.out.println("Arraylist : " + pq);
 
-       // System.out.println("Priority Queue: " + pq);
-       // System.out.println(x);
+
+
         int col = x.size();
+
+     //   int row = (int) (pq.size().topLeftXPos - params.get("ullat")) / 256;
+      //  System.out.println("row : " + row);
+
+      //  int col = pq.size() / row;
         int row = pq.size() / col;
 
         //ArrayList<Double> xPos = new ArrayList<Double>(x);
@@ -344,16 +308,9 @@ public class Rasterer {
         QuadTree.Node[][] imgNodes = new QuadTree.Node[row][col];
 
 
-
         int rowVal = 0;
         int colVal = 0;
         for (QuadTree.Node n : pq) {
-            //System.out.println(n.imgName);
-            //int col = xPos.indexOf(n.topLeftXPos);
-            //int row = yPos.indexOf(n.topLeftYPos);
-         //   System.out.println("row: " + rowVal);
-         //   System.out.println("col: " + colVal);
-
             img[rowVal][colVal] = n.getImgName();
             imgNodes[rowVal][colVal] = n;
 
@@ -363,7 +320,7 @@ public class Rasterer {
             } else {
                 colVal += 1;
             }
-
+           // pq.remove(n);
         }
 
 
@@ -383,7 +340,7 @@ public class Rasterer {
         //System.out.println("Results: " + results);
        // System.out.println();
 
-       // x.clear();
+        x.clear();
        // y.clear();
         //a.clear();
 
@@ -391,25 +348,6 @@ public class Rasterer {
         for (int i = 0; i < img.length; i++) {
             for (int j = 0; j < img[0].length; j++) {
                 System.out.println(img[i][j]);
-            }
-        }
-        */
-       // System.out.println("X TreeSet: ");
-        //System.out.println(x);
-
-
-        //System.out.println("Y TreeSet: ");
-        //System.out.println(y);
-
-
-
-
-
-
-
-        // q.root = new Node("root.png", );
-        //stop quadtree at certain depth. and then check if intersects the query
-
 
 
         /*
