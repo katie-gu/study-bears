@@ -312,12 +312,10 @@ public class Rasterer {
 
 
         String[][] img = new String[row][col];
-        QuadTree.Node[][] imgNodes = new QuadTree.Node[row][col];
-
-        //System.out.println(Arrays.deepToString(img));
+        //QuadTree.Node[][] imgNodes = new QuadTree.Node[row][col];
 
 
-        // System.out.println("ArrayList size: " + a);
+
         int rowVal = 0;
         int colVal = 0;
         for (QuadTree.Node n : pq) {
@@ -327,16 +325,7 @@ public class Rasterer {
          //   System.out.println("row: " + rowVal);
          //   System.out.println("col: " + colVal);
 
-
-
-            img[rowVal][colVal] = n.getImgName();//"img/" + n.imgName + ".png";
-          //  System.out.println(n.getImgName());
-
-            imgNodes[rowVal][colVal] = n;
-
-           // if (rowVal >= img.length) {
-           //     rowVal = 0;
-           // }
+            img[rowVal][colVal] = n.getImgName();
 
             if (colVal >= img[0].length - 1) {
                 colVal = 0;
@@ -345,18 +334,17 @@ public class Rasterer {
                 colVal += 1;
             }
 
-            //rowVal += 1;
-
         }
+
 
         //System.out.println("Rastered images: " + Arrays.deepToString(img));
 
         results.put("render_grid", img);
-        results.put("raster_ul_lon", imgNodes[0][0].topLeftXPos);
-        results.put("raster_ul_lat", imgNodes[0][0].topLeftYPos);
-        results.put("raster_lr_lon", imgNodes[imgNodes.length-1][imgNodes[0].length-1].bottomRightXPos);
-        results.put("raster_lr_lat", imgNodes[imgNodes.length-1][imgNodes[0].length-1].bottomRightYPos);
-        results.put("depth", imgNodes[0][0].depth);
+        results.put("raster_ul_lon", pq.getFirst().topLeftXPos);
+        results.put("raster_ul_lat", pq.getFirst().topLeftYPos);
+        results.put("raster_lr_lon", pq.getLast().bottomRightXPos);
+        results.put("raster_lr_lat", pq.getLast().bottomRightYPos);
+        results.put("depth", pq.getFirst().depth);
         results.put("query_success", query_success);
         results.put("raster_height", img[0].length * 256);
         results.put("raster_width", img.length * 256);
