@@ -23,15 +23,11 @@ public class Router {
 
     public static LinkedList<Long> shortestPath(GraphDB g, double stlon,
                                                 double stlat, double destlon, double destlat) {
-
         Long goalID = g.closest(destlon, destlat);
         Node goalNode = g.h.get(goalID);
-        //   System.out.println("goal id: " + goalID);
 
         Long startID = g.closest(stlon, stlat);
         Node startNode = g.h.get(startID);
-        //   System.out.println("start id: " + startID);
-
 
         class SearchNode implements Comparable<SearchNode> {
             private Node n;
@@ -70,7 +66,6 @@ public class Router {
         SearchNode currNode = new SearchNode(curr, 0, null);
         pq.add(currNode);
 
-        //pq.add(currNode);
         while (!pq.isEmpty()) {
             currNode = pq.poll();
             if ((currNode.n.getId()).equals(goalID)) {
@@ -80,18 +75,16 @@ public class Router {
                 if ((currNode.n.getId()).equals(startNode.getId())
                         || (!(n.getId().equals(currNode.prev.n.getId())))) {
                     if (visitedNodes.keySet().contains(n.getId())) {
-                        SearchNode next = new SearchNode(n,
-                                currNode.estimatedDistFromStart + g.distance(currNode.n.getId(), n.getId()),
-                                currNode);
-                        if (next.estimatedDistFromStart < visitedNodes.get(n.getId()).estimatedDistFromStart) {
+                        SearchNode next = new SearchNode(n, currNode.estimatedDistFromStart
+                                + g.distance(currNode.n.getId(), n.getId()), currNode);
+                        if (next.estimatedDistFromStart
+                              < visitedNodes.get(n.getId()).estimatedDistFromStart) {
                             pq.add(next);
                             visitedNodes.put(currNode.n.getId(), currNode);
                         }
-
                     } else {
-                        SearchNode next = new SearchNode(n,
-                                currNode.estimatedDistFromStart + g.distance(currNode.n.getId(), n.getId()),
-                                currNode);
+                        SearchNode next = new SearchNode(n, currNode.estimatedDistFromStart
+                                + g.distance(currNode.n.getId(), n.getId()), currNode);
                         pq.add(next);
                         visitedNodes.put(currNode.n.getId(), currNode);
                     }

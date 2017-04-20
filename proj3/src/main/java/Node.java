@@ -1,7 +1,3 @@
-import java.lang.reflect.Array;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
 import java.util.ArrayList;
 
 /**
@@ -55,12 +51,10 @@ public class Node { //implements comparable?
         adj.add(n);
     }
 
-
-    /*
     public ArrayList<Node> getAdj() {
         return adj;
     }
-    */
+
 
 
     /*
