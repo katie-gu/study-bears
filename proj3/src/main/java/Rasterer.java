@@ -119,9 +119,6 @@ public class Rasterer {
 
         }
 
-
-
-
         public class Node {
             Double topLeftXPos, topLeftYPos, bottomRightXPos, bottomRightYPos;
             Node topLeft,  topRight,  bottomLeft,  bottomRight;
