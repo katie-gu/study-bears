@@ -1,27 +1,69 @@
+import java.lang.reflect.Array;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
 
 /**
  * Created by jhinukbarman on 4/17/17.
  */
-/*
+
+
 //https://codereview.stackexchange.com/questions/67970/graph-implementation-in-java-8
-public class Node<T> implements Comparable{
+public class Node { //implements comparable?
 
-    private T vertex;
+   // private T vertex;
+    private Long id;
+    private Double latitude;
+    private Double longitude;
+    public ArrayList<Node> adj;
+    //private List<Edge<T>> edges;
+    //private HashMap<Node, Edge>
 
-    private List<Edge<T>> edges;
+    //private boolean hasEdge;
 
-    private Node<T> parent;
+    public Node(String id, String latitude, String longitude) {
+        /*
+        this.id = id;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        */
+        this.id = Long.parseLong(id);
+        this.latitude = Double.parseDouble(latitude);
+        this.longitude = Double.parseDouble(longitude);
 
-    private boolean isVisited;
-
-    public Node(T vertex) {
-        this.vertex = vertex;
-        this.edges = new ArrayList<>();
+        adj = new ArrayList<>();
     }
 
+    public boolean hasEdge() {
+        return (adj.size() > 0);
+    }
+
+    public Long getId() {
+        return this.id;
+    }
+
+    public Double getLongitude() {
+        return this.longitude;
+    }
+
+    public Double getLatitude() {
+        return this.latitude;
+    }
+
+    public void add(Node n) {
+        adj.add(n);
+    }
+
+
+    /*
+    public ArrayList<Node> getAdj() {
+        return adj;
+    }
+    */
+
+
+    /*
     public T vertex() {
         return vertex;
     }
@@ -31,6 +73,7 @@ public class Node<T> implements Comparable{
         return 1;
     }
 
+    /
     public boolean addEdge(Node<T> node, int weight) {
         if (hasEdge(node)) {
             return false;
@@ -80,5 +123,6 @@ public class Node<T> implements Comparable{
     public void setParent(Node<T> parent) {
         this.parent = parent;
     }
+    */
 }
-*/
+
