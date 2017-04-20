@@ -21,7 +21,8 @@ public class Router {
 
 
 
-    public static LinkedList<Long> shortestPath(GraphDB g, double stlon, double stlat, double destlon, double destlat) {
+    public static LinkedList<Long> shortestPath(GraphDB g, double stlon,
+                                                double stlat, double destlon, double destlat) {
 
         Long goalID = g.closest(destlon, destlat);
         Node goalNode = g.h.get(goalID);
@@ -56,7 +57,6 @@ public class Router {
                 } else {
                     return 0;
                 }
-                //return (int) (nodeA - nodeB);
             }
 
         }
@@ -73,101 +73,38 @@ public class Router {
         //pq.add(currNode);
         while (!pq.isEmpty()) {
             currNode = pq.poll();
-            //visitedNodes.put(currNode.n.getId(), currNode);
             if ((currNode.n.getId()).equals(goalID)) {
                 break;
             }
-
             for (Node n : currNode.n.adj) {
-                if ((currNode.n.getId()).equals(startNode.getId()) || (!(n.getId().equals(currNode.prev.n.getId())))) {
+                if ((currNode.n.getId()).equals(startNode.getId())
+                        || (!(n.getId().equals(currNode.prev.n.getId())))) {
                     if (visitedNodes.keySet().contains(n.getId())) {
-                        SearchNode next = new SearchNode(n, currNode.estimatedDistFromStart + g.distance(currNode.n.getId(), n.getId()), currNode);
+                        SearchNode next = new SearchNode(n,
+                                currNode.estimatedDistFromStart + g.distance(currNode.n.getId(), n.getId()),
+                                currNode);
                         if (next.estimatedDistFromStart < visitedNodes.get(n.getId()).estimatedDistFromStart) {
                             pq.add(next);
                             visitedNodes.put(currNode.n.getId(), currNode);
                         }
 
                     } else {
-                        SearchNode next = new SearchNode(n, currNode.estimatedDistFromStart + g.distance(currNode.n.getId(), n.getId()), currNode);
+                        SearchNode next = new SearchNode(n,
+                                currNode.estimatedDistFromStart + g.distance(currNode.n.getId(), n.getId()),
+                                currNode);
                         pq.add(next);
                         visitedNodes.put(currNode.n.getId(), currNode);
                     }
                 }
 
-
             }
-
-
-            /*
-            for (Node n: curr.adj) {
-                if (visitedNodes.keySet().contains(n.getId())) {
-                    //first node equals, not equals to second node
-                    SearchNode next = new SearchNode(n, currNode.estimatedDistFromStart + g.distance(curr.getId(), n.getId()), currNode);
-                    if (next.estimatedDistFromStart < visitedNodes.get(n.getId()).estimatedDistFromStart) {
-                        pq.add(next);
-                    }
-                } else {
-                    if (currNode.prev == null) { //change. keep the prev val somehow?
-                        SearchNode next = new SearchNode(n, currNode.estimatedDistFromStart + g.distance(curr.getId(), n.getId()), currNode);
-                        pq.add(next);
-                    } else if (!(n.equals(currNode.prev.n))) {
-                        SearchNode next = new SearchNode(n, currNode.estimatedDistFromStart + g.distance(curr.getId(), n.getId()), currNode);
-                        pq.add(next);
-                    }
-                }
-
-            }
-            */
-
             parent = currNode;
-
         }
-
         while (parent != null) {
             nodeList.addFirst(parent.n.getId());
-            //System.out.println("Goal dist: " + parent.w.estimatedDistanceToGoal());
             parent = parent.prev;
         }
-
         nodeList.addLast(goalID);
-
-
-
-       /*
-
-       public Solver(WorldState initial) {
-        this.curr = initial;
-        m = new MinPQ<>();
-        arr = new LinkedList<>();
-        SearchNode currNode = new SearchNode(curr, 0, null);
-        m.insert(currNode);
-
-        while (!m.isEmpty()) {
-            currNode = m.delMin();
-            if (currNode.w.isGoal()) {
-                break;
-            }
-            for (WorldState n : currNode.w.neighbors()) {
-                if (currNode.prev == null) {
-                    SearchNode next = new SearchNode(n, currNode.moves + 1, currNode);
-                    m.insert(next);
-                } else if (!(n.equals(currNode.prev.w))) {
-                    SearchNode next = new SearchNode(n, currNode.moves + 1, currNode);
-                    m.insert(next);
-                }
-            }
-        }
-        parent = currNode;
-        while (parent != null) {
-            arr.addFirst(parent.w);
-            //System.out.println("Goal dist: " + parent.w.estimatedDistanceToGoal());
-            parent = parent.prev;
-        }
-    }
-
-
-
-        */
         return nodeList;
 
 
