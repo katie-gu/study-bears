@@ -9,6 +9,9 @@ import java.util.HashMap;
  * The difference between A* and Dijkstra's is only a couple of lines of code, and boils
  * down to the priority you use to order your vertices.
  */
+
+
+
 public class Router {
     /**
      * Return a LinkedList of <code>Node</code>s representing the shortest path from st to dest.
@@ -22,11 +25,11 @@ public class Router {
 
         Long goalID = g.closest(destlon, destlat);
         Node goalNode = g.h.get(goalID);
-     //   System.out.println("goal id: " + goalID);
+        //   System.out.println("goal id: " + goalID);
 
         Long startID = g.closest(stlon, stlat);
         Node startNode = g.h.get(startID);
-     //   System.out.println("start id: " + startID);
+        //   System.out.println("start id: " + startID);
 
 
         class SearchNode implements Comparable<SearchNode> {

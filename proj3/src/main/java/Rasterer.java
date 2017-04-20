@@ -1,10 +1,5 @@
-//import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.TreeSet;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Collections;
-import java.util.Comparator;
+import java.lang.reflect.Array;
+import java.util.*;
 
 /**
  * This class provides all code necessary to take a query box and produce
@@ -19,6 +14,31 @@ public class Rasterer {
     QuadTree q = new QuadTree();
     NodeComparator nc = new NodeComparator();
     ArrayList<QuadTree.Node> arr = new ArrayList<>();
+    //   LinkedList<QuadTree.Node> nodeList = new LinkedList<>();
+    //  PriorityQueue<QuadTree.Node> p = new PriorityQueue<>(1, nc);
+    /*
+    PriorityQueue<QuadTree.Node> p = new PriorityQueue<>(1, new Comparator<QuadTree.Node>() {
+        @Override
+        public int compare(QuadTree.Node o1, QuadTree.Node o2) {
+            System.out.println(o1.topLeftXPos);
+            System.out.println(o1.topLeftYPos);
+            System.out.println(o2.topLeftXPos);
+            System.out.println(o2.topLeftYPos);
+
+            if ((o1.topLeftXPos.equals(o2.topLeftXPos)) && (o1.topLeftYPos > o2.topLeftYPos)) {
+                return -1;
+            } else if ((o1.topLeftYPos.equals(o2.topLeftYPos)) && (o1.topLeftXPos < o2.topLeftXPos)) {
+                return -1;
+            } else if ((o1.topLeftXPos < o2.topLeftXPos) && (o1.topLeftYPos > o2.topLeftYPos)) {
+                return -1;
+            } else if ((o1.topLeftXPos > o2.topLeftXPos) && (o1.topLeftYPos > o2.topLeftYPos)) {
+                return -1;
+            } else if (o1.topLeftXPos.equals(o2.topLeftXPos) && (o1.topLeftYPos.equals(o2.topLeftYPos))) {
+                return 0;
+            }
+            return 1;        }
+    });
+    */
 
 
     TreeSet<Double> x = new TreeSet<>();
@@ -67,14 +87,14 @@ public class Rasterer {
 
 
 
-    public class QuadTree {
+    public class QuadTree{
 
         private static final double ROOT_ULLAT = 37.892195547244356, ROOT_ULLON = -122.2998046875,
                 ROOT_LRLAT = 37.82280243352756, ROOT_LRLON = -122.2119140625;
 
         private Node root = new Node("", 0, ROOT_ULLON, ROOT_ULLAT, ROOT_LRLON, ROOT_LRLAT);
 
-        //private String prevImgName = "";
+        private String prevImgName = "";
         public QuadTree() {
             buildQuadTree(root);
 
@@ -82,46 +102,47 @@ public class Rasterer {
 
         //recursion?
         private Node buildQuadTree(Node root) {
+            String prevImgName = "";
+
+            //root.imgName = "";
 
             if (root.depth == 8) {
                 return null;
             }
 
             root.topLeft = buildQuadTree(new Node((root.imgName + 1), root.depth + 1,
-                    root.topLeftXPos, root.topLeftYPos,
-                    (root.topLeftXPos + root.bottomRightXPos) / 2,
-                    (root.topLeftYPos + root.bottomRightYPos) / 2));
+                    root.topLeftXPos, root.topLeftYPos, (root.topLeftXPos + root.bottomRightXPos)/2,
+                    (root.topLeftYPos + root.bottomRightYPos)/2));
 
             root.topRight = buildQuadTree(new Node((root.imgName + 2),
-                    root.depth + 1,
-                    (root.topLeftXPos + root.bottomRightXPos) / 2,
+                    root.depth + 1, (root.topLeftXPos + root.bottomRightXPos)/2,
                     root.topLeftYPos, root.bottomRightXPos,
-                    (root.topLeftYPos + root.bottomRightYPos) / 2));
+                    (root.topLeftYPos + root.bottomRightYPos)/2));
 
             root.bottomLeft = buildQuadTree(new Node((root.imgName + 3), root.depth + 1,
-                    root.topLeftXPos,
-                    (root.topLeftYPos + root.bottomRightYPos) / 2,
-                    (root.topLeftXPos + root.bottomRightXPos) / 2,
+                    root.topLeftXPos, (root.topLeftYPos + root.bottomRightYPos)/2, (root.topLeftXPos + root.bottomRightXPos)/2,
                     root.bottomRightYPos));
 
             root.bottomRight = buildQuadTree(new Node((root.imgName + 4), root.depth + 1,
-                    (root.topLeftXPos + root.bottomRightXPos) / 2,
-                    (root.topLeftYPos + root.bottomRightYPos) / 2,
-                    root.bottomRightXPos,
+                    (root.topLeftXPos + root.bottomRightXPos)/2, (root.topLeftYPos + root.bottomRightYPos)/2, root.bottomRightXPos,
                     root.bottomRightYPos));
 
             return root;
 
         }
 
+        // public String toString() {
+        //    return root.bottomRight.bottomRight.bottomRight.bottomLeft.bottomRight.bottomRight.bottomRight.imgName;
+        //  }
+
+
         public class Node {
-            Double topLeftXPos, topLeftYPos, bottomRightXPos, bottomRightYPos;
+            Double topLeftXPos,topLeftYPos, bottomRightXPos, bottomRightYPos;
             Node topLeft,  topRight,  bottomLeft,  bottomRight;
             String imgName;
             int depth;
             //store subtrees as instance variables?
-            public Node(String imgName, int depth, double topLeftXPos,
-                        double topLeftYPos, double bottomRightXPos, double bottomRightYPos) {
+            public Node(String imgName, int depth, double topLeftXPos, double topLeftYPos, double bottomRightXPos, double bottomRightYPos) {
                 this.imgName = imgName;
                 this.depth = depth;
                 this.topLeftXPos = topLeftXPos;
@@ -142,14 +163,39 @@ public class Rasterer {
             }
 
 
-            public boolean intersectsTile(double query_ulX, double query_ulY,
-                                          double query_lrX, double query_lrY) {
-                return ((this.topLeftXPos > query_lrX)
-                        || (this.bottomRightXPos < query_ulX)
-                        || (this.topLeftYPos < query_lrY) || (this.bottomRightYPos > query_ulY));
-
+            public boolean intersectsTile(double query_ulX, double query_ulY, double query_lrX, double query_lrY) {
+                if ((this.topLeftXPos > query_lrX) || (this.bottomRightXPos < query_ulX) ||
+                        (this.topLeftYPos < query_lrY) || (this.bottomRightYPos > query_ulY)) {
+                    return false;
+                } else {
+                    return true;
+                }
 
             }
+
+            /*
+
+            @Override
+            public int compareTo(QuadTree.Node o2) {
+              //  System.out.println(o1.topLeftXPos);
+              //  System.out.println(o1.topLeftYPos);
+             //   System.out.println(o2.topLeftXPos);
+             //   System.out.println(o2.topLeftYPos);
+
+                if ((this.topLeftXPos.equals(o2.topLeftXPos)) && (this.topLeftYPos > o2.topLeftYPos)) {
+                    return -1;
+                } else if ((this.topLeftYPos.equals(o2.topLeftYPos)) && (this.topLeftXPos < o2.topLeftXPos)) {
+                    return -1;
+                } else if ((this.topLeftXPos < o2.topLeftXPos) && (this.topLeftYPos > o2.topLeftYPos)) {
+                    return -1;
+                } else if ((this.topLeftXPos > o2.topLeftXPos) && (this.topLeftYPos > o2.topLeftYPos)) {
+                    return -1;
+                } else if (this.topLeftXPos.equals(o2.topLeftXPos) && (this.topLeftYPos.equals(o2.topLeftYPos))) {
+                    return 0;
+                }
+                return 1;
+            }
+            */
 
             public String getImgName() {
                 return "img/" + this.imgName + ".png";
@@ -161,26 +207,25 @@ public class Rasterer {
     public class NodeComparator implements Comparator<QuadTree.Node> {
         @Override
         public int compare(QuadTree.Node o1, QuadTree.Node o2) {
-            if ((o1.topLeftXPos.equals(o2.topLeftXPos))
-                    && (o1.topLeftYPos > o2.topLeftYPos)) {
+            if ((o1.topLeftXPos.equals(o2.topLeftXPos)) && (o1.topLeftYPos > o2.topLeftYPos)) {
                 return -1;
-            } else if ((o1.topLeftYPos.equals(o2.topLeftYPos))
-                    && (o1.topLeftXPos < o2.topLeftXPos)) {
+            } else if ((o1.topLeftYPos.equals(o2.topLeftYPos)) && (o1.topLeftXPos < o2.topLeftXPos)) {
                 return -1;
-            } else if ((o1.topLeftXPos < o2.topLeftXPos)
-                    && (o1.topLeftYPos > o2.topLeftYPos)) {
+            } else if ((o1.topLeftXPos < o2.topLeftXPos) && (o1.topLeftYPos > o2.topLeftYPos)) {
                 return -1;
-            } else if ((o1.topLeftXPos > o2.topLeftXPos)
-                    && (o1.topLeftYPos > o2.topLeftYPos)) {
+            } else if ((o1.topLeftXPos > o2.topLeftXPos) && (o1.topLeftYPos > o2.topLeftYPos)) {
                 return -1;
-            } else if (o1.topLeftXPos.equals(o2.topLeftXPos)
-                    && (o1.topLeftYPos.equals(o2.topLeftYPos))) {
+            } else if (o1.topLeftXPos.equals(o2.topLeftXPos) && (o1.topLeftYPos.equals(o2.topLeftYPos))) {
                 return 0;
             }
             return 1;        }
 
 
     }
+
+
+
+
 
     public ArrayList<QuadTree.Node> pruneTree(Map<String, Double> params, QuadTree.Node n) {
         //QuadTree temp = q;
@@ -193,8 +238,7 @@ public class Rasterer {
             pruneTree(params, n.bottomLeft);
             pruneTree(params, n.bottomRight);
         } else {
-            if (!(n.intersectsTile(params.get("ullon"), params.get("ullat"),
-                    params.get("lrlon"), params.get("lrlat")))) {
+            if (!(n.intersectsTile(params.get("ullon"), params.get("ullat"), params.get("lrlon"), params.get("lrlat")))) {
                 // System.out.println("Inside this now");
                 return null;
                 // return new QuadTree.Node("", 0, 0 ,0 ,0, 0);
@@ -223,14 +267,31 @@ public class Rasterer {
         //System.out.println("Parameters: " + params);
         Map<String, Object> results = new HashMap<>();
 
+        // System.out.println("Since you haven't implemented getMapRaster, nothing is displayed in "
+        //                  + "your browser.");
+
+
 
         double lonDDP = (params.get("lrlon") - params.get("ullon")) / (params.get("w"));
+        // TreeSet<Double> x = new TreeSet<>();
+        //TreeSet<Double> y = new TreeSet<>();
 
         ArrayList<QuadTree.Node> pq = pruneTree(params, q.root);
         if (pq == null) {
             query_success = false;
         }
         Collections.sort(pq, nc);
+        //   System.out.println("Arraylist : " + pq);
+
+
+
+
+        //  int row = (int) (pq.get(pq.size() - 1).topLeftYPos - params.get("ullat")) / 256;
+
+        //     System.out.println("row : " + row);
+
+        //     int col = pq.size() / row;
+
 
         int col = x.size();
         int row = pq.size() / col;
@@ -283,6 +344,8 @@ public class Rasterer {
         //a.clear();
 
         return results;
+
+        //[[img/2143411.png, img/2143412.png, img/2143421.png], [img/2143413.png, img/2143414.png, img/2143423.png], [img/2143431.png, img/2143432.png, img/2143441.png]]
 
     }
 
