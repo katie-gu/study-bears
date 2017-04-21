@@ -64,12 +64,19 @@ public class CountingSort {
      * @param toSort int array that will be sorted
     **/
     public static int[] betterCountingSort(int[] toSort) {
+
+        System.out.print("toSort: ");
+        for (int i : toSort) {
+            System.out.print(i + " ");
+        }
+        System.out.println();
+
         ArrayList<Integer> numNeg = new ArrayList<>();
         TreeSet<Integer> uniqueNeg = new TreeSet<>();
         // find max
         int max = Integer.MIN_VALUE;
         for (int i : toSort) {
-            System.out.println("hi");
+            //System.out.println("hi");
             if (i < 0) {
                 numNeg.add(i);
                 uniqueNeg.add(i);
@@ -89,9 +96,10 @@ public class CountingSort {
         }
         */
 
+        System.out.println("counts size : " + Math.abs(max) + 2 + numNeg.size());
         int[] counts = new int[Math.abs(max) + 2 + numNeg.size()];
         for (int i : toSort) {
-            System.out.println("ok then");
+            //System.out.println("ok then");
             if (i < 0) {
                 negIndex = max + Math.abs(i);
                 counts[negIndex] += 1;
@@ -102,6 +110,7 @@ public class CountingSort {
         }
 
         // put the value count times into a new array
+
         int[] sorted = new int[toSort.length - numNeg.size()];
         int[] negSorted = new int[numNeg.size()];
 
