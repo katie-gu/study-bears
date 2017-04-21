@@ -45,12 +45,12 @@ public class RadixSort {
     public static String[] betterCountingSort(String[] toSort, int digit) {
         int i = 0;
 
-        String maxString = "";
+        //String maxString = "";
         int maxValue = Integer.MIN_VALUE;
         for (String j : toSort) {
             if ((int) j.charAt(digit) > maxValue) {
                 maxValue = (int) j.charAt(digit);
-                maxString = j;
+               // maxString = j;
             }
         }
 

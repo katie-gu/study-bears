@@ -63,7 +63,13 @@ public class CountingSort {
      * 
      * @param toSort int array that will be sorted
     **/
-    public static int[] betterCountingSort(int[] toSort) {
+    public static int[] betterCountingSort(int[] sortList) {
+
+        int[] toSort = sortList;
+
+        for (int i = 0; i < sortList.length; i++) {
+            sortList[i] = toSort[i];
+        }
         int i = 0;
 
         int maxValue = Integer.MIN_VALUE;
@@ -90,6 +96,7 @@ public class CountingSort {
         }
 
         System.out.println("array size: " + Math.abs(newMaxValue) + 1);
+        System.out.println("tosort size: " + toSort.length);
         int[] temp = new int[Math.abs(newMaxValue) + 1];
 
         for (i = 0; i <= newMaxValue; i++) {
