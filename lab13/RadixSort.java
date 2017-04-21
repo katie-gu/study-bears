@@ -34,7 +34,8 @@ public class RadixSort {
         }
 
         for (int d = min; d >= 0; d--) {
-            betterCountingSort(temp, d);
+            temp = betterCountingSort(temp, d);
+            //System.out.println(temp);
         }
 
         return temp;
