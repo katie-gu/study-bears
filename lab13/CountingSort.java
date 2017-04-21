@@ -65,7 +65,10 @@ public class CountingSort {
     **/
     public static int[] betterCountingSort(int[] toSort) {
 
-        int[] temp = toSort;
+        int[] temp = new int[toSort.length];
+        for (int i = 0; i < toSort.length; i++) {
+            temp[i] = toSort[i];
+        }
 
         int n = toSort.length;
 
