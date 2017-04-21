@@ -67,6 +67,14 @@ public class CountingSort {
 
         int[] toSort = sortList;
 
+        if (toSort == null) {
+            return toSort;
+        }
+
+        if (toSort.length == 0) {
+            return toSort;
+        }
+
         for (int i = 0; i < sortList.length; i++) {
             sortList[i] = toSort[i];
         }

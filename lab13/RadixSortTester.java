@@ -21,7 +21,7 @@ public class RadixSortTester {
 
     @Test
     public void testNaiveWithNonNegative() {
-        long startTime = System.currentTimeMillis();
+       // long startTime = System.currentTimeMillis();
 
         String[] radixSort = RadixSort.sort(testArr);
         //assertEquals(, 3);
@@ -37,9 +37,9 @@ public class RadixSortTester {
             System.out.print(s + " ");
         }
 
-        long endTime   = System.currentTimeMillis();
-        long totalTime = endTime - startTime;
-        System.out.println(totalTime);
+      //  long endTime   = System.currentTimeMillis();
+     //   long totalTime = endTime - startTime;
+      //  System.out.println(totalTime);
         //assertEquals(testArr, expect);
 
     }
