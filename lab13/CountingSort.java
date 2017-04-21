@@ -64,169 +64,54 @@ public class CountingSort {
      * @param toSort int array that will be sorted
     **/
     public static int[] betterCountingSort(int[] toSort) {
+        int i = 0;
 
-        int[] temp = new int[toSort.length];
-        for (int i = 0; i < toSort.length; i++) {
-            temp[i] = toSort[i];
-        }
-
-        int n = toSort.length;
-
-        // The output character array that will have sorted arr
-        int output[] = new int[n];
-
-        // Create a count array to store count of inidividul
-        // characters and initialize count array as 0
-        int count[] = new int[256];
-
-        /*
-        for (int i=0; i<256; ++i) {
-            count[i] = 0;
-        }
-        */
-
-        // store count of each character
-        for (int i=0; i<n; ++i) {
-            ++count[temp[i]];
-        }
-        // Change count[i] so that count[i] now contains actual
-        // position of this character in output array
-        for (int i=1; i<=255; ++i)
-            count[i] += count[i-1];
-
-        // Build the output character array
-        for (int i = 0; i<n; ++i)
-        {
-            output[count[toSort[i]]-1] = temp[i];
-            --count[toSort[i]];
-        }
-
-        // Copy the output array to arr, so that arr now
-        // contains sorted characters
-        for (int i = 0; i<n; ++i) {
-            temp[i] = output[i];
-        }
-
-        return output;
-
-
-        /*
-        System.out.print("toSort: ");
-        for (int i : toSort) {
-            System.out.print(i + " ");
-        }
-        System.out.println();
-
-        ArrayList<Integer> numNeg = new ArrayList<>();
-        TreeSet<Integer> uniqueNeg = new TreeSet<>();
-        // find max
-        int max = Integer.MIN_VALUE;
-        for (int i : toSort) {
-            //System.out.println("hi");
-            if (i < 0) {
-                numNeg.add(i);
-                uniqueNeg.add(i);
-            }
-            if (i > max) {
-                max = i;
+        int maxValue = Integer.MIN_VALUE;
+        for (int j : toSort) {
+            if (j > maxValue) {
+                maxValue = j;
             }
         }
 
-        // gather all the counts for each value
-        int negIndex = 0;
-        int addNegSize = 0;
 
-        /*
-        if (uniqueNeg.size() != 0) {
-            addNegSize = Math.abs(uniqueNeg.size());
-        }
-        */
-
-        /*
-        System.out.println("counts size : " + Math.abs(max) + 2 + numNeg.size());
-        int[] counts = new int[Math.abs(max) + 2 + numNeg.size()];
-        for (int i : toSort) {
-            //System.out.println("ok then");
-            if (i < 0) {
-                negIndex = max + Math.abs(i);
-                counts[negIndex] += 1;
-            } else {
-                counts[i] += 1;
-            }
-
-        }
-
-        // put the value count times into a new array
-
-        int[] sorted = new int[toSort.length - numNeg.size()];
-        int[] negSorted = new int[numNeg.size()];
-
-        int k = 0;
-        for (int i = 0; i < sorted.length; i += 1) {
-            for (int j = 0; j < counts[i]; j += 1, k += 1) {
-                System.out.println("in here RN");
-                sorted[k] = i;
+        int[] b = new int[toSort.length];
+        int[] copyofa = new int[toSort.length];
+        int min = 0;
+        for (i = 0; i < toSort.length; i++) {
+            b[i] = 0;
+            if (min > toSort[i]) {
+                min = toSort[i];
             }
         }
 
-        k = 0;
-        for (int i = max + 1; i < counts.length; i += 1) {
-            for (int j = 0; j < counts[i]; j += 1, k += 1) {
-              //  System.out.println("counts: " + counts[i]);
-                System.out.println("in here");
-                negSorted[k] = 0 - (i - max);
-            }
+        int newMaxValue = maxValue - min;
+        for (i = 0; i < toSort.length; i++) {
+            copyofa[i] = toSort[i] - min;
         }
 
-        //List<Object> negList = Arrays.asList(negSorted);
-        //Collections.reverse(negList);
+        int[] temp = new int[newMaxValue + 1];
 
-
-        for(int i = 0; i < negSorted.length / 2; i++) {
-            int temp = negSorted[i];
-            negSorted[i] = negSorted[negSorted.length - i - 1];
-            negSorted[negSorted.length - i - 1] = temp;
-        }
-        //negList.toArray();
-        /*
-        int[] negOrdered = new int[negList.size()];
-        for (int i = 0; i < negOrdered.length; i++) {
-            negOrdered[i] = negList.get(i);
-        }
-        */
-
-        /*
-        System.out.print("Sorted: ");
-        for (int i : sorted) {
-            System.out.print(i + " ");
+        for (i = 0; i <= newMaxValue; i++) {
+            temp[i] = 0;
         }
 
-        System.out.println("\n Neglist : ");
-
-        for (Object i : negSorted) {
-            System.out.print(i + " ");
+        for (i = 0; i < toSort.length; i++) {
+            temp[copyofa[i]] += 1;
         }
 
-
-       // System.out.println("sorted: " + sorted.toString());
-      //  System.out.println("neglist " + negList.toString());
-
-        int [] newArray = new int[sorted.length + negSorted.length];
-        System.arraycopy(negSorted, 0, newArray, 0, negSorted.length);
-        System.arraycopy(sorted, 0, newArray, negSorted.length, sorted.length );
-
-
-
-        System.out.print("result : ");
-        for (int i : newArray) {
-            System.out.print(i + " ");
+        for (i = 1; i <= newMaxValue; i++) {
+            temp[i] = temp[i] + temp[i - 1];
         }
 
-        // return the sorted array
+        for (i = toSort.length - 1; i >= 0; i--) {
+            b[temp[copyofa[i]] - 1] = copyofa[i];
+            temp[copyofa[i]] = temp[copyofa[i]] - 1;
+        }
 
-        return newArray;
-    */
+        for (i = 0; i < toSort.length; i++) {
+            b[i] = b[i] + min;
+        }
 
+        return temp;
     }
-
 }
