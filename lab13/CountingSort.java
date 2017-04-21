@@ -89,7 +89,7 @@ public class CountingSort {
             copyofa[i] = toSort[i] - min;
         }
 
-        int[] temp = new int[newMaxValue + 1];
+        int[] temp = new int[Math.abs(newMaxValue) + 1];
 
         for (i = 0; i <= newMaxValue; i++) {
             temp[i] = 0;
