@@ -69,6 +69,7 @@ public class CountingSort {
         // find max
         int max = Integer.MIN_VALUE;
         for (int i : toSort) {
+            System.out.println("hi");
             if (i < 0) {
                 numNeg.add(i);
                 uniqueNeg.add(i);
@@ -88,8 +89,9 @@ public class CountingSort {
         }
         */
 
-        int[] counts = new int[max + 2 + numNeg.size()];
+        int[] counts = new int[Math.abs(max) + 2 + numNeg.size()];
         for (int i : toSort) {
+            System.out.println("ok then");
             if (i < 0) {
                 negIndex = max + Math.abs(i);
                 counts[negIndex] += 1;
@@ -106,6 +108,7 @@ public class CountingSort {
         int k = 0;
         for (int i = 0; i < sorted.length; i += 1) {
             for (int j = 0; j < counts[i]; j += 1, k += 1) {
+                System.out.println("in here RN");
                 sorted[k] = i;
             }
         }
@@ -114,7 +117,7 @@ public class CountingSort {
         for (int i = max + 1; i < counts.length; i += 1) {
             for (int j = 0; j < counts[i]; j += 1, k += 1) {
               //  System.out.println("counts: " + counts[i]);
-              //  System.out.println("k: " + k);
+                System.out.println("in here");
                 negSorted[k] = 0 - (i - max);
             }
         }
@@ -123,8 +126,7 @@ public class CountingSort {
         //Collections.reverse(negList);
 
 
-        for(int i = 0; i < negSorted.length / 2; i++)
-        {
+        for(int i = 0; i < negSorted.length / 2; i++) {
             int temp = negSorted[i];
             negSorted[i] = negSorted[negSorted.length - i - 1];
             negSorted[negSorted.length - i - 1] = temp;
@@ -157,13 +159,13 @@ public class CountingSort {
         System.arraycopy(negSorted, 0, newArray, 0, negSorted.length);
         System.arraycopy(sorted, 0, newArray, negSorted.length, sorted.length );
 
-        /*
+
 
         System.out.print("result : ");
         for (int i : newArray) {
             System.out.print(i + " ");
         }
-        */
+
         // return the sorted array
 
         return newArray;
