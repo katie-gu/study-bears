@@ -22,38 +22,70 @@ public class RadixSort {
      **/
     public static String[] sort(String[] a) {
 
-
+        //d < (max or min?? of string array a).length
         String[] temp = a;
+        int min = Integer.MAX_VALUE;
 
         for (int i = 0; i < a.length; i++) {
             temp[i] = a[i];
+            if ((temp[i].length() - 1) < min) {
+                min = temp[i].length() - 1;
+            }
         }
 
-
-        for (int i = 0; i < temp[0].length(); i++) {
-            Queue[] queueArray = new Queue[256];
-
-            for (int startQueueIndex = 0; startQueueIndex < queueArray.length; startQueueIndex++) {
-                queueArray[startQueueIndex] = new PriorityQueue(); //This line is giving me the first error
-            }
-
-            for (int myArrayIndex = 0; myArrayIndex < temp.length; myArrayIndex++) {
-                char character = (temp[myArrayIndex].charAt(myArrayIndex));
-                int asciiValue = (int) (character); //this method returns the ascii value for a character
-                queueArray[asciiValue].add(temp[myArrayIndex]);
-            }
-
-            int sortIndex = 0;
-
-            for (int queueIndex = 0; queueIndex <= 255; queueIndex++) {
-                while (!queueArray[queueIndex].isEmpty()) {
-                    queueArray[sortIndex].remove(queueArray[queueIndex]); //This line is giving me the second error
-                    sortIndex++;
-                }
-            }
+        for (int d = min; d >= 0; d--) {
+            betterCountingSort(temp, d);
         }
 
         return temp;
+
+    }
+
+    public static String[] betterCountingSort(String[] toSort, int digit) {
+        int i = 0;
+
+        String maxString = "";
+        int maxValue = Integer.MIN_VALUE;
+        for (String j : toSort) {
+            if ((int) j.charAt(digit) > maxValue) {
+                maxValue = (int) j.charAt(digit);
+                maxString = j;
+            }
+        }
+
+        // gather all the counts for each value
+        ArrayList<String>[] counts = new ArrayList[256];
+
+      //  for (ArrayList<String> arr : counts) {
+       //     arr = new ArrayList<String>();
+      //  }
+
+        for (String s : toSort) {
+            //System.out.println("string : " + s);
+            //System.out.println("int val : " + (int) s.charAt(digit));
+            if (counts[(int) s.charAt(digit)] == null) {
+                counts[(int) s.charAt(digit)] = new ArrayList<String>();
+            }
+            counts[(int) s.charAt(digit)].add(s);
+            //System.out.println(counts[(int) s.charAt(digit)]);
+
+        }
+
+        // put the value count times into a new array
+        String[] sorted = new String[toSort.length];
+        int k = 0;
+        for (int x = 0; x < counts.length; x += 1) {
+            //for (int j = 0; j < counts[x]; j += 1) {
+            if (counts[x] != null) {
+                for (String a : counts[x]) {
+                    sorted[k] = a;
+                    k += 1;
+                }
+            }
+           // }
+        }
+        return sorted;
+        // return the sorted array
     }
 
         /*
