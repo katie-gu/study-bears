@@ -65,6 +65,8 @@ public class CountingSort {
     **/
     public static int[] betterCountingSort(int[] toSort) {
 
+        int[] temp = toSort;
+
         int n = toSort.length;
 
         // The output character array that will have sorted arr
@@ -82,7 +84,7 @@ public class CountingSort {
 
         // store count of each character
         for (int i=0; i<n; ++i) {
-            ++count[toSort[i]];
+            ++count[temp[i]];
         }
         // Change count[i] so that count[i] now contains actual
         // position of this character in output array
@@ -92,14 +94,14 @@ public class CountingSort {
         // Build the output character array
         for (int i = 0; i<n; ++i)
         {
-            output[count[toSort[i]]-1] = toSort[i];
+            output[count[toSort[i]]-1] = temp[i];
             --count[toSort[i]];
         }
 
         // Copy the output array to arr, so that arr now
         // contains sorted characters
         for (int i = 0; i<n; ++i) {
-            toSort[i] = output[i];
+            temp[i] = output[i];
         }
 
         return output;
