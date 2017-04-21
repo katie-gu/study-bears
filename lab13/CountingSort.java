@@ -65,6 +65,47 @@ public class CountingSort {
     **/
     public static int[] betterCountingSort(int[] toSort) {
 
+        int n = toSort.length;
+
+        // The output character array that will have sorted arr
+        int output[] = new int[n];
+
+        // Create a count array to store count of inidividul
+        // characters and initialize count array as 0
+        int count[] = new int[256];
+
+        /*
+        for (int i=0; i<256; ++i) {
+            count[i] = 0;
+        }
+        */
+
+        // store count of each character
+        for (int i=0; i<n; ++i) {
+            ++count[toSort[i]];
+        }
+        // Change count[i] so that count[i] now contains actual
+        // position of this character in output array
+        for (int i=1; i<=255; ++i)
+            count[i] += count[i-1];
+
+        // Build the output character array
+        for (int i = 0; i<n; ++i)
+        {
+            output[count[toSort[i]]-1] = toSort[i];
+            --count[toSort[i]];
+        }
+
+        // Copy the output array to arr, so that arr now
+        // contains sorted characters
+        for (int i = 0; i<n; ++i) {
+            toSort[i] = output[i];
+        }
+
+        return output;
+
+
+        /*
         System.out.print("toSort: ");
         for (int i : toSort) {
             System.out.print(i + " ");
@@ -96,6 +137,7 @@ public class CountingSort {
         }
         */
 
+        /*
         System.out.println("counts size : " + Math.abs(max) + 2 + numNeg.size());
         int[] counts = new int[Math.abs(max) + 2 + numNeg.size()];
         for (int i : toSort) {
@@ -159,7 +201,7 @@ public class CountingSort {
         for (Object i : negSorted) {
             System.out.print(i + " ");
         }
-        */
+
 
        // System.out.println("sorted: " + sorted.toString());
       //  System.out.println("neglist " + negList.toString());
@@ -178,6 +220,8 @@ public class CountingSort {
         // return the sorted array
 
         return newArray;
+    */
 
     }
+
 }
