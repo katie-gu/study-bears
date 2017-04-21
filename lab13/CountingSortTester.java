@@ -6,7 +6,12 @@ public class CountingSortTester {
     /**
      * Array that will be properly sorted with CountingSort.naiveCountingSort
      **/
-    public static int[] nonNegative = {9, 5, 2, 1, 5, 3, 0, 3, 1, 1};
+
+    //27 36 15 25 31 27 34 32 12 14 26 6 21 6 32 10 24 16 9 15 20 36 27 26 20 3 19 18 34 33 4 21 10 0 29 26 29 25 34 6 16 26 4 21 7 10 2 26 25 22 4 35 10 13 3 34 10 18 2 20 28 2 3 13 9 1 6 36 32 28 3 8 22
+   // public static int[] nonNegative = {9, 5, 2, 1, 5, 3, 0, 3, 1, 1};
+
+	public static int[] nonNegative = {27, 36, 15, 25, 31, 27, 34, 32, 12, 14, 26, 6, 21, 6, 32, 10, 24, 16, 9, 15, 20, 36, 27, 26, 20, 3, 19, 18, 34, 33, 4, 21, 10, 0, 29, 26, 29, 25, 34, 6, 16, 26, 4, 21, 7, 10, 2, 26, 25, 22, 4, 35, 10, 13, 3, 34, 10, 18, 2, 20, 28, 2, 3, 13, 9, 1, 6, 36, 32, 28, 3, 8, 22};
+
 
     /**
      * Array that will cause CountingSort.naiveCountingSort to fail, but CountingSort.betterCountingSort can handle
