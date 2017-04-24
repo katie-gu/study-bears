@@ -33,6 +33,8 @@ import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
 
 public class SeamCarverVisualizer {
+
+    /*
     JFrame frame;
 
     public void visualizeHorizontalCarve(SeamCarver sc, int N) {
@@ -119,4 +121,6 @@ public class SeamCarverVisualizer {
             scv.visualizeVerticalCarve(sc, N);
         }
     }
+
+    */
 }

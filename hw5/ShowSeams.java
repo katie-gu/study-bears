@@ -15,6 +15,8 @@ import edu.princeton.cs.algs4.StdOut;
 
 public class ShowSeams {
 
+    /*
+
     private static void showHorizontalSeam(SeamCarver sc) {
         Picture ep = SCUtility.toEnergyPicture(sc);
         int[] horizontalSeam = sc.findHorizontalSeam();
@@ -43,4 +45,5 @@ public class ShowSeams {
 
     }
 
+    */
 }

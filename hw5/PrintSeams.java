@@ -61,6 +61,8 @@ public class PrintSeams {
     }
 
     public static void main(String[] args) {
+        /*
+
         Picture picture = new Picture(args[0]);
         StdOut.printf("%s (%d-by-%d image)\n", args[0], picture.width(), picture.height());
         StdOut.println();
@@ -83,6 +85,8 @@ public class PrintSeams {
             StdOut.print(y + " ");
         StdOut.println("}");
         printSeam(carver, horizontalSeam, HORIZONTAL);
+
+        */
 
     }
 
