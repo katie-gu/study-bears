@@ -76,8 +76,9 @@ public class SeamCarver {
     public int[] findHorizontalSeam() {
 
         Picture oldPicture = original;
-        original = picture();
-        int[] result = new int[picture.width()];
+        original = new Picture(original.width(), original.height());
+        //original.set(original.width(), original.height(), original.getRBG())
+        int[] result;
         result = findVerticalSeam();
         original = oldPicture;
 
@@ -107,8 +108,6 @@ public class SeamCarver {
                     minPath[row][col] = energy(col, row);
                 } else {
                     if (col == 0) {
-                        System.out.println("row :" + row);
-                        System.out.println("col :" + col);
                         if (col == width() - 1) {
                             minPath[row][col] = energy(col, row)
                                     + minPath[row - 1][col];
@@ -122,14 +121,12 @@ public class SeamCarver {
                     } else {
                         minPath[row][col] = energy(col, row)
                                 + Math.min(minPath[row - 1][col],
-                                Math.min(minPath[row - 1][col + 1],
-                                        minPath[row - 1][col - 1]));
+                                Math.min(minPath[row - 1][col + 1], minPath[row - 1][col - 1]));
                     }
                 }
             }
             row += 1;
         }
-
         int[] result = new int[height()];
         double min = Integer.MAX_VALUE;
         int minIndex = 0;
@@ -139,7 +136,6 @@ public class SeamCarver {
                 minIndex = i;
             }
         }
-
         int index = 0;
         int chosenCol = minIndex;
         int r = height() - 1;
@@ -180,9 +176,13 @@ public class SeamCarver {
             index += 1;
             r -= 1;
         }
+        return reverseArray(result);
+    }
+
+    private int[] reverseArray(int[] arr) {
         int[] newResult = new int[height()];
         for (int i = 0; i < newResult.length; i++) {
-            newResult[i] = result[result.length - 1 - i];
+            newResult[i] = arr[arr.length - 1 - i];
         }
         return newResult;
     }
