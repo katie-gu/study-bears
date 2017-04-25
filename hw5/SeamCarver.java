@@ -15,9 +15,8 @@ public class SeamCarver {
         this.picture = picture;
     }
 
-    // current picture
     public Picture picture() {
-        return picture;
+        return new Picture(picture.height(), picture.width());
     }
 
     // width of current picture
@@ -71,16 +70,35 @@ public class SeamCarver {
 
 
 
-    /*
+
     // sequence of indices for horizontal seam
     public int[] findHorizontalSeam() {
+        /*
+        Picture oldPicture = picture;
+        picture = picture();
+        int[] result = new int[picture.width()];
+        result = findVerticalSeam();
+        picture = oldPicture;
 
+        System.out.println("result: ");
+        for (int i = 0; i < result.length; i++) {
+            System.out.print(i + " ");
+        }
+
+        return result;
+        */
+        //picture = new Picture(picture.width())
+        //picture().set(picture().width(), picture().height(), picture().get(0,0));
+        return new int[4];
     }
-    */
+
+
+    public int[][] getMinCostArray;
 
     // sequence of indices for vertical seam
     public int[] findVerticalSeam() {
         int[] seq = new int[height()];
+
 
         double[][] minPath = new double[height()][width()];
         int row = 0;
@@ -88,6 +106,8 @@ public class SeamCarver {
 
         //System.out.println("here");
         //check edge/corner/null cases
+
+
         while (row < height()) {
             for (int col = 0; col < width(); col++) {
                 if (row == 0) {
@@ -121,6 +141,8 @@ public class SeamCarver {
         */
 
         //find min of last row and work upward
+
+
         int[] result = new int[height()];
 
         double min = Integer.MAX_VALUE;
@@ -259,16 +281,18 @@ public class SeamCarver {
     }
 
 
-    /*
+
     // remove horizontal seam from picture
     public void removeHorizontalSeam(int[] seam) {
-
+        for (int row = 0; row < height(); row++) {
+           // picture.get(seam[row], row).
+        }
     }
 
     // remove vertical seam from picture
     public void removeVerticalSeam(int[] seam) {
 
     }
-    */
+
 
 }
