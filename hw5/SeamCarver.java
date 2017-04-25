@@ -107,8 +107,15 @@ public class SeamCarver {
                     minPath[row][col] = energy(col, row);
                 } else {
                     if (col == 0) {
-                        minPath[row][col] = energy(col, row)
-                                + Math.min(minPath[row - 1][col], minPath[row - 1][col + 1]);
+                        System.out.println("row :" + row);
+                        System.out.println("col :" + col);
+                        if (col == width() - 1) {
+                            minPath[row][col] = energy(col, row)
+                                    + minPath[row - 1][col];
+                        } else {
+                            minPath[row][col] = energy(col, row)
+                                    + Math.min(minPath[row - 1][col], minPath[row - 1][col + 1]);
+                        }
                     } else if (col == width() - 1) {
                         minPath[row][col] = energy(col, row)
                                 + Math.min(minPath[row - 1][col], minPath[row - 1][col - 1]);
@@ -138,7 +145,11 @@ public class SeamCarver {
         int r = height() - 1;
         while (r >= 0) {
             if (chosenCol == 0) {
-                min = Math.min(minPath[r][chosenCol], minPath[r][chosenCol + 1]);
+                if (chosenCol == width() - 1) {
+                    min = minPath[r][chosenCol];
+                } else {
+                    min = Math.min(minPath[r][chosenCol], minPath[r][chosenCol + 1]);
+                }
                 if (minPath[r][chosenCol] == min) {
                     result[index] = chosenCol;
                 } else {
