@@ -7,11 +7,24 @@ import edu.princeton.cs.algs4.Picture;
 public class SeamCarver {
     private Picture picture;
     private Picture original;
+    private boolean transposed;
+    private int width;
+    private int height;
+    private double[][] energies;
     //WeightedQuickUnionUF w;
     //int[][] energies;
 
     public SeamCarver(Picture picture) {
         original = new Picture(picture);
+        energies = new double[height()][width()];
+       // System.out.println("original energies: ");
+        for (int r = 0; r < energies.length; r++) {
+            for (int c = 0; c < energies[0].length; c++) {
+                energies[r][c] = energy(c, r);
+               // System.out.print(energies[r][c] + " ");
+            }
+           // System.out.println();
+        }
         //this.picture = picture;
         //this.energies = new int[picture.height()][picture.width()];
     }
@@ -69,14 +82,41 @@ public class SeamCarver {
         return xSquared + ySquared;
     }
 
-
+    public double getEnergy(int col, int row, boolean transposed) {
+        if (transposed) {
+            return energy(col, row);
+        } else {
+            return energy(col, row);
+        }
+    }
 
 
     // sequence of indices for horizontal seam
     public int[] findHorizontalSeam() {
+        transposed = true;
+        energies = transposeMatrix(energies);
+        /*
+        System.out.println("new energies: ");
+        for (int r = 0; r < energies.length; r++) {
+            for (int c = 0; c < energies[0].length; c++) {
+                System.out.print(energies[r][c] + " ");
+            }
+            System.out.println();
+        }
+        */
 
+        int[] result = findVerticalSeam();
+        energies = transposeMatrix(energies);
+        transposed = false;
+        return result;
+        /*
+        transposed = true;
         Picture oldPicture = original;
-        original = new Picture(original.width(), original.height());
+        //System.out.println("height: " + original.height());
+        //System.out.println("width: " + original.width());
+        original = new Picture(original.height(), original.width());
+        //System.out.println("height: " + original.height());
+        //System.out.println("width: " + original.width());
         //original.set(original.width(), original.height(), original.getRBG())
         int[] result;
         result = findVerticalSeam();
@@ -84,42 +124,56 @@ public class SeamCarver {
 
         System.out.println("result: ");
         for (int i = 0; i < result.length; i++) {
-            System.out.print(i + " ");
+            System.out.print(result[i] + " ");
         }
+        */
 
-        return result;
 
         //picture = new Picture(picture.width())
         //picture().set(picture().width(), picture().height(), picture().get(0,0));
         //return new int[4];
     }
 
+    public static double[][] transposeMatrix(double [][] m){
+        double[][] temp = new double[m[0].length][m.length];
+        for (int i = 0; i < m.length; i++) {
+            for (int j = 0; j < m[0].length; j++) {
+                temp[j][i] = m[i][j];
+            }
+        }
+        return temp;
+    }
 
-   // public int[][] getMinCostArray;
+    // public int[][] getMinCostArray;
 
     // sequence of indices for vertical seam
     public int[] findVerticalSeam() {
-        int[] seq = new int[height()];
-        double[][] minPath = new double[height()][width()];
+        double[][] minPath;
+        if (transposed) {
+            minPath = new double[width()][height()];
+        } else {
+            minPath = new double[height()][width()];
+
+        }
         int row = 0;
-        while (row < height()) {
-            for (int col = 0; col < width(); col++) {
+        while (row < minPath.length) {
+            for (int col = 0; col < minPath[0].length; col++) {
                 if (row == 0) {
-                    minPath[row][col] = energy(col, row);
+                    minPath[row][col] = energies[row][col];
                 } else {
                     if (col == 0) {
-                        if (col == width() - 1) {
-                            minPath[row][col] = energy(col, row)
+                        if (col == energies[0].length - 1) {
+                            minPath[row][col] = energies[row][col]
                                     + minPath[row - 1][col];
                         } else {
-                            minPath[row][col] = energy(col, row)
+                            minPath[row][col] = energies[row][col]
                                     + Math.min(minPath[row - 1][col], minPath[row - 1][col + 1]);
                         }
-                    } else if (col == width() - 1) {
-                        minPath[row][col] = energy(col, row)
+                    } else if (col == energies[0].length - 1) {
+                        minPath[row][col] = energies[row][col]
                                 + Math.min(minPath[row - 1][col], minPath[row - 1][col - 1]);
                     } else {
-                        minPath[row][col] = energy(col, row)
+                        minPath[row][col] = energies[row][col]
                                 + Math.min(minPath[row - 1][col],
                                 Math.min(minPath[row - 1][col + 1], minPath[row - 1][col - 1]));
                     }
@@ -127,21 +181,31 @@ public class SeamCarver {
             }
             row += 1;
         }
-        int[] result = new int[height()];
+
+        /*
+        for (int r = 0; r < minPath.length; r++) {
+            for (int c = 0; c < minPath[0].length; c++) {
+                System.out.print(minPath[r][c] + " ");
+            }
+            System.out.println();
+        }
+        */
+
+        int[] result = new int[minPath.length];
         double min = Integer.MAX_VALUE;
         int minIndex = 0;
-        for (int i = 0; i < width(); i++) {
-            if (minPath[height() - 1][i] < min) {
-                min = minPath[height() - 1][i];
+        for (int i = 0; i < minPath[0].length; i++) {
+            if (minPath[minPath.length - 1][i] < min) {
+                min = minPath[minPath.length - 1][i];
                 minIndex = i;
             }
         }
         int index = 0;
         int chosenCol = minIndex;
-        int r = height() - 1;
+        int r = minPath.length - 1;
         while (r >= 0) {
             if (chosenCol == 0) {
-                if (chosenCol == width() - 1) {
+                if (chosenCol == minPath[0].length - 1) {
                     min = minPath[r][chosenCol];
                 } else {
                     min = Math.min(minPath[r][chosenCol], minPath[r][chosenCol + 1]);
@@ -152,7 +216,7 @@ public class SeamCarver {
                     result[index] = chosenCol + 1;
                     chosenCol += 1;
                 }
-            } else if (chosenCol == width() - 1) {
+            } else if (chosenCol == minPath[0].length - 1) {
                 min = Math.min(minPath[r][chosenCol], minPath[r][chosenCol - 1]);
                 if (minPath[r][chosenCol] == min) {
                     result[index] = chosenCol;
@@ -180,7 +244,7 @@ public class SeamCarver {
     }
 
     private int[] reverseArray(int[] arr) {
-        int[] newResult = new int[height()];
+        int[] newResult = new int[energies.length];
         for (int i = 0; i < newResult.length; i++) {
             newResult[i] = arr[arr.length - 1 - i];
         }
@@ -192,7 +256,7 @@ public class SeamCarver {
     // remove horizontal seam from picture
     public void removeHorizontalSeam(int[] seam) {
         //for (int row = 0; row < height(); row++) {
-           // picture.get(seam[row], row).
+        // picture.get(seam[row], row).
         //}
     }
 
