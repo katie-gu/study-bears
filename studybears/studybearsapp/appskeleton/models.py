@@ -19,12 +19,14 @@ class StudyGroups(models.Model):
     members = models.ManyToManyField('User')
     "pending_requests = models.ManyToManyField('Request')"
     def is_open(self):
-        return self.size <= self.capacity
+        return self.size < self.capacity
     def add_member(self, user):
         if is_open(self):
             self.members.add(user)
             user.my_groups.add(self)
             self.size += 1
+        else:
+           print("Error: Cannot add user because group is full.")
     def remove_member(self, user):
         user_name = user.name
         contains_user = self.members.filter(user__name__startswith="user_name")
@@ -45,7 +47,3 @@ class User(models.Model):
 
 class Request(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-
-class Meeting(models.Model):
-    location = models.ForeignKey(Location, on_delete=models.CASCADE)
-    date_time = models.ManyToManyField(Date_And_Time)
