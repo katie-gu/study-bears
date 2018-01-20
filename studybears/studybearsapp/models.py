@@ -1,4 +1,4 @@
-from django.db import models
+from django.db import migrations, models
 
 # Create your models here.
 class Date_And_Time(models.Model):
@@ -12,21 +12,21 @@ class Location(models.Model):
 class StudyGroups(models.Model):
     course = models.CharField(max_length = 200)
     location = models.CharField(max_length = 200)
-    date_times = models.ManyToManyField(Date_And_Time)
+    "date_times = models.ManyToManyField(Date_And_Time)"
     size = models.IntegerField()
     capacity = models.IntegerField()
-    study_strategies = models.TextField()
-    members = models.ManyToManyField('User')
+    "study_strategies = models.TextField()"
+    "members = models.OneToManyField('User')"
     "pending_requests = models.ManyToManyField('Request')"
     def is_open(self):
         return self.size < self.capacity
-    def add_member(self, user):
-        if is_open(self):
+    """def add_member(self, user):
+        if self.is_open():
             self.members.add(user)
             user.my_groups.add(self)
             self.size += 1
         else:
-           print("Error: Cannot add user because group is full.")
+           print("Error: Cannot add user because group is full.")"""
     def remove_member(self, user):
         user_name = user.name
         contains_user = self.members.filter(user__name__startswith="user_name")
@@ -45,5 +45,18 @@ class User(models.Model):
     time_availabilities = models.ManyToManyField(Date_And_Time)
     my_groups = models.ManyToManyField(StudyGroups)
 
+    def add_new_member(self, studygroup):
+        if studygroup.is_open():
+            self.my_groups.add(studygroup)
+            studygroup.size = studygroup.size + 1
+        else:
+            print("Error: Cannot add user because group is full.")
+
+    "study_group = models.ForeignKey(StudyGroups, on_delete=models.CASCADE)"
+
 class Request(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+class Animal(models.Model):
+    name = models.CharField(max_length = 50)
+    sound = models.CharField(max_length = 50)
