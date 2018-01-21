@@ -11,6 +11,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="/static/studybearsapp/script.js"></script>
 
+
   </head>
 
   <body>
@@ -44,24 +45,30 @@
         <h2>Welcome to Study Bears.</h2>
         <h3>Create an Account or Sign in!</h3>
         <a href="signin.html" div class="g-signin2" data-onsuccess="onSignIn"></a>
-      </div>
+      <div class="enter_name">
           <form action="homepage" method="post">
             <label for="name">Name:</label>
               <input type="text" id="name" name="profile_name">
-            </div>
-            <input type="submit" name="submit" value="Submit">
-            <div>
+              <p> </p>
+      </div>
+            
               <label for="email">Email:</label>
               <input type="text" id="email" name="profile_email">
             <input type="submit" name="submit" value="Submit">
           </form>
+          
+      </div>
 
           <div class="data">
+          <!--
           <p>Profile Pic</p>
           <img id="pic" class="img-circle" width="40" height="40"/>
+
+          
           <p>Email Address</p>
           <p id="email" class="alert alert-danger" width="50" height="50"></p>
           <button onclick="signOut()" class="btn btn-danger">SignOut</button>
+          -->
         </div> 
     </div>
   </section>
