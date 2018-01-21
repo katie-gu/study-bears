@@ -21,5 +21,7 @@ from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('studybearsapp/', include('studybearsapp.urls')),
-    path('admin/', admin.site.urls),
+    path('studybearsapp/form', include('studybearsapp.urls'))
+    path('studybearsapp/group', include('studybearsapp.urls'))
+    #path('admin/', admin.site.urls),
 ]
