@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Google Sign</title>
+    <!-- Bootstrap: Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link href='https://fonts.googleapis.com/css?family=Roboto:300,400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="main.css">
+    <meta name="google-signin-client_id" content="616212674350-gc4h74kb9vqe6fq4ok3nfdgsmjffd534.apps.googleusercontent.com">
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="script.js"></script>
+  </head>
+
+  <p>Study Bears</p>  
+  <body>
+    <div class="g-signin2" data-onsuccess="onSignIn"></div>
+    <div class="data">
+      <p>Profile Details</p>
+      <img id="pic" class="img-circle" width="100" height="100"/>
+      <p>Email Address</p>
+      <p id="email" class="alert alert-danger"></p>
+      <button onclick="signOut()" class="btn btn-danger">SignOut</button>
+    </div>
+  </body>
+</html>
