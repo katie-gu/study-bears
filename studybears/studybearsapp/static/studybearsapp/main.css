@@ -126,9 +126,16 @@ img.resize {
 	margin-top: 900px;
 }
 
+#name {
+  font-color: black;
+}
+#email {
+  font-color: black;
+}
 
-
-
-
+.enter_name {
+  text-align: left;
+  margin-left: 20px;
+}
 
 
