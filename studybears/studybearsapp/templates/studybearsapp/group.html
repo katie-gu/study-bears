@@ -2,61 +2,30 @@
 <html>
   <head>
     <title>Study Group Creation Form</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <style>
-    h1 {
-      margin-top: 50px;
-      margin-bottom: 50px;
-      font-family: "Georgia", serif;
-    }
-    label {
-      margin-bottom: 40px;
-      font-size: 20px;
-      font-family: Georgia;
-    }
-
-    input {
-      width: 200px;
-    }
-
-    body {
-      background-image: url('https://www.timeshighereducation.com/sites/default/files/pile-of-books_0.jpg');
-      background-repeat: no-repeat;
-      background-attachment: fixed;
-      background-position: center;
-      background-size: cover;
-    }
-
-    </style>
   </head>
     <body>
-      <div class="jumbotron text-center" style="background-color: navy">
-        <h1 style="text-align:center; color:White" > Study Group Creation Form </h1>
-      </div>
-      <form action="/form" method="post">
-        <div style="text-align:center" style="background-color: gold">
-          <div>
-            <label for="course">Course:</label>
-            <input type="text" id ="name" name="user_name">
-          </div>
-          <div>
-            <label for="location">Location:</label>
-            <input type="text" id="class" name="user_class">
-          </div>
-          <div>
-            <label for="capacity">Capacity:</label>
-            <input type="text" id="location" name="user_location">
-          </div>
-          <div>
-            <label for="time">Time:</label>
-            <input type="text" id="time" name="user_time">
-          </div>
-          <div>
-            <label for="studystrategies">Study Strategies:</label>
-            <input type="text" id="studystrategies" name="user_strategies">
-          </div>
-          <input type="submit" name="submit" value="Submit">
+      <form action="post_group" method="post">
+        <div>
+          <label for="course">Course:</label>
+          <input type="text" id ="class" name="group_class">
         </div>
+        <div>
+          <label for="location">Location:</label>
+          <input type="text" id="location" name="group_location">
+        </div>
+        <div>
+          <label for="capacity">Capacity:</label>
+          <input type="text" id="capacity" name="group_capacity">
+        </div>
+        <div>
+          <label for="time">Time:</label>
+          <input type="text" id="time" name="group_time">
+        </div>
+        <div>
+          <label for="studystrategies">Study Strategies:</label>
+          <input type="text" id="studystrategies" name="group_strategies">
+        </div>
+        <input type="submit" name="submit" value="Submit">
     </form>
   </body>
 </html>
