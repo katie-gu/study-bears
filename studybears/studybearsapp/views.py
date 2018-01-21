@@ -1,17 +1,20 @@
 from django.shortcuts import render
-from studybearsapp.models import StudyGroups, Profile, Location, Date_And_Time, Classes
+from studybearsapp.models import StudyGroups, Profile, Location, Date_And_Time 
 from django.contrib.auth.models import User 
-
+from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
 from django.http import HttpResponse
 
-
 def index(request):
-	profile_email = request.POST.get('profile_email')
-	profile_name = request.POST.get('profile_name')
-	user = User.objects.create_user(profile_name, profile_email, 'x')
-    Profile.objects.create(name=profile_name, email=profile_email, phone_number=2, user=user)
     return render(request, 'studybearsapp/index.html')
+
+@csrf_exempt
+def homepage(request):
+        profile_email = request.POST.get('profile_email')
+        profile_name = request.POST.get('profile_name')
+        user = User.objects.create_user(profile_name, profile_email, 'x')
+        Profile.objects.create(name=profile_name, email=profile_email, phone_number=2, user=user)
+        return render(request, 'studybearsapp/homepage.html')
 
 #this request contains info from the front end enough to create an object
 def form(request): 

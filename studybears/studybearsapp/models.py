@@ -8,15 +8,20 @@ class Date_And_Time(models.Model):
     date_time = models.CharField(max_length=100)
     #date_time = models.DateTimeField()
 
+class Classes(models.Model):
+    my_classes = models.CharField(max_length=100)
+    #date_time = models.DateTimeField()
+
 class Location(models.Model):
     address = models.CharField(max_length = 100)
     #x_coordinate = models.CharField(max_length = 50)
     #y_coordinate = models.CharField(max_length = 50)
 
+
 class StudyGroups(models.Model):
     course = models.CharField(max_length = 200)
     location = models.CharField(max_length = 200)
-    "date_times = models.ManyToManyField(Date_And_Time)"
+    date_times = models.ManyToManyField(Date_And_Time)
     size = models.IntegerField()
     capacity = models.IntegerField()
     "study_strategies = models.TextField()"
@@ -49,6 +54,8 @@ class Profile(models.Model):
     time_availabilities = models.ManyToManyField(Date_And_Time)
     my_groups = models.ManyToManyField(StudyGroups)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    my_classes = models.ManyToManyField(Classes)
+
 
     
 
