@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from studybearsapp.models import StudyGroups, Profile, Location, Date_And_Time
+from studybearsapp.models import StudyGroups, Profile, Location, Date_And_Time, Classes
 from django.contrib.auth.models import User 
 
 # Create your views here.
@@ -11,22 +11,30 @@ def index(request):
 
 #this request contains info from the front end enough to create an object
 def form(request): 
-	name_from_request = request.POST.get('name')
+	name_from_request = request.POST.get('user_name')
 	prof_obj = Profile.objects.get(name= name_from_request)
 
-	location_from_request = request.POST.get('location')
+	location_from_request = request.POST.get('user_location')
 	new_location_model = Location.objects.create(address = location_from_request)
 	prof_obj.potential_locations.add(new_location_model)
 
-	strategies_from_request = request.POST.get('studystrategies')
+	strategies_from_request = request.POST.get('user_studystrategies')
 
-	class_from_request = request.POST.get('class')
+	class_from_request = request.POST.get('user_class')
+	class_model = Date_And_Time.objects.create(my_classes = class_from_request)
+	proj_obj.classes.add(class_model)
 
-	time_from_request = request.POST.get('time')
-	#time_model = 
-
+	time_from_request = request.POST.get('user_time')
+	time_model = Date_And_Time.objects.create(date_time = time_from_request)
+	proj_obj.time_availabilities.add(time_model)	
 
 	prof_obj.save()
 
 	return render(request,'studybearsapp/form.html')
+
+def group(request): 
+
+	StudyGroups.objects.create(course=request.POST.get('group_class'), location=request.POST.get('group_location'), size=0, capacity=request.POST.get('group_capacity'))
+	return render(request, 'studybearsapp/group.html')
+	#add the user to this group
 
