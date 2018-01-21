@@ -1,4 +1,7 @@
 from django.db import migrations, models
+from django.contrib.auth.models import User 
+from django.db.models.signals import post_save
+from django.dispatch import receiver 
 
 # Create your models here.
 class Date_And_Time(models.Model):
@@ -35,7 +38,7 @@ class StudyGroups(models.Model):
             user.my_groups.remove(self)
             size -= 1
 
-class User(models.Model):
+class Profile(models.Model):
     """ my_requests are the user's requests to join other groups
     """
     name = models.CharField(max_length = 50)
@@ -44,6 +47,18 @@ class User(models.Model):
     potential_locations = models.ManyToManyField(Location)
     time_availabilities = models.ManyToManyField(Date_And_Time)
     my_groups = models.ManyToManyField(StudyGroups)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    
+
+    # @receiver(post_save, sender=User)
+    # def create_user_profile(sender, instance, created, **kwargs): 
+    #     if created: 
+    #         Profile.objects.create(user=instance)
+
+    # @receiver(post_save, sender=User)
+    # def save_user_profile(sender, instance, **kwargs): 
+    #     instance.profile.save()
 
     def add_new_member(self, studygroup):
         if studygroup.is_open():
@@ -52,11 +67,7 @@ class User(models.Model):
         else:
             print("Error: Cannot add user because group is full.")
 
-    "study_group = models.ForeignKey(StudyGroups, on_delete=models.CASCADE)"
+   # "study_group = models.ForeignKey(StudyGroups, on_delete=models.CASCADE)"
 
 class Request(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-
-class Animal(models.Model):
-    name = models.CharField(max_length = 50)
-    sound = models.CharField(max_length = 50)
+    user = models.ForeignKey(Profile, on_delete=models.CASCADE)
