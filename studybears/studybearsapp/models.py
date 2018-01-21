@@ -14,8 +14,6 @@ class Classes(models.Model):
 
 class Location(models.Model):
     address = models.CharField(max_length = 100)
-    #x_coordinate = models.CharField(max_length = 50)
-    #y_coordinate = models.CharField(max_length = 50)
 
 
 class StudyGroups(models.Model):
