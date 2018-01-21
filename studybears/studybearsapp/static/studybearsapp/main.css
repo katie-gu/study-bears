@@ -134,6 +134,7 @@ img.resize {
 }
 
 .enter_name {
+  font-color: black;
   text-align: left;
   margin-left: 20px;
 }
