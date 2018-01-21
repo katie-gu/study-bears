@@ -14,8 +14,6 @@ class Classes(models.Model):
 
 class Location(models.Model):
     address = models.CharField(max_length = 100)
-    #x_coordinate = models.CharField(max_length = 50)
-    #y_coordinate = models.CharField(max_length = 50)
 
 
 class StudyGroups(models.Model):
@@ -76,6 +74,37 @@ class Profile(models.Model):
             print("Error: Cannot add user because group is full.")
 
    # "study_group = models.ForeignKey(StudyGroups, on_delete=models.CASCADE)"
+
+    def compare_group_with_user(self, group, course, location):
+        #current best group is g_one
+        if group.is_open() != True:
+            return 0
+        if group.course != course:
+            return 0
+        if group.location != location:
+            return 1
+        else:
+            return 2
+
+    def find_best_group(self, course, location):
+    #find the best group for a profile
+        best_group = None
+        best_num_attributes = 0
+        for group in StudyGroups.objects.all():
+            num_attributes = self.compare_group_with_user(group, course, location)
+            if num_attributes == 2:
+                #if returns True, that means the group is better than best_group
+                # best_num_attributes = num_attributes
+                return group
+            elif best_num_attributes < num_attributes:
+                best_num_attributes = num_attributes
+                best_group = group
+                #return early
+        if best_group == None:
+            print("No groups available currently.")
+            return
+
+        return best_group
 
 class Request(models.Model):
     user = models.ForeignKey(Profile, on_delete=models.CASCADE)

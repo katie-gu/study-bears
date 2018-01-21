@@ -23,6 +23,8 @@ urlpatterns = [
     path('studybearsapp/', include('studybearsapp.urls')),
     path('studybearsapp/form', include('studybearsapp.urls')),
     path('studybearsapp/group', include('studybearsapp.urls')), 
-    path('studybearsapp/homepage', include('studybearsapp.urls'))
+    path('studybearsapp/homepage', include('studybearsapp.urls')),
+    path('studybearsapp/post_group', include('studybearsapp.urls')),
+    path('studybearsapp/post_form', include('studybearsapp.urls'))
     #path('admin/', admin.site.urls),
 ]

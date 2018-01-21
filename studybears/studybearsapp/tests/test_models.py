@@ -76,3 +76,17 @@ class YourTestClass(TestCase):
     def tearDown(self):
        #Clean up run after every test method.
        pass
+
+    def test_find_best_group(self):
+        katie = Profile.objects.get(name="Katie")
+        best_group_actual = katie.find_best_group("CS 70", "Moffitt")
+        best_group_expected = StudyGroups.objects.get(course="CS 70", location="Moffitt", size=0, capacity=3)
+        print(best_group_expected.course)
+        print(best_group_actual.course)
+        print(best_group_expected.size)
+        print(best_group_actual.size)
+        self.assertTrue(best_group_expected.id == best_group_actual.id)
+
+    def tearDown(self):
+       #Clean up run after every test method.
+       pass
