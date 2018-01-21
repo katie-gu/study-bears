@@ -43,7 +43,20 @@
       <div class="row text-center">
         <h2>Welcome to Study Bears.</h2>
         <h3>Create an Account or Sign in!</h3>
-        <a href="signin.html" div class="g-signin2" data-onsuccess="onSignIn"></a></div>
+        <a href="signin.html" div class="g-signin2" data-onsuccess="onSignIn"></a>
+      </div>
+          <form action="/index" method="post">
+            <div>
+              <label for="email">Email:</label>
+              <input type="text" id="email" name="profile_email">
+            </div>
+            <div>
+              <label for="name">Name:</label>
+              <input type="text" id="name" name="profile_name">
+            </div>
+            <input type="submit" name="submit" value="Submit">
+          </form>
+
           <div class="data">
           <p>Profile Pic</p>
           <img id="pic" class="img-circle" width="40" height="40"/>
@@ -52,7 +65,6 @@
           <button onclick="signOut()" class="btn btn-danger">SignOut</button>
         </div> 
     </div>
-
   </section>
   
   <!--
