@@ -5,12 +5,13 @@ from django.dispatch import receiver
 
 # Create your models here.
 class Date_And_Time(models.Model):
-    date_time = models.DateTimeField()
+    date_time = models.CharField(max_length=100)
+    #date_time = models.DateTimeField()
 
 class Location(models.Model):
     address = models.CharField(max_length = 100)
-    x_coordinate = models.CharField(max_length = 50)
-    y_coordinate = models.CharField(max_length = 50)
+    #x_coordinate = models.CharField(max_length = 50)
+    #y_coordinate = models.CharField(max_length = 50)
 
 class StudyGroups(models.Model):
     course = models.CharField(max_length = 200)
