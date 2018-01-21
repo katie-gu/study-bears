@@ -5,11 +5,11 @@
     <!-- Bootstrap: Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link href='https://fonts.googleapis.com/css?family=Roboto:300,400,700' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="main.css">
+    <link rel="stylesheet" type= "text/css" href="https://raw.githubusercontent.com/katie-gu/study-bears/master/studybears/studybearsapp/static/main.css">
     <meta name="google-signin-client_id" content="616212674350-gc4h74kb9vqe6fq4ok3nfdgsmjffd534.apps.googleusercontent.com">
     <script src="https://apis.google.com/js/platform.js" async defer></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="script.js"></script>
+    <script src="https://raw.githubusercontent.com/katie-gu/study-bears/master/studybears/studybearsapp/static/script.js"></script>
 
   </head>
 
@@ -45,7 +45,7 @@
         <h3>Create an Account or Sign in!</h3>
         <a href="signin.html" div class="g-signin2" data-onsuccess="onSignIn"></a>
       </div>
-          <form action="/signin" method="post">
+          <form action="homepage" method="post">
             <div>
               <label for="email">Email:</label>
               <input type="text" id="email" name="profile_email">
@@ -54,6 +54,7 @@
               <label for="name">Name:</label>
               <input type="text" id="name" name="profile_name">
             </div>
+            <input type="hidden" name="{{ craft.config.csrfTokenName }}" value="{{ craft.request.csrfToken }}">
             <input type="submit" name="submit" value="Submit">
           </form>
 
