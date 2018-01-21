@@ -11,9 +11,170 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="/static/studybearsapp/script.js"></script>
 
+    <style>
+    .g-signin2{
+      margin-left: 525px; /*500*/
+        margin-top: 10px; /*200*/
+    }
+
+
+    .data{
+        display:none;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      font-weight: 300;
+    }
+
+    header {
+      padding: 20px 0;
+    }
+
+    header .row,
+    footer .row {
+      display: flex;
+      align-items: center;
+    }
+
+    header h1 {
+      font-weight: 700;
+      margin: 0;
+    }
+
+    header nav {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    header p {
+      padding: 0 20px;
+      margin: 0;
+    }
+
+    .jumbotron {
+      display: flex;
+      align-items: center;
+      background-image: url('https://az616578.vo.msecnd.net/files/2016/12/08/636168226067377027624645327_study.jpg');
+      background-size: cover;
+      color: #ffffff;
+      height: 500px;
+      text-shadow: 0.25px 0.25px 0.25px #000000;
+    }
+
+    .jumbotron h2 {
+      font-size: 60px;
+      font-weight: 700;
+      margin: 0;
+      color: #fff;
+    }
+
+    .jumbotron h3 {
+      margin: 0 0 20px;
+      color: #fff;
+    }
+
+    section .row img {
+      margin: 0 0 30px;
+      width: 100%;
+    }
+
+    .col-md-6 {
+      margin: 0 0 30px;
+    }
+
+    .btn.btn-primary {
+      border-radius: 2px;
+      border: 0px;
+      color: white;
+      text-shadow: none;
+      background-color: purple;
+    }
+
+    .btn.btn-primary:hover {
+      color: #ffffff;
+      background-color: #fbd1d5;
+    }
+
+    .btn-secondary {
+      background-color: #E8DFE0;
+      color: #ffffff;
+      margin: 0 0 30px;
+    }
+
+    footer {
+      font-size: 12px;
+      padding: 20px 0;
+    }
+
+    footer .col-sm-8 {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    footer ul {
+      list-style: none;
+    }
+
+    footer li img {
+      width: 32px;
+      height: 32px;
+    }
+
+    img.resize {
+      max-width: 25%;
+      max-height: 25%;
+    }
+
+    /*check why me_section function does not change font accurately*/
+    .me_section {
+      font-size: 20px;
+      font-family: Verdana;
+    }
+
+    /*top row text location changes*/
+    .col-sm-4 {
+    }
+
+    .data {
+      margin-top: 900px;
+    }
+
+    #name {
+      font-color: black;
+    }
+    #email {
+      font-color: black;
+    }
+
+    /* .enter_name {
+      font-color: black;
+      text-align: left;
+      margin-left: 20px;
+    } */
+
+    #name_form {
+      /* margin-left: 100px; */
+      text-align: center;
+    }
+
+    #email_form {
+      text-align: center;
+    }
+
+    input[type=text] {
+      color: black;
+    }
+
+    #submit_button {
+      background-color: white;
+      font-weight: bold;
+      color: black;
+    }
+
+  </style>
 
   </head>
-
   <body>
   <!--
     <div class="g-signin2" data-onsuccess="onSignIn"></div>
@@ -35,7 +196,7 @@
         <a href="./my_group.html">My Group</a>
         <p></p>
         <p>Contact</p>
-      </nav>  
+      </nav>
     </div>
   </header>
 
@@ -45,18 +206,19 @@
         <h2>Welcome to Study Bears.</h2>
         <h3>Create an Account or Sign in!</h3>
         <a href="signin.html" div class="g-signin2" data-onsuccess="onSignIn"></a>
-      <div class="enter_name">
+      <!-- <div class="enter_name"> -->
           <form action="homepage" method="post">
-            <label for="name">Name:</label>
+            <label for="name" id="name_form">Name:</label>
               <input type="text" id="name" name="profile_name">
+            <p> </p>
+      <!-- </div> -->
+
+              <label for="email" id="email_form">Email:</label>
+                <input type="text" id="email" name="profile_email">
               <p> </p>
-      </div>
-            
-              <label for="email">Email:</label>
-              <input type="text" id="email" name="profile_email">
-            <input type="submit" name="submit" value="Submit">
+            <input type="submit" id="submit_button" name="submit" value="Submit">
           </form>
-          
+
       </div>
 
           <div class="data">
@@ -64,58 +226,38 @@
           <p>Profile Pic</p>
           <img id="pic" class="img-circle" width="40" height="40"/>
 
-          
+
           <p>Email Address</p>
           <p id="email" class="alert alert-danger" width="50" height="50"></p>
           <button onclick="signOut()" class="btn btn-danger">SignOut</button>
           -->
-        </div> 
+        </div>
     </div>
   </section>
-  
+
   <!--
   <section class="container">
     <div class="row">
       <figure class="col-sm-6">
         <p>make groups</p>
         <img src="https://s3.amazonaws.com/codecademy-content/projects/make-a-website/lesson-4/kitchen.jpg">
-      </figure> 
+      </figure>
       <figure class="col-sm-6">
         <p>create scheduled calendar</p>
         <img src="https://s3.amazonaws.com/codecademy-content/projects/make-a-website/lesson-4/woodwork.jpg">
-      </figure> 
+      </figure>
     </div>
     <div class="row">
       <figure class="col-sm-6">
         <p>group message</p>
         <img src="https://s3.amazonaws.com/codecademy-content/projects/make-a-website/lesson-4/gifts.jpg">
-      </figure> 
+      </figure>
       <figure class="col-sm-6">
         <p>make study buddies</p>
         <img src="https://s3.amazonaws.com/codecademy-content/projects/make-a-website/lesson-4/antique.jpg">
-      </figure> 
-    </div>  
-  </section> 
-  --> 
-
-  <footer class="container">
-    <div class="row">
-      <p class="col-sm-4">&copy; 2017 Barman</p>
-      <ul class="col-sm-8">
-        <li class="col-sm-1">
-          <img src="https://s3.amazonaws.com/codecademy-content/projects/make-a-website/lesson-4/twitter.svg">
-        </li>      
-        <li class="col-sm-1">
-          <img src="https://s3.amazonaws.com/codecademy-content/projects/make-a-website/lesson-4/facebook.svg">
-        </li>
-        <li class="col-sm-1">
-          <img src="https://s3.amazonaws.com/codecademy-content/projects/make-a-website/lesson-4/instagram.svg">
-        </li>
-        <li class="col-sm-1">
-          <img src="https://s3.amazonaws.com/codecademy-content/projects/make-a-website/lesson-4/medium.svg">
-        </li>   
-      </ul>
-    </div>  
-  </footer>  
+      </figure>
+    </div>
+  </section>
+  -->
 </body>
 </html>
