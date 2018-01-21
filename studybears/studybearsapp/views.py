@@ -64,7 +64,9 @@ def post_form(request):
 
 	prof_obj.save()
 
-	return render(request, 'studybearsapp/post_form.html')
+	best_group = prof_obj.find_best_group(class_from_request, location_from_request)
+
+	return render(request, 'studybearsapp/post_form.html', {'Name:': best_group.course, 'Time':best_group.date_times.date_time, 'Location': best_group.location.address, 'Capacity': best_group.capacity})
 
 @csrf_exempt
 def group(request): 
