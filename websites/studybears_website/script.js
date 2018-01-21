@@ -9,6 +9,7 @@ function onSignIn(googleUser)
 	$(".data").css("display","block");
 	$("#pic").attr("src",profile.getImageUrl());
 	$("#email").text(profile.getEmail());
+	window.location.href = "main.css";
 }
 
 function signOut()
