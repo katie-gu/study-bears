@@ -1,7 +1,7 @@
 from django.db import migrations, models
-from django.contrib.auth.models import User 
+from django.contrib.auth.models import User
 from django.db.models.signals import post_save
-from django.dispatch import receiver 
+from django.dispatch import receiver
 
 # Create your models here.
 class Date_And_Time(models.Model):
@@ -55,15 +55,15 @@ class Profile(models.Model):
     my_classes = models.ManyToManyField(Classes)
 
 
-    
+
 
     # @receiver(post_save, sender=User)
-    # def create_user_profile(sender, instance, created, **kwargs): 
-    #     if created: 
+    # def create_user_profile(sender, instance, created, **kwargs):
+    #     if created:
     #         Profile.objects.create(user=instance)
 
     # @receiver(post_save, sender=User)
-    # def save_user_profile(sender, instance, **kwargs): 
+    # def save_user_profile(sender, instance, **kwargs):
     #     instance.profile.save()
 
     def add_new_member(self, studygroup):
@@ -108,3 +108,15 @@ class Profile(models.Model):
 
 class Request(models.Model):
     user = models.ForeignKey(Profile, on_delete=models.CASCADE)
+
+class Profile1(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    email_confirmed = models.BooleanField(default=False)
+    def __str__(self):
+        return self.user.username
+
+@receiver(post_save, sender=User)
+def update_user_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile1.objects.create(user=instance)
+    instance.profile1.save()

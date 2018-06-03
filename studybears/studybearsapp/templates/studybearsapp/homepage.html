@@ -1,18 +1,29 @@
 <html>
 <head>
   <title> Home </title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <style>
     h1 {
       margin-top: 50px;
       margin-bottom: 50px;
+      font-family: "Georgia", serif;
     }
-    #group_form {
+    body {
+      background-image: url('http://news.berkeley.edu/wp-content/uploads/2017/08/campus-aerial-shot-750.jpg');
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      background-position: center;
+      background-size: cover;
+    }
+    #my_groups {
       /*position: fixed;
       left: 100px;
       right: 100px;
       top: 100px;*/
       height: 100px;
       width: 200px;
+      font-family: "Georgia", serif;
+      font-size: 30px;
       margin-bottom: 50px;
     }
 
@@ -23,38 +34,34 @@
       top: 300px;*/
       height: 100px;
       width: 200px;
+      font-family: "Georgia", serif;
+      font-size: 30px;
       margin-bottom: 50px;
     }
 
-    #my_groups {
+    #make_group {
       /*position: fixed;
       left: 100px;
       right: 100px;
       top: 500px;*/
       height: 100px;
       width: 200px;
+      font-family: "Georgia", serif;
+      font-size: 30px;
       margin-bottom: 50px;
     }
   </style>
 </head>
 <body>
-  <h1 style="text-align:center"> Home </h1>
-  <div style="text-align:center;">
+  <div class="jumbotron text-center" style="background-color: navy">
+    <h1 style="text-align:center; color:White" > Home </h1>
+  </div>
+  <div class="container-fluid" style="text-align:center">
+    <button id="my_groups" type="button"> My Groups </button>
     <p> </p>
-    <form action="group" method="post">
-            <button type="submit" id= "group_form" name="group_form" value="group_form">Make New Group</button>
-    </form>
-    <!--<a href="form.html"><button id="fill_form" type="button">Fill Form</button></a>-->
+    <a href="form.html"><button id="fill_form" type="button">Fill Form</button></a>
     <p> </p>
-    <p> </p>
-    <form action="form" method="post">
-            <button type="submit" id= "fill_form" name="fill_form" value="fill_form">Fill Form</button>
-          </form>
-    <!--<a href="form.html"><button id="fill_form" type="button">Fill Form</button></a>-->
-    <p> </p>
-     <form action="form" method="post">
-            <button type="submit" id= "my_groups" name="my_groups" value="my_groups">My Groups</button>
-          </form>
+    <a href="group.html"><button id="make_group" type="button"> Make Group </button> </a>
     <p> </p>
   </div>
 </body>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title> Home </title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <style>
+      h1 {
+        margin-top: 50px;
+        margin-bottom: 50px;
+        color: white;
+        font-family: "Georgia", serif;
+      }
+      body {
+        background-image: url('http://www.berkeleyside.com/wp-content/uploads/2017/08/campus-aerial-shot-750.jpg');
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-position: center;
+        background-size: cover;
+      }
+      </style>
+    </head>
+
+    <body>
+      <div class="page-header">
+        <h1 align='center'>Study Bears</h1>
+      </div>
+      <div class="content container">
+        <div class="row">
+            <div class="col-md-8">
+              {% block content %}
+              {% endblock %}
+            </div>
+          </div>
+        </div>
+      </body>
+  </html>

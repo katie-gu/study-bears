@@ -1,0 +1,15 @@
+{% extends 'studybearsapp/base.html' %}
+
+{% block title %} Login{% endblock %}
+{% block content %}
+  <h2 style="color:white">Login</h2>
+   <form method="post">
+    {% csrf_token %}
+    {% for field in form %}
+      <p>
+        <p style="color:white"> {{field.label}} </p>
+        {{field}}
+    {% endfor %} <br> <br>
+    <button style="color:black" type="submit">Login</button>
+ </form>
+{% endblock %}
