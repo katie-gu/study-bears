@@ -1,0 +1,10 @@
+{% extends 'studybearsapp/profile_page_template.html' %}
+{% block content %}
+<h1> Create Group </h1>
+<form action='create_group_post' method=post>
+    {% csrf_token %}
+    {{ form.as_p }}
+    {{ events }}
+    <input type=submit value="Submit">
+</form>
+{% endblock %}

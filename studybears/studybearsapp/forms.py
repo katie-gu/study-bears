@@ -10,3 +10,11 @@ class SignUpForm(UserCreationForm):
     class Meta:
         model = User
         fields = ('username', 'first_name', 'last_name', 'email', 'password1', 'password2',)
+
+class CreateGroupForm(forms.Form):
+    group_name = forms.CharField(label='Group Name', max_length=200, required=True)
+    course = forms.CharField(label='Course', max_length=200, required=True)
+    date_time = forms.DateTimeField(label='Meeting Date and Time', input_formats=['%m/%d/%y %H:%M'])
+    location = forms.CharField(label='Meeting Location', max_length=200, required=True)
+    capacity = forms.IntegerField(label='Capacity')
+    study_strategies = forms.CharField(label='Study Strategies', max_length=500, required=True)

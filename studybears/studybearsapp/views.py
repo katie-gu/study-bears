@@ -1,3 +1,5 @@
+import os
+import httplib2
 from django.shortcuts import render, redirect
 from studybearsapp.models import StudyGroups, Profile, Location, Date_And_Time, Classes
 from django.contrib.auth.models import User
@@ -5,15 +7,19 @@ from django.views.decorators.csrf import csrf_exempt
 from django.template import loader
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
-from  studybearsapp.forms import SignUpForm
+from studybearsapp.forms import SignUpForm, CreateGroupForm
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.template.loader import render_to_string
 from studybearsapp.tokens import account_activation_token
+from django.shortcuts import get_object_or_404
 # Create your views here.
 from django.http import HttpResponse
-
+from django.contrib.auth.decorators import login_required
+import google.oauth2.credentials
+import google_auth_oauthlib.flow
+import googleapiclient.discovery
 def index(request):
     return render(request, 'studybearsapp/index.html')
 
@@ -92,11 +98,7 @@ def post_group(request):
 
 #Displays a list of groups the user belongs to.
 def profile_page(request):
-    latest_group_list = StudyGroups.objects.order_by('-course')[:5]
-    output = ','.join([group.course for group in latest_group_list])
-    context = {'latest_group_list':
-                latest_group_list}
-    return render(request, 'studybearsapp/profile_page.html', context)
+    return render(request, 'studybearsapp/profile_page.html')
 
 def login_page(request):
     username = request.POST['username']
@@ -146,6 +148,118 @@ def activate(request, uidb64, token):
 
 def account_activation_sent(request):
     return render(request, 'studybearsapp/account_activation_sent.html')
+
+def create_group(request):
+    if request.method == 'POST':
+        form = CreateGroupForm(request.POST)
+        if form.is_valid():
+            group_name = form.cleaned_data['group_name']
+            course = form.cleaned_data['course']
+            date_time = form.cleaned_data['date_time']
+            location = form.cleaned_data['location']
+            capacity = form.cleaned_data['capacity']
+            study_strategies = form.cleaned_data['study_strategies']
+            StudyGroups.objects.create(name=group_name, course=course, date_time=date_time,
+                                        location=location, capacity=capacity, study_strategies=study_strategies)
+            new_group = StudyGroups.objects.get(name__exact=group_name, course__exact=course, date_time__exact=date_time,
+                                        location__exact=location, capacity__exact=capacity, study_strategies__exact=study_strategies)
+            return redirect(new_group)
+    else:
+        form = CreateGroupForm()
+        authorize(request)
+        if 'credentials' not in request.session:
+            return redirect('authorize')
+
+        credentials = google.oauth2.credentials.Credentials(
+          **request.session['credentials'])
+        calendar = googleapiclient.discovery.build(API_SERVICE_NAME, API_VERSION, credentials=credentials)
+        events = calendar.events().list().execute()
+        request.session['credentials'] = credentials_to_dict(credentials)
+    return render(request, 'studybearsapp/create_group.html', {'form': form, 'events': events})
+
+def authorize(request):
+    flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
+                CLIENT_SECRETS_FILE,
+                scopes=['https://www.googleapis.com/auth/calendar'],
+                redirect_uri='http://127.0.0.1:8000/studybearsapp/create_form/oauth2callback',
+                )
+    authorization_url, state = flow.authorization_url(access_type='offline', include_granted_scopes='true')
+    request.session['state'] = state
+    return redirect(authorization_url)
+
+def oauth2callback(request):
+    state = request.session['state']
+    flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
+                CLIENT_SECRETS_FILE,
+                scope=['https://www.googleapis.com/auth/calendar'],
+                redirect_uri='http://127.0.0.1:8000/studybearsapp/create_form/oauth2callback',
+                )
+    authorization_response = request.url
+    flow.fetch_token(authorization_response=authorization_response)
+    credentials = flow.credentials
+    request.session['credentials'] = credentials_to_dict(credentials)
+    return redirect('create_group')
+
+def credentials_to_dict(credentials):
+  return {'token': credentials.token,
+          'refresh_token': credentials.refresh_token,
+          'token_uri': credentials.token_uri,
+          'client_id': credentials.client_id,
+          'client_secret': credentials.client_secret,
+          'scopes': credentials.scopes}
+
+def groups(request):
+    study_groups = StudyGroups.objects.all()
+    return render(request, 'studybearsapp/groups.html', {'study_groups': study_groups})
+
+def group_detail_page(request, pk):
+     group_id = get_object_or_404(StudyGroups, pk=pk) #Get group, if it exists.
+     return render(request, 'studybearsapp/group_detail_page.html', {'group': group_id})
+
+def group_update_page(request, pk):
+    group_id = get_object_or_404(StudyGroups, pk=pk)
+    if request.method == 'POST':
+        form = CreateGroupForm(request.POST)
+        if form.is_valid():
+            group_name = form.cleaned_data['group_name']
+            course = form.cleaned_data['course']
+            date_time = form.cleaned_data['date_time']
+            location = form.cleaned_data['location']
+            capacity = form.cleaned_data['capacity']
+            study_strategies = form.cleaned_data['study_strategies']
+            if group_name != '' and group_id.name != group_name:
+                group_id.name = group_name
+            if course != '' and group_id.course != course:
+                group_id.course = course
+            if date_time != '' and group_id.date_time != date_time:
+                group_id.date_time = date_time
+            if location != '' and group_id.location != location:
+                group_id.location = location
+            if capacity != '' and group_id.capacity != capacity:
+                group_id.capacity = capacity
+            if study_strategies != '' and group_id.study_strategies != study_strategies:
+                group_id.study_strategies = study_strategies
+            group_id.save()
+            return redirect(group_id)
+    else:
+        data = {'group_name': group_id.name,
+                'course': group_id.course,
+                'date_time': group_id.date_time,
+                'location': group_id.location,
+                'capacity': group_id.capacity,
+                'study_strategies': group_id.study_strategies
+                }
+        form = CreateGroupForm(initial=data)
+    return render(request, 'studybearsapp/update_group.html', {'form': form, 'group': group_id})
+
+def group_delete_page(request, pk):
+    group_id = get_object_or_404(StudyGroups, pk=pk)
+    if request.method == 'POST':
+        group_id.delete()  #Delete the group from the database.
+        return redirect('groups')
+    return render(request, 'studybearsapp/delete_group.html', {'group': group_id})
+
+
 
  #def logout_view(request):
      #logout(request)

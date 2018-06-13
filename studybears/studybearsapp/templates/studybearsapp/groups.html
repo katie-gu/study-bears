@@ -1,0 +1,16 @@
+{% extends 'studybearsapp/profile_page_template.html' %}
+{% block content %}
+<h1> My Groups </h1>
+{% if study_groups %}
+  {% for group in study_groups %}
+    <ul>
+      <li>
+        <a href='{{group.get_absolute_url}}'> {{group.name}} </a>
+      </li>
+    </ul>
+    {% endfor %}
+{% else %}
+  <p> There are no books to display. </p>
+{% endif %}
+{% endblock %}
+}}

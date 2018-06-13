@@ -1,0 +1,9 @@
+{% extends 'studybearsapp/profile_page_template.html' %}
+{% block content %}
+<h1> Update Group </h1>
+<form action='{{group.get_absolute_url|add:"/update/post"}}' method=post>
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type=submit value="Submit">
+</form>
+{% endblock %}

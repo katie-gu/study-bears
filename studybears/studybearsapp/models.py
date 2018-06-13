@@ -1,7 +1,9 @@
 from django.db import migrations, models
 from django.contrib.auth.models import User
+from datetime import datetime
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.urls import reverse
 
 # Create your models here.
 class Date_And_Time(models.Model):
@@ -17,12 +19,13 @@ class Location(models.Model):
 
 
 class StudyGroups(models.Model):
+    name = models.CharField(max_length=200, default='')
     course = models.CharField(max_length = 200)
+    date_time = models.DateTimeField(default=datetime.now)
     location = models.CharField(max_length = 200)
-    date_times = models.ManyToManyField(Date_And_Time)
-    size = models.IntegerField()
+    "size = models.IntegerField()"
     capacity = models.IntegerField()
-    "study_strategies = models.TextField()"
+    study_strategies = models.TextField(max_length=500, default='')
     "members = models.OneToManyField('User')"
     "pending_requests = models.ManyToManyField('Request')"
     def is_open(self):
@@ -41,6 +44,11 @@ class StudyGroups(models.Model):
             self.members.remove(user)
             user.my_groups.remove(self)
             size -= 1
+    def get_absolute_url(self):
+        """
+        Returns the url to access a detail record for this group.
+        """
+        return reverse('group_detail_page', args=[str(self.id)])
 
 class Profile(models.Model):
     """ my_requests are the user's requests to join other groups

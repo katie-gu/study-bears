@@ -1,0 +1,9 @@
+{% extends 'studybearsapp/profile_page_template.html' %}
+{% block content %}
+<h1> Confirm Delete </h1>
+<p> Are you sure you want to delete {{group.name}}? </p>
+<form action='{{group.get_absolute_url|add:"/delete/post"}}' method=post>
+  {% csrf_token %}
+  <input type=submit value="Delete">
+</form>
+{% endblock %}
