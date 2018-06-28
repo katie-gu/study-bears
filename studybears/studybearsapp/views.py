@@ -7,7 +7,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.template import loader
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
-from studybearsapp.forms import SignUpForm, CreateGroupForm
+from studybearsapp.forms import SignUpForm, CreateGroupForm, CreateMeetingForm, AddMemberForm
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
@@ -15,11 +15,18 @@ from django.template.loader import render_to_string
 from studybearsapp.tokens import account_activation_token
 from django.shortcuts import get_object_or_404
 # Create your views here.
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 import google.oauth2.credentials
 import google_auth_oauthlib.flow
 import googleapiclient.discovery
+from django.contrib.auth.decorators import login_required
+from django.urls import reverse
+CLIENT_SECRETS_FILE = os.path.join(os.path.dirname(__file__), "client_secret_661856853782-etoetkk761euisd0gcdk706sbnjvl84n.apps.googleusercontent.com.json")
+SCOPES = ['https://www.googleapis.com/auth/calendar']
+API_SERVICE_NAME = 'calendar'
+API_VERSION = 'v3'
+
 def index(request):
     return render(request, 'studybearsapp/index.html')
 
@@ -97,9 +104,12 @@ def post_group(request):
 	return render(request, 'studybearsapp/post_group.html')
 
 #Displays a list of groups the user belongs to.
-def profile_page(request):
-    return render(request, 'studybearsapp/profile_page.html')
+#@login_required
+def profile_page(request, username):
+    user = User.objects.get(username = username)
+    return render(request, 'studybearsapp/profile_page.html', {'user': user})
 
+@csrf_exempt
 def login_page(request):
     username = request.POST['username']
     password = request.POST['password']
@@ -107,7 +117,9 @@ def login_page(request):
     if user is not None:
         login(request, user)
         #Redirect to success page.
-        return render(request, 'studybearsapp/profile_page.html')
+        username = User.objects.get(username__exact=request.user)
+        url = reverse('profile_page', kwargs={'username': username.username})
+        return HttpResponseRedirect(url)
     else:
         #Return an 'invalid login' user message.
         return render(request, 'studybearsapp/invalid_login.html')
@@ -155,50 +167,47 @@ def create_group(request):
         if form.is_valid():
             group_name = form.cleaned_data['group_name']
             course = form.cleaned_data['course']
-            date_time = form.cleaned_data['date_time']
-            location = form.cleaned_data['location']
             capacity = form.cleaned_data['capacity']
             study_strategies = form.cleaned_data['study_strategies']
-            StudyGroups.objects.create(name=group_name, course=course, date_time=date_time,
-                                        location=location, capacity=capacity, study_strategies=study_strategies)
-            new_group = StudyGroups.objects.get(name__exact=group_name, course__exact=course, date_time__exact=date_time,
-                                        location__exact=location, capacity__exact=capacity, study_strategies__exact=study_strategies)
+            StudyGroups.objects.create(name=group_name, course=course,
+                                        capacity=capacity, study_strategies=study_strategies)
+            new_group = StudyGroups.objects.get(name__exact=group_name, course__exact=course,
+                                        capacity__exact=capacity, study_strategies__exact=study_strategies)
             return redirect(new_group)
     else:
         form = CreateGroupForm()
-        authorize(request)
-        if 'credentials' not in request.session:
-            return redirect('authorize')
+    return render(request, 'studybearsapp/create_group.html', {'form': form})
 
-        credentials = google.oauth2.credentials.Credentials(
-          **request.session['credentials'])
-        calendar = googleapiclient.discovery.build(API_SERVICE_NAME, API_VERSION, credentials=credentials)
-        events = calendar.events().list().execute()
-        request.session['credentials'] = credentials_to_dict(credentials)
-    return render(request, 'studybearsapp/create_group.html', {'form': form, 'events': events})
-
-def authorize(request):
+def authorize(request, pk):
+    group_id = get_object_or_404(StudyGroups, pk=pk)
+    group_url = group_id.get_absolute_url()
+    redirect_url = 'http://127.0.0.1:8000/studybearsapp/' + group_url + '/create_meeting/oauth2callback'
     flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
                 CLIENT_SECRETS_FILE,
                 scopes=['https://www.googleapis.com/auth/calendar'],
-                redirect_uri='http://127.0.0.1:8000/studybearsapp/create_form/oauth2callback',
+                redirect_uri=redirect_url,
                 )
     authorization_url, state = flow.authorization_url(access_type='offline', include_granted_scopes='true')
     request.session['state'] = state
     return redirect(authorization_url)
 
-def oauth2callback(request):
+def oauth2callback(request, pk):
+    group_id = get_object_or_404(StudyGroups, pk=pk)
+    group_url = group_id.get_absolute_url()
+    redirect_url = group_url + '/create_meeting/post'
     state = request.session['state']
     flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
                 CLIENT_SECRETS_FILE,
-                scope=['https://www.googleapis.com/auth/calendar'],
-                redirect_uri='http://127.0.0.1:8000/studybearsapp/create_form/oauth2callback',
+                scopes=['https://www.googleapis.com/auth/calendar'],
+                redirect_uri='http://127.0.0.1:8000/studybearsapp/create_meeting/oauth2callback',
                 )
-    authorization_response = request.url
-    flow.fetch_token(authorization_response=authorization_response)
+    flow.fetch_token(code=request.GET['code'],
+                    authorization_response='http://127.0.0.1:8000/studybearsapp/create_group/oauth2callback',
+                    auth=False
+                    )
     credentials = flow.credentials
     request.session['credentials'] = credentials_to_dict(credentials)
-    return redirect('create_group')
+    return redirect(redirect_url)
 
 def credentials_to_dict(credentials):
   return {'token': credentials.token,
@@ -214,7 +223,7 @@ def groups(request):
 
 def group_detail_page(request, pk):
      group_id = get_object_or_404(StudyGroups, pk=pk) #Get group, if it exists.
-     return render(request, 'studybearsapp/group_detail_page.html', {'group': group_id})
+     return render(request, 'studybearsapp/group_detail_page.html', {'group': group_id, 'members': group_id.members.all()})
 
 def group_update_page(request, pk):
     group_id = get_object_or_404(StudyGroups, pk=pk)
@@ -252,12 +261,68 @@ def group_update_page(request, pk):
         form = CreateGroupForm(initial=data)
     return render(request, 'studybearsapp/update_group.html', {'form': form, 'group': group_id})
 
+@login_required
+def profiles_home(request):
+    return HttpResponseRedirect(reverse('profile_page', args=[request.user.username]))
+
 def group_delete_page(request, pk):
     group_id = get_object_or_404(StudyGroups, pk=pk)
     if request.method == 'POST':
         group_id.delete()  #Delete the group from the database.
         return redirect('groups')
     return render(request, 'studybearsapp/delete_group.html', {'group': group_id})
+
+def create_meeting(request, pk):
+    group_id = get_object_or_404(StudyGroups, pk=pk)
+    if request.method == 'POST':
+        form = CreateMeetingForm(request.POST)
+        if form.is_valid():
+            start_time = form.cleaned_data['start_time']
+            end_time = form.cleaned_data['end_time']
+            location = form.cleaned_data['location']
+            description = form.cleaned_data['description']
+            authorize(request, pk)
+            if 'credentials' not in request.session:
+                return redirect('authorize')
+
+            credentials = google.oauth2.credentials.Credentials(
+              **request.session['credentials'])
+            calendar = googleapiclient.discovery.build(API_SERVICE_NAME, API_VERSION, credentials=credentials)
+            event = {"summary": group_id.name + " Meeting",
+                     "location": location,
+                     "description": description,
+                     "start": {
+                        "dateTime": start_time.isoformat(),
+                        "timeZone": "America/Los_Angeles"
+                        },
+                      "end": {
+                        "dateTime": end_time.isoformat(),
+                        "timeZone": "America/Los_Angeles"
+                      }
+                    }
+            calendar.events().insert(calendarId='primary', body=event).execute()
+            return render(request, 'studybearsapp/meeting_successfully_added.html', {'group': group_id})
+    else:
+        form = CreateMeetingForm()
+    return render(request, 'studybearsapp/create_meeting.html', {'form': form, 'group': group_id})
+
+def add_member(request, pk):
+    group = get_object_or_404(StudyGroups, pk=pk)
+    if request.method == 'POST':
+        form = AddMemberForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            user = User.objects.get(username=username)
+            if user is not None:
+                group.members.add(user)
+            else:
+                return render(request, 'studybearsapp/add_member_error.html', {'username': username})
+    else:
+        form = AddMemberForm()
+    return render(request, 'studybearsapp/add_member.html', {'group': group, 'form': form})
+
+def remove_member(request, pk):
+    return render(request, 'studybearsapp/remove_member.html')
 
 
 

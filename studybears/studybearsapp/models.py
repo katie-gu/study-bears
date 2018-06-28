@@ -21,12 +21,9 @@ class Location(models.Model):
 class StudyGroups(models.Model):
     name = models.CharField(max_length=200, default='')
     course = models.CharField(max_length = 200)
-    date_time = models.DateTimeField(default=datetime.now)
-    location = models.CharField(max_length = 200)
-    "size = models.IntegerField()"
-    capacity = models.IntegerField()
+    "capacity = models.IntegerField()"
     study_strategies = models.TextField(max_length=500, default='')
-    "members = models.OneToManyField('User')"
+    members = models.ManyToManyField(User)
     "pending_requests = models.ManyToManyField('Request')"
     def is_open(self):
         return self.size < self.capacity

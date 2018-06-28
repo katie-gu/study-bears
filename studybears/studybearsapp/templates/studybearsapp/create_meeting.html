@@ -1,7 +1,7 @@
 {% extends 'studybearsapp/profile_page_template.html' %}
 {% block content %}
-<h1> Create Group </h1>
-<form action='create_group_post' method=post>
+<h1> Create Meeting </h1>
+<form action='{{group.get_absolute_url|add:"/create_meeting/post"}}' method=post>
     {% csrf_token %}
     {{ form.as_p }}
     <input type=submit value="Submit">

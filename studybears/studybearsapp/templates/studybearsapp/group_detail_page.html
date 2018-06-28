@@ -2,11 +2,20 @@
 {% block content %}
 <h1> {{group.name}} </h1>
 <p><strong>Course: </strong>{{group.course}}</p>
-<p><strong>Members: </strong>
-<p><strong>Meeting Date and Time: </strong>{{group.date_time}}</p>
-<p><strong>Meeting Location: </strong>{{group.location}}</p>
 <p><strong>Capacity: </strong>{{group.capacity}}</p>
 <p><strong>Study Strategies: </strong>{{group.study_strategies}}</p>
+<hr>
+<h1> Meetings </h1>
+<iframe src="https://calendar.google.com/calendar/embed?src=katiegu%40berkeley.edu&ctz=America%2FLos_Angeles" style="border:0" width="800" height="600" frameborder="0" scrolling="no"></iframe>
+<p> <a href ='{{group.get_absolute_url | add:"/create_meeting"}}'>Add Meeting </p>
+<hr>
+<h1> Members </h1>
+{% for member in members %}
+  <p> {{member.username}} </p>
+  <br>
+{% endfor %}
+<p> <a href='{{group.get_absolute_url|add:"/add_member"}}'> Add Member </p>
+<p> <a href='{{group.get_absolute_url|add:"/remove_member"}}'> Remove Member </p>
 <hr>
 <p> <a href='{{group.get_absolute_url|add:"/update"}}'> Update Group </p>
 <p> <a href='{{group.get_absolute_url|add:"/delete"}}'> Delete Group </p>
