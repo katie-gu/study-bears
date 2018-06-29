@@ -308,21 +308,47 @@ def create_meeting(request, pk):
 
 def add_member(request, pk):
     group = get_object_or_404(StudyGroups, pk=pk)
+    memberList = group.members.all()
     if request.method == 'POST':
         form = AddMemberForm(request.POST)
         if form.is_valid():
             username = form.cleaned_data['username']
-            user = User.objects.get(username=username)
-            if user is not None:
+            try:
+                user = User.objects.get(username=username)
+            except (User.DoesNotExist):
+                user = None
+            if user is not None and user not in memberList:
                 group.members.add(user)
+                return render(request, 'studybearsapp/member_added_successfully.html', {'username': username})
+            elif user in memberList:
+                return render(request, 'studybearsapp/member_in_group.html', {'username': username})
             else:
-                return render(request, 'studybearsapp/add_member_error.html', {'username': username})
+                return render(request, 'studybearsapp/member_not_found.html', {'username': username})
     else:
         form = AddMemberForm()
-    return render(request, 'studybearsapp/add_member.html', {'group': group, 'form': form})
+        return render(request, 'studybearsapp/add_member.html', {'group': group, 'form': form})
 
 def remove_member(request, pk):
-    return render(request, 'studybearsapp/remove_member.html')
+    group = get_object_or_404(StudyGroups, pk=pk)
+    memberList = group.members.all()
+    if request.method == 'POST':
+        form = AddMemberForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            try:
+                user = User.objects.get(username=username)
+            except (User.DoesNotExist):
+                user = None
+            if user is not None and user in memberList:
+                group.members.remove(user)
+                return render(request, 'studybearsapp/member_removed_successfully.html', {'username': username})
+            elif user is not None and user not in memberList:
+                return render(request, 'studybearsapp/member_not_in_group.html', {'username': username})
+            else:
+                return render(request, 'studybearsapp/member_not_found.html', {'username': username})
+    else:
+        form = AddMemberForm()
+        return render(request, 'studybearsapp/remove_member.html', {'group': group, 'form': form})
 
 
 

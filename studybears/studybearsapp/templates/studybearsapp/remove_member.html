@@ -1,0 +1,9 @@
+{% extends 'studybearsapp/profile_page_template.html' %}
+{% block content %}
+<h1> Remove Member By Username </h1>
+<form action='{{group.get_absolute_url|add:"/remove_member/post"}}' method=post>
+   {% csrf_token %}
+   {{form.as_p}}
+   <input type=Submit value='Remove Member'>
+</form>
+{% endblock %}
